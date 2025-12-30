@@ -11,7 +11,7 @@ const gameState = {
   enemies: [],
   towers: [],
   projectiles: [],
-  money: 90,
+  money: 100,
   lives: 20
 };
 
@@ -192,17 +192,7 @@ canvas.addEventListener("click", e => {
   });
   
 
-/**********************
- * ENEMY SPAWNING
- **********************/
-const spawnInterval = setInterval(() => {
-    if (enemiesSpawned >= maxEnemies) {
-      clearInterval(spawnInterval); // stop spawning after 20
-      return;
-    }
-    gameState.enemies.push(new Enemy());
-    enemiesSpawned++;
-  }, 1500);
+
   
 
 /**********************
@@ -255,4 +245,30 @@ for (let r = 0; r < gridRows; r++) {
   requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+let gameStarted = false; // track if game has started
+let spawnInterval;       // store interval ID
+
+function startGame() {
+  if (gameStarted) return; // prevent multiple starts
+  gameStarted = true;
+
+  // hide button
+  document.getElementById("startButton").style.display = "none";
+
+  // spawn enemies
+  spawnInterval = setInterval(() => {
+    if (enemiesSpawned >= maxEnemies) {
+      clearInterval(spawnInterval);
+      return;
+    }
+    gameState.enemies.push(new Enemy());
+    enemiesSpawned++;
+  }, 1500);
+
+  // start game loop
+  gameLoop();
+}
+
+// attach to button
+document.getElementById("startButton").addEventListener("click", startGame);
+
