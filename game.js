@@ -11,9 +11,15 @@ const gameState = {
   enemies: [],
   towers: [],
   projectiles: [],
-  money: 100,
+  money: 90,
   lives: 20
 };
+
+
+
+let enemiesSpawned = 0;   // tracks how many enemies have spawned
+const maxEnemies = 20;    // maximum enemies
+
 
 /**********************
  * UTILS
@@ -22,6 +28,20 @@ function distance(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
+
+/**********************
+ * GRID SETTINGS
+ **********************/
+const gridSize = 40; // each tile is 40x40 pixels
+const gridCols = canvas.width / gridSize;
+const gridRows = canvas.height / gridSize;
+
+// Optional: keep track of which tiles are occupied
+const gridOccupied = Array.from({ length: gridCols }, () =>
+  Array(gridRows).fill(false)
+);
+
+
 /**********************
  * ENEMY
  **********************/
@@ -29,7 +49,7 @@ class Enemy {
   constructor() {
     this.x = 0;
     this.y = 200;
-    this.speed = 1;
+    this.speed = 2;
     this.hp = 100;
     this.size = 20;
   }
@@ -116,7 +136,7 @@ class Projectile {
       const dist = Math.hypot(dx, dy);
   
       if (dist < this.radius + 10) {
-        this.target.hp -= 10;
+        this.target.hp -= 60;
         this.hit = true;
         return;
       }
@@ -153,19 +173,37 @@ class Projectile {
  * INPUT
  **********************/
 canvas.addEventListener("click", e => {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-
-  gameState.towers.push(new Tower(x, y));
-});
+    const rect = canvas.getBoundingClientRect();
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+  
+    // Snap to nearest grid cell
+    const col = Math.floor(x / gridSize);
+    const row = Math.floor(y / gridSize);
+  
+    // Only place if tile is free
+    if (!gridOccupied[col][row]) {
+      const snappedX = col * gridSize + gridSize / 2; // center of tile
+      const snappedY = row * gridSize + gridSize / 2;
+  
+      gameState.towers.push(new Tower(snappedX, snappedY));
+      gridOccupied[col][row] = true;
+    }
+  });
+  
 
 /**********************
  * ENEMY SPAWNING
  **********************/
-setInterval(() => {
-  gameState.enemies.push(new Enemy());
-}, 1500);
+const spawnInterval = setInterval(() => {
+    if (enemiesSpawned >= maxEnemies) {
+      clearInterval(spawnInterval); // stop spawning after 20
+      return;
+    }
+    gameState.enemies.push(new Enemy());
+    enemiesSpawned++;
+  }, 1500);
+  
 
 /**********************
  * GAME LOOP
@@ -173,6 +211,23 @@ setInterval(() => {
 function gameLoop() {
   // clear frame
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+
+  // Draw grid lines
+ctx.strokeStyle = "rgba(255,255,255,0.1)";
+for (let c = 0; c < gridCols; c++) {
+  ctx.beginPath();
+  ctx.moveTo(c * gridSize, 0);
+  ctx.lineTo(c * gridSize, canvas.height);
+  ctx.stroke();
+}
+for (let r = 0; r < gridRows; r++) {
+  ctx.beginPath();
+  ctx.moveTo(0, r * gridSize);
+  ctx.lineTo(canvas.width, r * gridSize);
+  ctx.stroke();
+}
+
 
   // enemies
   gameState.enemies.forEach(enemy => {
