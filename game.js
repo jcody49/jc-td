@@ -16,9 +16,35 @@ const gameState = {
 };
 
 
-
 let enemiesSpawned = 0;   // tracks how many enemies have spawned
 const maxEnemies = 20;    // maximum enemies
+
+
+/**********************
+ * WAVE STATE
+ **********************/
+//const startButton = document.getElementById("startButton");
+const waveText = document.getElementById("waveText");
+
+const waveState = {
+  currentWave: 0,
+  countdown: 40,
+  countdownInterval: null,
+  status: "idle" // idle | countdown | spawning
+};
+
+
+  const skipButton = document.getElementById("skipButton");
+
+skipButton.addEventListener("click", () => {
+    // only skip if a wave countdown is active
+    if (waveState.status === "countdown") {
+        clearInterval(waveState.countdownInterval); // stop the countdown
+        startWave(); // start the wave immediately
+    }
+});
+
+  
 
 
 /**********************
@@ -40,6 +66,10 @@ const gridSizeY = canvas.height / gridRows;
 const gridSize = Math.min(gridSizeX, gridSizeY); // square cells
 
 
+
+/**********************
+ * PATHING
+ **********************/
 const pathCells = [
 
     // start--4 cells right
@@ -134,6 +164,10 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 );
 
 
+
+/**********************
+ * ENEMIES
+ **********************/
 class Enemy {
     constructor() {
       this.pathIndex = 0;
@@ -296,11 +330,60 @@ canvas.addEventListener("click", e => {
       gameState.towers.push(new Tower(snappedX, snappedY));
       gridOccupied[col][row] = true;
     }
-  });
+});
   
 
 
   
+/***********************
+* WAVE LOGIC
+***********************/
+
+function startNextWave() {
+    waveState.currentWave++;
+    waveState.countdown = 40;
+    waveState.status = "countdown";
+  
+    skipButton.disabled = false; // enable during countdown
+  
+    if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
+  
+    waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
+  
+    waveState.countdownInterval = setInterval(() => {
+      waveState.countdown--;
+      waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
+  
+      if (waveState.countdown <= 0) {
+        clearInterval(waveState.countdownInterval);
+        startWave();
+      }
+    }, 1000);
+  }
+  
+  function startWave() {
+    waveState.status = "spawning";
+    waveText.textContent = `Wave ${waveState.currentWave} in progress`;
+  
+    skipButton.disabled = true; // disable once wave starts
+  
+    let enemiesSpawned = 0;
+  const maxEnemies = 20; // fixed per wave
+  const spawnInterval = setInterval(() => {
+    if (enemiesSpawned >= maxEnemies) {
+      clearInterval(spawnInterval);
+      return;
+    }
+    gameState.enemies.push(new Enemy());
+    enemiesSpawned++;
+  }, 1500);
+  }
+  
+  
+  
+
+
+
 
 /**********************
  * GAME LOOP
@@ -356,24 +439,18 @@ let gameStarted = false;
 let spawnInterval;
 
 function startGame() {
-  if (gameStarted) return;
-  gameStarted = true;
-
-  // hide button
-  document.getElementById("startButton").style.display = "none";
-
-  // spawn enemies
-  spawnInterval = setInterval(() => {
-    if (enemiesSpawned >= maxEnemies) {
-      clearInterval(spawnInterval);
-      return;
-    }
-    gameState.enemies.push(new Enemy());
-    enemiesSpawned++;
-  }, 1500);
-
-  gameLoop();
-}
+    if (gameStarted) return;
+    gameStarted = true;
+  
+    // hide start button
+    document.getElementById("startButton").style.display = "none";
+  
+    startNextWave();
+  
+    // start the game loop (can run while countdown is active)
+    gameLoop();
+  }
+  
 
 document.getElementById("startButton").addEventListener("click", startGame);
 
