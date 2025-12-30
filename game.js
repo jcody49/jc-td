@@ -32,9 +32,11 @@ function distance(a, b) {
 /**********************
  * GRID SETTINGS
  **********************/
-const gridSize = 40; // each tile is 40x40 pixels
-const gridCols = canvas.width / gridSize;
-const gridRows = canvas.height / gridSize;
+// Instead of fixed 40px, calculate from canvas / desired grid
+const gridCols = 25; // 25 columns
+const gridRows = 15; // 15 rows
+const gridSize = canvas.width / gridCols; // dynamically set cell size
+
 
 // Optional: keep track of which tiles are occupied
 const gridOccupied = Array.from({ length: gridCols }, () =>
@@ -245,11 +247,11 @@ for (let r = 0; r < gridRows; r++) {
   requestAnimationFrame(gameLoop);
 }
 
-let gameStarted = false; // track if game has started
-let spawnInterval;       // store interval ID
+let gameStarted = false;
+let spawnInterval;
 
 function startGame() {
-  if (gameStarted) return; // prevent multiple starts
+  if (gameStarted) return;
   gameStarted = true;
 
   // hide button
@@ -265,10 +267,9 @@ function startGame() {
     enemiesSpawned++;
   }, 1500);
 
-  // start game loop
   gameLoop();
 }
 
-// attach to button
 document.getElementById("startButton").addEventListener("click", startGame);
+
 
