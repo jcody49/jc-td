@@ -35,8 +35,98 @@ function distance(a, b) {
 // Instead of fixed 40px, calculate from canvas / desired grid
 const gridCols = 25; // 25 columns
 const gridRows = 15; // 15 rows
-const gridSize = canvas.width / gridCols; // dynamically set cell size
+const gridSizeX = canvas.width / gridCols;
+const gridSizeY = canvas.height / gridRows;
+const gridSize = Math.min(gridSizeX, gridSizeY); // square cells
 
+
+const pathCells = [
+
+    // start--4 cells right
+    { col: 0, row: 7 }, 
+    { col: 1, row: 7 },
+    { col: 2, row: 7 },
+    { col: 3, row: 7 },
+    { col: 4, row: 7 }, 
+    
+    
+    // move up
+    { col: 4, row: 6 }, 
+    { col: 4, row: 5 },
+    { col: 4, row: 4 }, 
+    { col: 4, row: 3 }, 
+  
+    // new segment: right 2
+    { col: 5, row: 3 },
+    { col: 6, row: 3 },
+
+  
+    // new segment: down 7
+    { col: 6, row: 4 },
+    { col: 6, row: 5 },
+    { col: 6, row: 6 },
+    { col: 6, row: 7 },
+    { col: 6, row: 8 },
+    { col: 6, row: 9 },
+    { col: 6, row: 10 },
+    { col: 6, row: 11 },
+
+
+    // new segment: right 2
+    { col: 7, row: 11 },
+    { col: 8, row: 11 },
+
+
+    // new segment: up 7
+    { col: 8, row: 10 },
+    { col: 8, row: 9 },
+    { col: 8, row: 8 },
+    { col: 8, row: 7 },
+    { col: 8, row: 6 },
+    { col: 8, row: 5 },
+    { col: 8, row: 4 },
+    { col: 8, row: 3 },
+
+
+    // new segment: right 2
+    { col: 9, row: 3 },
+    { col: 10, row: 3 },
+
+
+    // new segment: down 5
+    { col: 10, row: 4 },
+    { col: 10, row: 5 },
+    { col: 10, row: 6 },
+    { col: 10, row: 7 },
+
+
+    // new segment: right 3
+    { col: 11, row: 7 },
+    { col: 12, row: 7 },
+    { col: 13, row: 7 },
+    { col: 14, row: 7 },
+    { col: 15, row: 7 },
+    { col: 16, row: 7 },
+    { col: 17, row: 7 },
+    { col: 18, row: 7 },
+    { col: 19, row: 7 },
+    { col: 20, row: 7 },
+    { col: 21, row: 7 },
+    { col: 22, row: 7 },
+    { col: 23, row: 7 },
+    { col: 24, row: 7 },
+    { col: 25, row: 7 },
+    { col: 26, row: 7 },
+
+  ];
+
+  
+  
+
+  const path = pathCells.map(cell => ({
+    x: cell.col * gridSize + gridSize / 2,
+    y: cell.row * gridSize + gridSize / 2
+  }));
 
 // Optional: keep track of which tiles are occupied
 const gridOccupied = Array.from({ length: gridCols }, () =>
@@ -44,31 +134,46 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 );
 
 
-/**********************
- * ENEMY
- **********************/
 class Enemy {
-  constructor() {
-    this.x = 0;
-    this.y = 200;
-    this.speed = 2;
-    this.hp = 100;
-    this.size = 20;
+    constructor() {
+      this.pathIndex = 0;
+      this.x = path[0].x;
+      this.y = path[0].y;
+      this.speed = 2;
+      this.hp = 100;
+      this.size = gridSize * 0.5; // half cell size
+    }
+  
+    update() {
+      if (this.pathIndex >= path.length - 1) return;
+  
+      const target = path[this.pathIndex + 1];
+      const dx = target.x - this.x;
+      const dy = target.y - this.y;
+      const dist = Math.hypot(dx, dy);
+  
+      if (dist < this.speed) {
+        // move to next path point
+        this.x = target.x;
+        this.y = target.y;
+        this.pathIndex++;
+      } else {
+        // move towards next path point
+        this.x += (dx / dist) * this.speed;
+        this.y += (dy / dist) * this.speed;
+      }
+    }
+  
+    draw() {
+      ctx.fillStyle = "red";
+      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+  
+      // health bar
+      ctx.fillStyle = "green";
+      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2 - 6, (this.hp / 100) * this.size, 4);
+    }
   }
-
-  update() {
-    this.x += this.speed;
-  }
-
-  draw() {
-    ctx.fillStyle = "red";
-    ctx.fillRect(this.x, this.y, this.size, this.size);
-
-    // health bar
-    ctx.fillStyle = "green";
-    ctx.fillRect(this.x, this.y - 6, (this.hp / 100) * this.size, 4);
-  }
-}
+  
 
 /**********************
  * TOWER
