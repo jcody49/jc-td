@@ -1,6 +1,8 @@
 import { gameLoop } from './game-engine.js';
 import { Enemy } from './enemies.js';
 import { Tower } from './towers.js';
+import { startWave, startNextWave, waveState } from './waves.js';
+
 
 
 
@@ -53,30 +55,24 @@ let gameStarted = false;
 let spawnInterval;
 
 /**********************
- * WAVE STATE
+ * WAVE TEXT
  **********************/
 //const startButton = document.getElementById("startButton");
 const waveText = document.getElementById("waveText");
 
-const waveState = {
-  currentWave: 0,
-  countdown: 40,
-  countdownInterval: null,
-  status: "idle" // idle | countdown | spawning
-};
 
 
-  const skipButton = document.getElementById("skipButton");
+
+const skipButton = document.getElementById("skipButton");
 
 skipButton.addEventListener("click", () => {
-    // only skip if a wave countdown is active
-    if (waveState.status === "countdown") {
-        clearInterval(waveState.countdownInterval); // stop the countdown
-        startWave(); // start the wave immediately
-    }
+  if (waveState.status === "countdown") {
+    clearInterval(waveState.countdownInterval);
+    startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+  }
 });
-
   
+
 
 
 /**********************
@@ -193,70 +189,19 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 
   
 /***********************
-* WAVE LOGIC
+* START GAME
 ***********************/
-
-function startWave() {
-  waveState.status = "spawning";
-  waveText.textContent = `Wave ${waveState.currentWave} in progress`;
-
-  skipButton.disabled = true; // disable once wave starts
-
-  let enemiesSpawned = 0;
-  const maxEnemies = 20; // fixed per wave
-
-  spawnInterval = setInterval(() => {
-    if (enemiesSpawned >= maxEnemies) {
-      clearInterval(spawnInterval);
-      return;
-    }
-
-    gameState.enemies.push(
-      new Enemy({
-        path,       // pass path
-        gridSize,   // pass grid size
-        ctx,        // pass canvas context
-        canvas      // pass canvas
-      })
-    );
-
-    enemiesSpawned++;
-  }, 1500);
-}
-
-function startNextWave() {
-  waveState.currentWave++;
-  waveState.countdown = 40;
-  waveState.status = "countdown";
-
-  skipButton.disabled = false; // enable during countdown
-
-  if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
-
-  waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
-
-  waveState.countdownInterval = setInterval(() => {
-    waveState.countdown--;
-    waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
-
-    if (waveState.countdown <= 0) {
-      clearInterval(waveState.countdownInterval);
-      startWave(); // enemies start spawning now
-    }
-  }, 1000);
-}
 
 function startGame() {
   if (gameStarted) return;
   gameStarted = true;
 
-  // hide start button
   document.getElementById("startButton").style.display = "none";
 
-  startNextWave();
+  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
 
-  // start the game loop (grid + entities)
   gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState);
 }
+
 
 document.getElementById("startButton").addEventListener("click", startGame);
