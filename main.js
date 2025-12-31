@@ -212,8 +212,4 @@ function startGame() {
 }
 
 
-
-
-
-
 document.getElementById("startButton").addEventListener("click", startGame);
