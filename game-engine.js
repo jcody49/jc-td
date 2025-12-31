@@ -24,9 +24,10 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState) {
   
     // towers
     gameState.towers.forEach(tower => {
-      tower.update();
-      tower.draw();
+        tower.update(gameState); // pass the gameState object
+        tower.draw();
     });
+  
   
     // projectiles
     gameState.projectiles.forEach(p => {

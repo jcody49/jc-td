@@ -1,5 +1,6 @@
 import { gameLoop } from './game-engine.js';
 import { Enemy } from './enemies.js';
+import { Tower } from './towers.js';
 
 
 
@@ -26,6 +27,23 @@ let enemiesSpawned = 0;   // tracks how many enemies have spawned
 const maxEnemies = 20;    // maximum enemies
 
 
+canvas.addEventListener("click", e => {
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  // Snap to grid if you want (optional)
+  const col = Math.floor(x / gridSize);
+  const row = Math.floor(y / gridSize);
+  const snappedX = col * gridSize + gridSize / 2;
+  const snappedY = row * gridSize + gridSize / 2;
+
+  // Only place if tile is free (optional)
+  if (!gridOccupied[col][row]) {
+    gameState.towers.push(new Tower({ x: snappedX, y: snappedY, ctx }));
+    gridOccupied[col][row] = true;
+  }
+});
 
 
 /**********************
@@ -72,13 +90,11 @@ function distance(a, b) {
 /**********************
  * GRID SETTINGS
  **********************/
-// Instead of fixed 40px, calculate from canvas / desired grid
 const gridCols = 25; // 25 columns
 const gridRows = 15; // 15 rows
 const gridSizeX = canvas.width / gridCols;
 const gridSizeY = canvas.height / gridRows;
 const gridSize = Math.min(gridSizeX, gridSizeY); // square cells
-
 
 
 /**********************
@@ -164,9 +180,6 @@ const pathCells = [
 
   ];
 
-  
-  
-
   const path = pathCells.map(cell => ({
     x: cell.col * gridSize + gridSize / 2,
     y: cell.row * gridSize + gridSize / 2
@@ -176,136 +189,6 @@ const pathCells = [
 const gridOccupied = Array.from({ length: gridCols }, () =>
   Array(gridRows).fill(false)
 );
-
-
-
-
-  
-  
-
-/**********************
- * TOWER
- **********************/
-class Tower {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.range = 100;
-      this.cooldown = 0;
-    }
-  
-    update() {
-      if (this.cooldown > 0) {
-        this.cooldown--;
-        return;
-      }
-  
-      const target = gameState.enemies.find(
-        e => distance(this, e) < this.range
-      );
-  
-      if (target) {
-        gameState.projectiles.push(new Projectile(this.x, this.y, target));
-        this.cooldown = 45; // frames until next shot
-      }
-    }
-  
-    draw() {
-      // Draw the tower
-      ctx.fillStyle = "cyan";
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
-      ctx.fill();
-  
-      // Muzzle flash: only shows 1 frame after shooting
-      if (this.cooldown === 44) { // just fired
-        ctx.fillStyle = "white";
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 14, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  }
-  
-
-
-/**********************
- * PROJECTILES
- **********************/
-class Projectile {
-    constructor(x, y, target) {
-      this.x = x;
-      this.y = y;
-      this.target = target;
-      this.speed = 4;
-      this.radius = 3;
-      this.hit = false;
-      this.trail = []; // store previous positions
-    }
-  
-    update() {
-      if (!this.target) return;
-  
-      const dx = this.target.x - this.x;
-      const dy = this.target.y - this.y;
-      const dist = Math.hypot(dx, dy);
-  
-      if (dist < this.radius + 10) {
-        this.target.hp -= 60;
-        this.hit = true;
-        return;
-      }
-  
-      // move projectile
-      this.x += (dx / dist) * this.speed;
-      this.y += (dy / dist) * this.speed;
-  
-      // save trail positions
-      this.trail.push({x: this.x, y: this.y});
-      if (this.trail.length > 5) this.trail.shift(); // limit trail length
-    }
-  
-    draw() {
-      // Draw trail
-      ctx.fillStyle = "rgba(255,255,0,0.5)";
-      this.trail.forEach(pos => {
-        ctx.beginPath();
-        ctx.arc(pos.x, pos.y, this.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-  
-      // Draw projectile
-      ctx.fillStyle = "yellow";
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-  
-  
-
-/**********************
- * INPUT
- **********************/
-canvas.addEventListener("click", e => {
-    const rect = canvas.getBoundingClientRect();
-    let x = e.clientX - rect.left;
-    let y = e.clientY - rect.top;
-  
-    // Snap to nearest grid cell
-    const col = Math.floor(x / gridSize);
-    const row = Math.floor(y / gridSize);
-  
-    // Only place if tile is free
-    if (!gridOccupied[col][row]) {
-      const snappedX = col * gridSize + gridSize / 2; // center of tile
-      const snappedY = row * gridSize + gridSize / 2;
-  
-      gameState.towers.push(new Tower(snappedX, snappedY));
-      gridOccupied[col][row] = true;
-    }
-});
-  
 
 
   
