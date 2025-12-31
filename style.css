@@ -2,52 +2,48 @@ body {
     margin: 0;
     background: #111;
     font-family: sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
 }
 
 
 /* Header */
-#gameHeader { 
-    font-family: 'Audiowide', sans-serif; 
+#gameHeader {
+    font-family: 'Audiowide', sans-serif;
     font-size: 60px;
     text-align: center;
-    position: relative;
-    color: #ccc; /* fallback */
     letter-spacing: 2px;
     
     /* Gradient fill */
-    background: linear-gradient(135deg, #4682B4, #5F9EA0, #7FFFD4); /* steel blue → cadet → aquamarine */
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    /* Outline / stroke */
-    text-shadow:
-       -2px -2px 0 #000,
-        2px -2px 0 #000,
-       -2px  2px 0 #000,
-        2px  2px 0 #000,
-        0px 0px 6px rgba(0,255,255,0.6); /* soft glow */
-}
-
-/* Optional: animate gradient for extra “energy” */
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-}
-
-#gameHeader {
+    background: linear-gradient(135deg, #4682B4, #5F9EA0, #7FFFD4);
     background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* must be transparent for the gradient to show */
+
+    /* Outline and glow */
+    text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #7fff00,
+        -2px  2px 0 #000,
+         2px  2px 0 #000,
+         0px 0px 20px rgba(0,255,255,0.6);
+
+    /* Animate gradient */
     animation: gradientShift 3s ease infinite;
+
+    /* Fallback for browsers that don’t support -webkit-background-clip */
+    color: #5F9EA0; /* muted steel-blue fallback */
 }
+
+
 
   
   /* Container for canvas + menu */
   #gameContainer {
     display: flex;
-    gap: 10px;
+    gap: 14px;
     align-items: flex-start;
-    margin: 20px auto; /* centers horizontally with automatic side margins */
-    max-width: 1000px; /* optional, prevents stretching */
+    margin: 15px auto; /* centers horizontally with automatic side margins */
+    max-width: 1130px; /* optional, prevents stretching */
 }
 
   
@@ -76,7 +72,7 @@ body {
   
   /* Tower menu */
   #towerMenu {
-    width: 180px;
+    width: 230px;
     background: #222;
     color: white;
     padding: 10px;
@@ -85,6 +81,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    transform: translateY(3%);
   }
   
   #towerMenu h3 {
@@ -114,7 +111,7 @@ body {
 
 canvas {
     background: #1e1e1e;
-    border: 2px solid #444;
+    border: 2px solid #7fff00;
     display: block;
     margin: 0 auto;
 }
@@ -122,12 +119,12 @@ canvas {
 #startButton, #skipButton {
     display: block;
     margin: 10px auto 0 auto;
-    width: 800px; /* same as canvas */
+    width: 805px; /* same as canvas */
     padding: 12px;
     font-size: 18px;
     background-color: #222;
     color: #fff;
-    border: 2px solid #444;
+    border: 2px solid #00ffff;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
 }
@@ -144,7 +141,8 @@ canvas {
   }
   
   #towerMenu {
-    width: 180px;
+    width: 290px;
+    height: 440px;
     background: #222;
     color: white;
     padding: 10px;
@@ -153,6 +151,7 @@ canvas {
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    border: 2px solid #7fff00;
   }
   
   #towerMenu h3 {
@@ -175,6 +174,7 @@ canvas {
   .towerCard:hover {
     background: #666;
     transform: scale(1.05);
+    border: 2px solid #444;
   }
 
   
