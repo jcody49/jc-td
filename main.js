@@ -22,7 +22,7 @@ const gameState = {
   towers: [],
   projectiles: [],
   money: 100,
-  lives: 20
+  lives: 10
 };
 
 

@@ -1,47 +1,53 @@
 export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
+    // Check game over first
+    if (gameState.lives <= 0) {
+        alert("Game Over!");
+        return; // stop the loop
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
     // Draw grid lines
     ctx.strokeStyle = "rgba(255,255,255,0.1)";
     for (let c = 0; c < gridCols; c++) {
-      ctx.beginPath();
-      ctx.moveTo(c * gridSize, 0);
-      ctx.lineTo(c * gridSize, canvas.height);
-      ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(c * gridSize, 0);
+        ctx.lineTo(c * gridSize, canvas.height);
+        ctx.stroke();
     }
     for (let r = 0; r < gridRows; r++) {
-      ctx.beginPath();
-      ctx.moveTo(0, r * gridSize);
-      ctx.lineTo(canvas.width, r * gridSize);
-      ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, r * gridSize);
+        ctx.lineTo(canvas.width, r * gridSize);
+        ctx.stroke();
     }
-  
+
     // enemies
     gameState.enemies.forEach(enemy => {
-      enemy.update();
-      enemy.draw();
+        enemy.update(gameState);
+        enemy.draw();
     });
-  
+
     // towers
     gameState.towers.forEach(tower => {
-        tower.update(gameState); // pass the gameState object
+        tower.update(gameState);
         tower.draw();
     });
-  
-  
+
     // projectiles
     gameState.projectiles.forEach(p => {
-      p.update();
-      p.draw();
+        p.update();
+        p.draw();
     });
-  
+
     // cleanup
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
-    gameState.enemies = gameState.enemies.filter(e => e.hp > 0);
+    gameState.enemies = gameState.enemies.filter(e => !e.remove);
 
     // Update HUD
-  if (hud) hud.update();
-  
-    requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud));
-  }
-  
+    if (hud) hud.update();
+
+    requestAnimationFrame(() =>
+        gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud)
+    );
+}

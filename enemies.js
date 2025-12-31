@@ -1,56 +1,90 @@
 export class Enemy {
     constructor({ path, gridSize, ctx, canvas }) {
-      this.path = path;
-      this.gridSize = gridSize;
-      this.ctx = ctx;
-      this.canvas = canvas;
+        this.path = path;
+        this.gridSize = gridSize;
+        this.ctx = ctx;
+        this.canvas = canvas;
+      
+        this.pathIndex = 0;
+        this.x = path[0].x;
+        this.y = path[0].y;
+        this.speed = 2;
+        this.hp = 100;
+        this.size = gridSize * 0.5;
+      
+        this.isFlashing = false;
+        this.flashTimer = 0;
+        this.flashLines = [];
+      
+        this.remove = false;   // ← ADD
+        this.escaped = false;  // ← ADD
+      }
+      
+      
   
-      this.pathIndex = 0;
-      this.x = path[0].x;
-      this.y = path[0].y;
-      this.speed = 2;
-      this.hp = 100;
-      this.size = gridSize * 0.5;
-  
-      this.isFlashing = false;
-      this.flashTimer = 0;
-      this.flashLines = [];
+      update(gameState) {
+        // 1️⃣ Check if enemy reached the end
+        if (this.pathIndex >= this.path.length - 1) {
+            if (!this.escaped) {
+                this.escaped = true;
+                gameState.lives--; // subtract a life
+            }
+    
+            // start zap animation instead of moving
+            if (!this.isFlashing) {
+                this.isFlashing = true;
+                this.flashTimer = 10; // duration of zap
+                this.flashLines = Array.from({ length: 6 }, () => ({
+                    angle: Math.random() * Math.PI * 2,
+                    length: Math.random() * this.size * 2 + this.size
+                }));
+            }
+    
+            // decrement flash timer each frame
+            if (this.isFlashing) {
+                this.flashTimer--;
+                if (this.flashTimer <= 0) {
+                    this.remove = true; // disappear after zap
+                }
+            }
+    
+            return; // skip movement
+        }
+    
+        // 2️⃣ Optional zap effect for last few tiles while moving
+        const zapTriggerIndex = this.path.length - 3;
+        if (this.pathIndex >= zapTriggerIndex && this.pathIndex < this.path.length - 1) {
+            if (!this.isFlashing) {
+                this.isFlashing = true;
+                this.flashTimer = 10;
+                this.flashLines = Array.from({ length: 6 }, () => ({
+                    angle: Math.random() * Math.PI * 2,
+                    length: Math.random() * this.size * 2 + this.size
+                }));
+            }
+    
+            this.flashTimer--;
+            if (this.flashTimer <= 0) {
+                this.isFlashing = false; // stop zapping
+            }
+        }
+    
+        // 3️⃣ Move along path
+        const target = this.path[this.pathIndex + 1];
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const dist = Math.hypot(dx, dy);
+    
+        if (dist < this.speed) {
+            this.x = target.x;
+            this.y = target.y;
+            this.pathIndex++;
+        } else {
+            this.x += (dx / dist) * this.speed;
+            this.y += (dy / dist) * this.speed;
+        }
     }
-  
-    update() {
-      if (this.isFlashing) {
-        this.flashTimer--;
-        if (this.flashTimer <= 0) this.hp = 0;
-        return;
-      }
-  
-      const zapTriggerIndex = this.path.length - 3;
-      if (this.pathIndex >= zapTriggerIndex) {
-        this.isFlashing = true;
-        this.flashTimer = 10;
-        this.flashLines = Array.from({ length: 6 }, () => ({
-          angle: Math.random() * Math.PI * 2,
-          length: Math.random() * this.size * 2 + this.size
-        }));
-        return;
-      }
-  
-      if (this.pathIndex >= this.path.length - 1) return;
-  
-      const target = this.path[this.pathIndex + 1];
-      const dx = target.x - this.x;
-      const dy = target.y - this.y;
-      const dist = Math.hypot(dx, dy);
-  
-      if (dist < this.speed) {
-        this.x = target.x;
-        this.y = target.y;
-        this.pathIndex++;
-      } else {
-        this.x += (dx / dist) * this.speed;
-        this.y += (dy / dist) * this.speed;
-      }
-    }
+    
   
     draw() {
       const ctx = this.ctx;
@@ -69,7 +103,6 @@ export class Enemy {
           ctx.stroke();
         });
       } else {
-        // Draw enemy body
         ctx.fillStyle = "red";
         ctx.fillRect(
           this.x - this.size / 2,
@@ -78,7 +111,7 @@ export class Enemy {
           this.size
         );
   
-        // Draw health bar on top
+        // Health bar
         const hpBarWidth = this.size;
         const hpBarHeight = 4;
         const hpPercent = Math.max(this.hp / 100, 0);
