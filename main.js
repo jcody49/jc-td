@@ -1,4 +1,6 @@
 import { gameLoop } from './game-engine.js';
+import { Enemy } from './enemies.js';
+
 
 
 
@@ -23,6 +25,14 @@ const gameState = {
 let enemiesSpawned = 0;   // tracks how many enemies have spawned
 const maxEnemies = 20;    // maximum enemies
 
+
+
+
+/**********************
+ * GAME CONTROL
+ **********************/
+let gameStarted = false;
+let spawnInterval;
 
 /**********************
  * WAVE STATE
@@ -169,95 +179,7 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 
 
 
-/**********************
- * ENEMIES
- **********************/
-class Enemy {
-    constructor() {
-      this.pathIndex = 0;
-      this.x = path[0].x;
-      this.y = path[0].y;
-      this.speed = 2;
-      this.hp = 100;
-      this.size = gridSize * 0.5;
-      this.isFlashing = false;
-      this.flashTimer = 0;
-      this.flashLines = []; // store zap lines
-    }
-  
-    update() {
-        if (this.isFlashing) {
-          this.flashTimer--;
-          if (this.flashTimer <= 0) {
-            this.hp = 0; // remove from game
-          }
-          return;
-        }
-      
-        // Trigger zap a bit earlier (2 steps before the last cell)
-        const zapTriggerIndex = path.length - 3;
-        if (this.pathIndex >= zapTriggerIndex && !this.isFlashing) {
-          this.isFlashing = true;
-          this.flashTimer = 10; // frames
-          this.flashLines = [];
-          const lineCount = 6;
-          for (let i = 0; i < lineCount; i++) {
-            const angle = Math.random() * Math.PI * 2;
-            const length = Math.random() * this.size * 2 + this.size;
-            this.flashLines.push({ angle, length });
-          }
-          return;
-        }
-      
-        // Normal movement along path
-        if (this.pathIndex >= path.length - 1) return;
-      
-        const target = path[this.pathIndex + 1];
-        const dx = target.x - this.x;
-        const dy = target.y - this.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < this.speed) {
-          this.x = target.x;
-          this.y = target.y;
-          this.pathIndex++;
-        } else {
-          this.x += (dx / dist) * this.speed;
-          this.y += (dy / dist) * this.speed;
-        }
-      }
-      
-      
-      
-      
-  
-    draw() {
-        if (this.isFlashing) {
-          // draw zap lines
-          ctx.strokeStyle = "yellow";
-          ctx.lineWidth = 2;
-      
-          // adjust line length based on enemy size and canvas width
-          const maxLineLength = this.size * 2 * (canvas.width / 920); // scale from old width
-          this.flashLines.forEach(line => {
-            const length = line.length * (this.flashTimer / 10) * (canvas.width / 920);
-            const endX = this.x + Math.cos(line.angle) * length;
-            const endY = this.y + Math.sin(line.angle) * length;
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(endX, endY);
-            ctx.stroke();
-          });
-        } else {
-          // normal enemy
-          ctx.fillStyle = "red";
-          ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
-          ctx.fillStyle = "green";
-          ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2 - 6, (this.hp / 100) * this.size, 4);
-        }
-      }
-      
-  }
-  
+
   
   
 
@@ -391,73 +313,67 @@ canvas.addEventListener("click", e => {
 * WAVE LOGIC
 ***********************/
 
-function startNextWave() {
-  console.log("startNextWave called");
-    waveState.currentWave++;
-    waveState.countdown = 40;
-    waveState.status = "countdown";
-  
-    skipButton.disabled = false; // enable during countdown
-  
-    if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
-  
-    waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
-  
-    waveState.countdownInterval = setInterval(() => {
-      console.log("Countdown:", waveState.countdown);
-      waveState.countdown--;
-      waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
-  
-      if (waveState.countdown <= 0) {
-        clearInterval(waveState.countdownInterval);
-        startWave();
-      }
-    }, 1000);
-  }
-  
-  function startWave() {
-    waveState.status = "spawning";
-    waveText.textContent = `Wave ${waveState.currentWave} in progress`;
-  
-    skipButton.disabled = true; // disable once wave starts
-  
-    let enemiesSpawned = 0;
+function startWave() {
+  waveState.status = "spawning";
+  waveText.textContent = `Wave ${waveState.currentWave} in progress`;
+
+  skipButton.disabled = true; // disable once wave starts
+
+  let enemiesSpawned = 0;
   const maxEnemies = 20; // fixed per wave
-  const spawnInterval = setInterval(() => {
+
+  spawnInterval = setInterval(() => {
     if (enemiesSpawned >= maxEnemies) {
       clearInterval(spawnInterval);
       return;
     }
-    gameState.enemies.push(new Enemy());
+
+    gameState.enemies.push(
+      new Enemy({
+        path,       // pass path
+        gridSize,   // pass grid size
+        ctx,        // pass canvas context
+        canvas      // pass canvas
+      })
+    );
+
     enemiesSpawned++;
   }, 1500);
-  }
-  
-  
-  
-
-
-  let gameStarted = false;
-  let spawnInterval;
-  
-
-
-
-  function startGame() {
-    if (gameStarted) return;
-    gameStarted = true;
-
-    // hide start button
-    document.getElementById("startButton").style.display = "none";
-
-    startNextWave();
-
-    // start the game loop
-    gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState);
 }
 
-  
+function startNextWave() {
+  waveState.currentWave++;
+  waveState.countdown = 40;
+  waveState.status = "countdown";
+
+  skipButton.disabled = false; // enable during countdown
+
+  if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
+
+  waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
+
+  waveState.countdownInterval = setInterval(() => {
+    waveState.countdown--;
+    waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
+
+    if (waveState.countdown <= 0) {
+      clearInterval(waveState.countdownInterval);
+      startWave(); // enemies start spawning now
+    }
+  }, 1000);
+}
+
+function startGame() {
+  if (gameStarted) return;
+  gameStarted = true;
+
+  // hide start button
+  document.getElementById("startButton").style.display = "none";
+
+  startNextWave();
+
+  // start the game loop (grid + entities)
+  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState);
+}
 
 document.getElementById("startButton").addEventListener("click", startGame);
-
-
