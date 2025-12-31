@@ -1,3 +1,7 @@
+import { gameLoop } from './game-engine.js';
+
+
+
 /**********************
  * CANVAS SETUP
  **********************/
@@ -388,6 +392,7 @@ canvas.addEventListener("click", e => {
 ***********************/
 
 function startNextWave() {
+  console.log("startNextWave called");
     waveState.currentWave++;
     waveState.countdown = 40;
     waveState.status = "countdown";
@@ -399,6 +404,7 @@ function startNextWave() {
     waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
   
     waveState.countdownInterval = setInterval(() => {
+      console.log("Countdown:", waveState.countdown);
       waveState.countdown--;
       waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
   
@@ -431,73 +437,25 @@ function startNextWave() {
   
 
 
-
-
-/**********************
- * GAME LOOP
- **********************/
-function gameLoop() {
-  // clear frame
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-
-  // Draw grid lines
-ctx.strokeStyle = "rgba(255,255,255,0.1)";
-for (let c = 0; c < gridCols; c++) {
-  ctx.beginPath();
-  ctx.moveTo(c * gridSize, 0);
-  ctx.lineTo(c * gridSize, canvas.height);
-  ctx.stroke();
-}
-for (let r = 0; r < gridRows; r++) {
-  ctx.beginPath();
-  ctx.moveTo(0, r * gridSize);
-  ctx.lineTo(canvas.width, r * gridSize);
-  ctx.stroke();
-}
-
-
-  // enemies
-  gameState.enemies.forEach(enemy => {
-    enemy.update();
-    enemy.draw();
-  });
-
-  // towers
-  gameState.towers.forEach(tower => {
-    tower.update();
-    tower.draw();
-  });
-
-  gameState.projectiles.forEach(p => {
-    p.update();
-    p.draw();
-  });
+  let gameStarted = false;
+  let spawnInterval;
   
 
-  // cleanup
-  gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
-    gameState.enemies = gameState.enemies.filter(e => e.hp > 0);
 
 
-  requestAnimationFrame(gameLoop);
-}
-
-let gameStarted = false;
-let spawnInterval;
-
-function startGame() {
+  function startGame() {
     if (gameStarted) return;
     gameStarted = true;
-  
+
     // hide start button
     document.getElementById("startButton").style.display = "none";
-  
+
     startNextWave();
-  
-    // start the game loop (can run while countdown is active)
-    gameLoop();
-  }
+
+    // start the game loop
+    gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState);
+}
+
   
 
 document.getElementById("startButton").addEventListener("click", startGame);
