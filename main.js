@@ -25,30 +25,9 @@ const gameState = {
   lives: 10
 };
 
-
-let enemiesSpawned = 0;   // tracks how many enemies have spawned
-const maxEnemies = 20;    // maximum enemies
+let selectedTowerType = null;
 
 
-
-
-canvas.addEventListener("click", e => {
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
-
-  // Snap to grid if you want (optional)
-  const col = Math.floor(x / gridSize);
-  const row = Math.floor(y / gridSize);
-  const snappedX = col * gridSize + gridSize / 2;
-  const snappedY = row * gridSize + gridSize / 2;
-
-  // Only place if tile is free (optional)
-  if (!gridOccupied[col][row]) {
-    gameState.towers.push(new Tower({ x: snappedX, y: snappedY, ctx }));
-    gridOccupied[col][row] = true;
-  }
-});
 
 
 /**********************
@@ -193,6 +172,48 @@ const hud = initHUD({
   waveState,
   startWave
 });
+
+
+
+// Select all tower cards
+const towerCards = document.querySelectorAll(".towerCard");
+
+towerCards.forEach(card => {
+  card.addEventListener("click", () => {
+    const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$",""));
+    const towerName = card.querySelector(".towerName").textContent;
+
+    if (gameState.money >= cost) {
+      gameState.money -= cost;         // subtract money
+      hud.update();                    // refresh HUD
+      selectedTowerType = towerName;   // store which tower is selected
+    } else {
+      alert("Not enough money!");
+    }
+  });
+});
+
+
+canvas.addEventListener("click", e => {
+  if (!selectedTowerType) return; // do nothing if no tower selected
+
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+
+  const col = Math.floor(x / gridSize);
+  const row = Math.floor(y / gridSize);
+  const snappedX = col * gridSize + gridSize / 2;
+  const snappedY = row * gridSize + gridSize / 2;
+
+  if (!gridOccupied[col][row]) {
+    gameState.towers.push(new Tower({ x: snappedX, y: snappedY, ctx }));
+    gridOccupied[col][row] = true;
+    selectedTowerType = null; // clear selection after placement
+    hud.update();             // update money in HUD
+  }
+});
+
 
 function startGame() {
   if (gameStarted) return;
