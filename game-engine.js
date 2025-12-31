@@ -1,4 +1,4 @@
-export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState) {
+export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
   
     // Draw grid lines
@@ -38,7 +38,10 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState) {
     // cleanup
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
     gameState.enemies = gameState.enemies.filter(e => e.hp > 0);
+
+    // Update HUD
+  if (hud) hud.update();
   
-    requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState));
+    requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud));
   }
   

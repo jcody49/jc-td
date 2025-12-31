@@ -23,8 +23,15 @@
         <div id="waveText"></div>
         <canvas id="game" width="800" height="470"></canvas>
         <button id="startButton">Start Game</button>
-        <button id="skipButton">Skip Countdown</button>
+      
+        <!-- HUD Panel: appears only when timer is active -->
+        <div id="hud" style="display: none;">
+          <button id="skipButton">Skip Countdown</button>
+          <div id="lives">Lives: 20</div>
+          <div id="money">Money: 100</div>
+        </div>
       </div>
+      
   
         <!-- Right: tower menu -->
         <div id="towerMenu">

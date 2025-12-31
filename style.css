@@ -335,4 +335,26 @@ canvas {
 
   
 
-
+/*HUD*/
+#hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-family: 'Audiowide', sans-serif;
+    border-radius: 0 0 8px 8px; /* only bottom corners rounded */
+    margin: 0; /* flush with canvas */
+    width: 765px; /* match canvas width */
+}
+  
+  #hud button {
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  
+  #hud div {
+    font-size: 18px;
+  }
+  

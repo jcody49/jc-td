@@ -2,6 +2,7 @@ import { gameLoop } from './game-engine.js';
 import { Enemy } from './enemies.js';
 import { Tower } from './towers.js';
 import { startWave, startNextWave, waveState } from './waves.js';
+import { initHUD } from './hud.js';
 
 
 
@@ -27,6 +28,8 @@ const gameState = {
 
 let enemiesSpawned = 0;   // tracks how many enemies have spawned
 const maxEnemies = 20;    // maximum enemies
+
+const hud = initHUD(gameState, waveState, startWave);
 
 
 canvas.addEventListener("click", e => {
@@ -198,10 +201,15 @@ function startGame() {
 
   document.getElementById("startButton").style.display = "none";
 
+  // SHOW HUD
+  hud.show();
+
   startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
 
-  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState);
+  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
 }
+
+
 
 
 document.getElementById("startButton").addEventListener("click", startGame);
