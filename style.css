@@ -72,7 +72,7 @@ canvas {
     margin: 0 auto;
 }
 
-#startButton, #skipButton {
+#startButton {
     display: block;
     margin: 10px auto 0 auto;
     width: 805px; /* same as canvas */
@@ -205,7 +205,7 @@ canvas {
     border-color: #d2b48c;
   }
   
-  /* Aura — crimson */
+  /* booster — crimson */
   .booster-card-title {
     background: #3a1218;
     border-color: crimson;
@@ -219,7 +219,7 @@ canvas {
 
 
 
-
+  /*ADVANCED TOWERS*/
   .advanced-container .towerCard {
     position: relative;
     background: #2a2a2a;
@@ -335,26 +335,70 @@ canvas {
 
   
 
+
+
+
+
 /*HUD*/
 #hud {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 0px 20px;
+    padding-left: 0px;
     background: rgba(0,0,0,0.5);
+    border: 2px solid #7fff00;
+    border-top: 1px;
     color: white;
     font-family: 'Audiowide', sans-serif;
     border-radius: 0 0 8px 8px; /* only bottom corners rounded */
     margin: 0; /* flush with canvas */
-    width: 765px; /* match canvas width */
+    width: 780px; /* match canvas width */
+    height:70px;
 }
   
-  #hud button {
-    padding: 5px 10px;
-    cursor: pointer;
-  }
-  
-  #hud div {
+/* HUD Button: Skip */
+#hud button#skipButton {
+    height: 100%;
+    width: 350px;  /* match canvas */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 0 12px;
+    flex-shrink: 0;
     font-size: 18px;
-  }
-  
+    font-family: 'Audiowide', sans-serif;
+
+    /* gradient for depth & pop */
+    background: linear-gradient(145deg, #007f8f, #00b2cc, #0099aa); /* dark cyan -> teal */
+    color: #fff;
+    border: 2px solid #00ffff;
+    border-radius: 4px;
+
+    /* subtle glow */
+    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4),
+                0 2px 6px rgba(0,255,255,0.3);
+
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.15s, transform 0.15s;
+}
+
+#hud button#skipButton:hover {
+    background: linear-gradient(145deg, #0099aa, #00ccff, #00b2cc);
+    box-shadow: inset 0 -2px 6px rgba(0,0,0,0.5),
+                0 4px 8px rgba(0,255,255,0.4);
+    transform: scale(1.02);
+}
+
+/* Lives / Money boxes */
+#hud div {
+    font-size: 18px;
+    color: #fff;
+    padding: 0 10px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
