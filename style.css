@@ -15,10 +15,10 @@ canvas {
     margin: 0 auto;
 }
 
-#startButton {
+#startButton, #skipButton {
     display: block;
     margin: 10px auto 0 auto;
-    width: 920px; /* same as canvas */
+    width: 800px; /* same as canvas */
     padding: 12px;
     font-size: 18px;
     background-color: #222;
@@ -28,7 +28,9 @@ canvas {
     transition: background 0.2s, color 0.2s;
 }
 
-#startButton:hover {
+#startButton:hover, #skipButton:hover {
     background-color: #555;
     color: #fff;
 }
+
+

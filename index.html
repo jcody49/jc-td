@@ -9,15 +9,18 @@
   <div id="gameContainer" style="text-align:center; position: relative;">
     
     <!-- Wave UI -->
-    <div id="waveText" style="color:white; font-family: monospace; margin-bottom: 8px;"></div>
+    <div id="waveText" style="color:white; font-size: 20px; font-family: monospace; margin-bottom: 8px; position: relative; left: -72px;"></div>
 
     <!-- Canvas -->
-    <canvas id="game" width="920" height="470"></canvas>
+    <div id="gameWrapper" style="position: relative; left: -72px;">
+        <canvas id="game" width="800" height="470"></canvas>
+    </div>
+      
 
     <!-- Start button -->
-    <button id="startButton">Start Game</button>
+    <button id="startButton" style="position: relative; left: -72px;">Start Game</button>
 
-    <button id="skipButton">Skip Countdown</button>
+    <button id="skipButton" style="position: relative; left: -72px;">Skip Countdown</button>
 
   </div>
 

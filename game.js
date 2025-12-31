@@ -175,38 +175,86 @@ class Enemy {
       this.y = path[0].y;
       this.speed = 2;
       this.hp = 100;
-      this.size = gridSize * 0.5; // half cell size
+      this.size = gridSize * 0.5;
+      this.isFlashing = false;
+      this.flashTimer = 0;
+      this.flashLines = []; // store zap lines
     }
   
     update() {
-      if (this.pathIndex >= path.length - 1) return;
-  
-      const target = path[this.pathIndex + 1];
-      const dx = target.x - this.x;
-      const dy = target.y - this.y;
-      const dist = Math.hypot(dx, dy);
-  
-      if (dist < this.speed) {
-        // move to next path point
-        this.x = target.x;
-        this.y = target.y;
-        this.pathIndex++;
-      } else {
-        // move towards next path point
-        this.x += (dx / dist) * this.speed;
-        this.y += (dy / dist) * this.speed;
+        if (this.isFlashing) {
+          this.flashTimer--;
+          if (this.flashTimer <= 0) {
+            this.hp = 0; // remove from game
+          }
+          return;
+        }
+      
+        // Trigger zap a bit earlier (2 steps before the last cell)
+        const zapTriggerIndex = path.length - 3;
+        if (this.pathIndex >= zapTriggerIndex && !this.isFlashing) {
+          this.isFlashing = true;
+          this.flashTimer = 10; // frames
+          this.flashLines = [];
+          const lineCount = 6;
+          for (let i = 0; i < lineCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const length = Math.random() * this.size * 2 + this.size;
+            this.flashLines.push({ angle, length });
+          }
+          return;
+        }
+      
+        // Normal movement along path
+        if (this.pathIndex >= path.length - 1) return;
+      
+        const target = path[this.pathIndex + 1];
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < this.speed) {
+          this.x = target.x;
+          this.y = target.y;
+          this.pathIndex++;
+        } else {
+          this.x += (dx / dist) * this.speed;
+          this.y += (dy / dist) * this.speed;
+        }
       }
-    }
+      
+      
+      
+      
   
     draw() {
-      ctx.fillStyle = "red";
-      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
-  
-      // health bar
-      ctx.fillStyle = "green";
-      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2 - 6, (this.hp / 100) * this.size, 4);
-    }
+        if (this.isFlashing) {
+          // draw zap lines
+          ctx.strokeStyle = "yellow";
+          ctx.lineWidth = 2;
+      
+          // adjust line length based on enemy size and canvas width
+          const maxLineLength = this.size * 2 * (canvas.width / 920); // scale from old width
+          this.flashLines.forEach(line => {
+            const length = line.length * (this.flashTimer / 10) * (canvas.width / 920);
+            const endX = this.x + Math.cos(line.angle) * length;
+            const endY = this.y + Math.sin(line.angle) * length;
+            ctx.beginPath();
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(endX, endY);
+            ctx.stroke();
+          });
+        } else {
+          // normal enemy
+          ctx.fillStyle = "red";
+          ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+          ctx.fillStyle = "green";
+          ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2 - 6, (this.hp / 100) * this.size, 4);
+        }
+      }
+      
   }
+  
+  
   
 
 /**********************
