@@ -1,14 +1,13 @@
-// waves.js
 import { Enemy } from './enemies.js';
 
 export const waveState = {
   currentWave: 0,
-  countdown: 40,
+  countdown: 5, // shorter for testing
   countdownInterval: null,
   status: "idle" // idle | countdown | spawning
 };
 
-let spawnInterval; // keep this local to the file, used in startWave
+let spawnInterval;
 
 export function startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton) {
   waveState.status = "spawning";
@@ -16,20 +15,21 @@ export function startWave(gameState, path, gridSize, ctx, canvas, waveText, skip
   skipButton.disabled = true;
 
   let enemiesSpawned = 0;
-  const maxEnemies = 20;
+  const maxEnemies = 20; // smaller for testing
 
   spawnInterval = setInterval(() => {
     if (enemiesSpawned >= maxEnemies) {
       clearInterval(spawnInterval);
+      waveState.status = "done";
       return;
     }
 
     gameState.enemies.push(
-      new Enemy({ path, gridSize, ctx, canvas })
+      new Enemy({ path, gridSize, ctx, canvas, reward: 1 })
     );
 
     enemiesSpawned++;
-  }, 1500);
+  }, 1000);
 }
 
 export function startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton) {

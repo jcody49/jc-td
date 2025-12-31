@@ -5,6 +5,7 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         return; // stop the loop
     }
 
+    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw grid lines
@@ -22,31 +23,43 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         ctx.stroke();
     }
 
-    // enemies
+    // Update and draw enemies
     gameState.enemies.forEach(enemy => {
         enemy.update(gameState);
         enemy.draw();
     });
 
-    // towers
+    // Cleanup enemies and give money for killed ones
+    gameState.enemies = gameState.enemies.filter(enemy => {
+        if (enemy.remove) {
+            if (!enemy.escaped) {
+                gameState.money += enemy.reward || 1; // only give money for kills
+            }
+            return false; // remove from array
+        }
+        return true; // keep alive
+    });
+
+
+    // Update and draw towers
     gameState.towers.forEach(tower => {
         tower.update(gameState);
         tower.draw();
     });
 
-    // projectiles
+    // Update and draw projectiles
     gameState.projectiles.forEach(p => {
         p.update();
         p.draw();
     });
 
-    // cleanup
+    // Cleanup projectiles
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
-    gameState.enemies = gameState.enemies.filter(e => !e.remove);
 
     // Update HUD
     if (hud) hud.update();
 
+    // Continue the loop
     requestAnimationFrame(() =>
         gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud)
     );

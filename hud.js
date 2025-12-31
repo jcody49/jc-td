@@ -1,11 +1,8 @@
-import { startWave, waveState } from './waves.js';
-
-export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText }) {
+export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, waveState, startWave }) {
     const hud = document.getElementById('hud');
     const skipButton = document.getElementById("skipButton");
-    hud.style.display = 'none'; // hide initially
+    hud.style.display = 'none';
 
-    // Attach skip button listener
     skipButton.addEventListener("click", () => {
         if (waveState.status === "countdown") {
             clearInterval(waveState.countdownInterval);

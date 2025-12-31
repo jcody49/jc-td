@@ -183,22 +183,34 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 * START GAME
 ***********************/
 
-const hud = initHUD({ gameState, path, gridSize, ctx, canvas, waveText });
+const hud = initHUD({
+  gameState,
+  path,
+  gridSize,
+  ctx,
+  canvas,
+  waveText,
+  waveState,
+  startWave
+});
 
 function startGame() {
-    if (gameStarted) return;
-    gameStarted = true;
+  if (gameStarted) return;
+  gameStarted = true;
 
-    document.getElementById("startButton").style.display = "none";
+  document.getElementById("startButton").style.display = "none";
 
-    // SHOW HUD
-    hud.show();
+  // SHOW HUD
+  hud.show();
 
-    // START FIRST WAVE (skip button is now handled inside HUD)
-    startNextWave(gameState, path, gridSize, ctx, canvas, waveText, document.getElementById("skipButton"));
+  // START COUNTDOWN FOR FIRST WAVE
+  waveState.status = "countdown";
+  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, document.getElementById("skipButton"));
 
-    gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
+  // START GAME LOOP
+  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
 }
+
 
 
 
