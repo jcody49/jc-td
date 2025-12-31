@@ -21,7 +21,7 @@ export class Tower {
       );
   
       if (target) {
-        // <--- THIS IS THE LINE
+        
         gameState.projectiles.push(
           new Projectile({ x: this.x, y: this.y, target, ctx: this.ctx })
         );
