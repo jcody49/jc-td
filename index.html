@@ -4,26 +4,39 @@
   <meta charset="UTF-8" />
   <title>Tower Defense</title>
   <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+
+
+
 </head>
 <body>
-  <div id="gameContainer" style="text-align:center; position: relative;">
-    
-    <!-- Wave UI -->
-    <div id="waveText" style="color:white; font-size: 20px; font-family: monospace; margin-bottom: 8px; position: relative; left: -72px;"></div>
-
-    <!-- Canvas -->
-    <div id="gameWrapper" style="position: relative; left: -72px;">
-        <canvas id="game" width="800" height="470"></canvas>
-    </div>
+    <!-- Header -->
+    <header id="gameHeader">
+      <h1>JC$TD</h1>
+    </header>
+  
+    <!-- Main content: canvas + menu -->
+    <div id="gameContainer">
       
-
-    <!-- Start button -->
-    <button id="startButton" style="position: relative; left: -72px;">Start Game</button>
-
-    <button id="skipButton" style="position: relative; left: -72px;">Skip Countdown</button>
-
-  </div>
-
-  <script src="game.js"></script>
-</body>
+      <!-- Left: canvas and buttons -->
+      <div id="gameWrapper">
+        <div id="waveText"></div>
+        <canvas id="game" width="800" height="470"></canvas>
+        <button id="startButton">Start Game</button>
+        <button id="skipButton">Skip Countdown</button>
+      </div>
+  
+      <!-- Right: tower menu -->
+      <div id="towerMenu">
+        <h3>Build Towers</h3>
+        <div class="towerCard" data-tower="cannon"><p>Cannon</p></div>
+        <div class="towerCard" data-tower="flamethrower"><p>Flamethrower</p></div>
+        <div class="towerCard" data-tower="frost"><p>Frost</p></div>
+      </div>
+  
+    </div>
+  
+    <script src="game.js"></script>
+  </body>
+  
 </html>

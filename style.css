@@ -1,12 +1,116 @@
 body {
     margin: 0;
     background: #111;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     font-family: sans-serif;
 }
+
+
+/* Header */
+#gameHeader { 
+    font-family: 'Audiowide', sans-serif; 
+    font-size: 60px;
+    text-align: center;
+    position: relative;
+    color: #ccc; /* fallback */
+    letter-spacing: 2px;
+    
+    /* Gradient fill */
+    background: linear-gradient(135deg, #4682B4, #5F9EA0, #7FFFD4); /* steel blue → cadet → aquamarine */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Outline / stroke */
+    text-shadow:
+       -2px -2px 0 #000,
+        2px -2px 0 #000,
+       -2px  2px 0 #000,
+        2px  2px 0 #000,
+        0px 0px 6px rgba(0,255,255,0.6); /* soft glow */
+}
+
+/* Optional: animate gradient for extra “energy” */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+#gameHeader {
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+}
+
+  
+  /* Container for canvas + menu */
+  #gameContainer {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin: 20px auto; /* centers horizontally with automatic side margins */
+    max-width: 1000px; /* optional, prevents stretching */
+}
+
+  
+  /* Game wrapper */
+  #gameWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+  
+  /* Wave text */
+  #waveText {
+    color: white;
+    font-size: 20px;
+    font-family: monospace;
+    margin-bottom: 8px;
+  }
+  
+  /* Buttons */
+  button {
+    font-size: 16px;
+    padding: 6px 12px;
+    margin-top: 6px;
+  }
+  
+  /* Tower menu */
+  #towerMenu {
+    width: 180px;
+    background: #222;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  #towerMenu h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+  }
+  
+  .towerCard {
+    background: #444;
+    border: 2px solid #555;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .towerCard:hover {
+    background: #666;
+    transform: scale(1.05);
+  }
+  
+
+
 
 canvas {
     background: #1e1e1e;
@@ -34,3 +138,52 @@ canvas {
 }
 
 
+#gameContainer {
+    display: flex;
+    gap: 10px; /* space between canvas and menu */
+  }
+  
+  #towerMenu {
+    width: 180px;
+    background: #222;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  #towerMenu h3 {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+  }
+  
+  .towerCard {
+    background: #444;
+    border: 2px solid #555;
+    border-radius: 6px;
+    padding: 10px;
+    margin-bottom: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .towerCard:hover {
+    background: #666;
+    transform: scale(1.05);
+  }
+
+  
+
+  #waveText {
+    color: white;
+    font-size: 20px;
+    font-family: monospace;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+  
