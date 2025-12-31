@@ -29,7 +29,7 @@ const gameState = {
 let enemiesSpawned = 0;   // tracks how many enemies have spawned
 const maxEnemies = 20;    // maximum enemies
 
-const hud = initHUD(gameState, waveState, startWave);
+
 
 
 canvas.addEventListener("click", e => {
@@ -62,18 +62,6 @@ let spawnInterval;
  **********************/
 //const startButton = document.getElementById("startButton");
 const waveText = document.getElementById("waveText");
-
-
-
-
-const skipButton = document.getElementById("skipButton");
-
-skipButton.addEventListener("click", () => {
-  if (waveState.status === "countdown") {
-    clearInterval(waveState.countdownInterval);
-    startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
-  }
-});
   
 
 
@@ -195,19 +183,23 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 * START GAME
 ***********************/
 
+const hud = initHUD({ gameState, path, gridSize, ctx, canvas, waveText });
+
 function startGame() {
-  if (gameStarted) return;
-  gameStarted = true;
+    if (gameStarted) return;
+    gameStarted = true;
 
-  document.getElementById("startButton").style.display = "none";
+    document.getElementById("startButton").style.display = "none";
 
-  // SHOW HUD
-  hud.show();
+    // SHOW HUD
+    hud.show();
 
-  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+    // START FIRST WAVE (skip button is now handled inside HUD)
+    startNextWave(gameState, path, gridSize, ctx, canvas, waveText, document.getElementById("skipButton"));
 
-  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
+    gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
 }
+
 
 
 
