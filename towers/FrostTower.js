@@ -1,17 +1,18 @@
 import { Tower } from './tower.js';
-import { Projectile } from '../projectiles.js';
 import { frostImg } from '../game-engine.js';
 
 export class FrostTower extends Tower {
     constructor(opts) {
-        super(opts);
-        this.range = 120;       // slightly bigger range
-        this.fireRate = 45;     // frames between shots
+        super({ ...opts, towerType: "frost" });
+        this.range = 120;          // slightly bigger range
+        this.fireRate = 45;        // frames between shots
         this.cooldown = 0;
-        this.towerType = "frost";
-        this.damage = 35;
+        this.damage = 40;          // frost damage
+        this.slowMultiplier = 0.5; // 50% speed
+        this.slowDuration = 210;   // 3.5 seconds at 60fps
     }
 
+    // target closest unslowed enemy first, else closest slowed
     findTarget(enemies) {
         let unslowed = [];
         let slowed = [];
@@ -25,18 +26,16 @@ export class FrostTower extends Tower {
         });
 
         if (unslowed.length > 0) {
-            // closest unslowed enemy
             unslowed.sort((a, b) => a.dist - b.dist);
             return unslowed[0].e;
         }
 
         if (slowed.length > 0) {
-            // closest slowed enemy if no unslowed left
             slowed.sort((a, b) => a.dist - b.dist);
             return slowed[0].e;
         }
 
-        return null; // nothing in range
+        return null;
     }
 
     update(gameState) {
@@ -47,19 +46,8 @@ export class FrostTower extends Tower {
 
         const target = this.findTarget(gameState.enemies);
         if (target) {
-            gameState.projectiles.push(
-                new Projectile({
-                    x: this.x,
-                    y: this.y,
-                    target,
-                    ctx: this.ctx,
-                    type: "frost",
-                    damage: 0,
-                    slowMultiplier: 0.5,
-                    slowDuration: 210
-                })
-            );
-
+            // use base fire method to create projectile
+            this.fire(target, gameState);
             this.cooldown = this.fireRate;
         }
     }

@@ -17,38 +17,43 @@ export class Projectile {
 
     update() {
         if (!this.target) return;
-
+    
         const dx = this.target.x - this.x;
         const dy = this.target.y - this.y;
         const dist = Math.hypot(dx, dy);
-
+    
         if (dist < this.radius + 10) {
-            if (this.type === "cannon") {
+            // Apply damage for ALL projectiles, regardless of type
+            if (this.damage && this.damage > 0) {
                 this.target.hp -= this.damage;
-            } else if (this.type === "frost") {
-                // Refresh slow if longer than current
+            }
+    
+            // Apply slow only if frost
+            if (this.type === "frost") {
+                // refresh slow only if longer than current
                 if (!this.target.slowTimer || this.target.slowTimer < this.slowDuration) {
                     this.target.slowMultiplier = this.slowMultiplier;
                     this.target.slowTimer = this.slowDuration;
                 }
             }
-
+    
             this.hit = true;
             return;
         }
-
+    
         this.x += (dx / dist) * this.speed;
         this.y += (dy / dist) * this.speed;
-
+    
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > 5) this.trail.shift();
     }
+    
 
     draw() {
         const ctx = this.ctx;
 
-        if (this.type === "cannon") ctx.fillStyle = "yellow";
-        else if (this.type === "frost") ctx.fillStyle = "#6ecbff"; // icy bullet
+        // Frost bullets will now show icy blue
+        ctx.fillStyle = this.type === "frost" ? "#6ecbff" : "yellow";
 
         this.trail.forEach(pos => {
             ctx.beginPath();
