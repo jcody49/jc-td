@@ -8,7 +8,7 @@ export class FrostTower extends Tower {
         this.fireRate = 60;
         this.damage = 5;
         this.slowMultiplier = 0.5;
-        this.slowDuration = 120;
+        this.slowDuration = 160;
     }
 
     draw() {

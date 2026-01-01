@@ -5,7 +5,7 @@ export class CannonTower extends Tower {
     constructor(opts) {
         super({ ...opts, towerType: "cannon" });
         this.range = 100;
-        this.fireRate = 45;
+        this.fireRate = 50;
         this.damage = 60;
     }
 
