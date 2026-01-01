@@ -14,7 +14,11 @@ export class CannonTower extends Tower {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(Math.PI / 2); // left-facing
-        ctx.drawImage(cannonImg, -20, -20, 40, 40);
+
+        const size = 27; // new smaller image size
+        // center the image automatically
+        ctx.drawImage(cannonImg, -size / 2, -size / 2, size, size);
+
         ctx.restore();
     }
 }
