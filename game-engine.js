@@ -8,18 +8,36 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     // --- Ghost tower (visual only) ---
-    if (window.selectedTowerType) {
-        ctx.save();
-        ctx.fillStyle = "rgba(0, 255, 255, 1)";
-        ctx.globalAlpha = 0.3;
+    // --- Ghost tower (visual only) ---
+// --- Ghost tower (visual only) ---
+if (window.selectedTowerType) {
+    const col = Math.floor(window.mouseX / gridSize);
+    const row = Math.floor(window.mouseY / gridSize);
 
-    
-        ctx.beginPath();
-        ctx.arc(window.mouseX, window.mouseY, 10, 0, Math.PI * 2);
-        ctx.fill();
-    
-        ctx.restore();
-    }
+    const cellKey = `${col},${row}`;
+    const validPlacement =
+        window.gridOccupied[col] &&
+        window.gridOccupied[col][row] === false &&
+        !window.pathOccupied.includes(cellKey);
+
+    ctx.save();
+    ctx.globalAlpha = 0.35;
+    ctx.fillStyle = validPlacement ? "cyan" : "red";
+
+    ctx.beginPath();
+    ctx.arc(
+        col * gridSize + gridSize / 2,
+        row * gridSize + gridSize / 2,
+        10,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+
+    ctx.restore();
+}
+
+
   
 
     // Draw grid lines

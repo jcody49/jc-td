@@ -277,3 +277,5 @@ window.selectedTowerType = selectedTowerType;
 window.mouseX = mouseX;
 window.mouseY = mouseY;
 
+window.gridOccupied = gridOccupied;
+window.pathOccupied = pathOccupied;
