@@ -10,8 +10,9 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
     // --- Ghost tower (visual only) ---
     if (window.selectedTowerType) {
         ctx.save();
-        ctx.globalAlpha = 0.5;
-        ctx.fillStyle = "cyan";
+        ctx.fillStyle = "rgba(0, 255, 255, 1)";
+        ctx.globalAlpha = 0.3;
+
     
         ctx.beginPath();
         ctx.arc(window.mouseX, window.mouseY, 10, 0, Math.PI * 2);
