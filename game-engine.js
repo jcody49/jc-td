@@ -1,3 +1,5 @@
+const cannonImg = new Image();
+cannonImg.src = './assets/cannon.png';
 export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
     // Check game over first
     if (gameState.lives <= 0) {
@@ -7,35 +9,34 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // --- Ghost tower (visual only) ---
-    // --- Ghost tower (visual only) ---
+
+
+
+
 // --- Ghost tower (visual only) ---
-if (window.selectedTowerType) {
+if (window.selectedTowerType === "Cannon") {
     const col = Math.floor(window.mouseX / gridSize);
     const row = Math.floor(window.mouseY / gridSize);
 
     const cellKey = `${col},${row}`;
     const validPlacement =
-        window.gridOccupied[col] &&
-        window.gridOccupied[col][row] === false &&
-        !window.pathOccupied.includes(cellKey);
+        gridOccupied[col] &&
+        gridOccupied[col][row] === false &&
+        !pathOccupied.includes(cellKey);
 
     ctx.save();
-    ctx.globalAlpha = 0.35;
-    ctx.fillStyle = validPlacement ? "cyan" : "red";
-
-    ctx.beginPath();
-    ctx.arc(
-        col * gridSize + gridSize / 2,
-        row * gridSize + gridSize / 2,
-        10,
-        0,
-        Math.PI * 2
+    ctx.globalAlpha = 0.35; // semi-transparent
+    ctx.drawImage(
+        cannonImg,              // image
+        col * gridSize,         // x
+        row * gridSize,         // y
+        gridSize,               // width
+        gridSize                // height
     );
-    ctx.fill();
-
     ctx.restore();
 }
+
+
 
 
   
