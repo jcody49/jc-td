@@ -7,6 +7,19 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // --- Ghost tower (visual only) ---
+    if (window.selectedTowerType) {
+        ctx.save();
+        ctx.globalAlpha = 0.5;
+        ctx.fillStyle = "cyan";
+    
+        ctx.beginPath();
+        ctx.arc(window.mouseX, window.mouseY, 10, 0, Math.PI * 2);
+        ctx.fill();
+    
+        ctx.restore();
+    }
+  
 
     // Draw grid lines
     ctx.strokeStyle = "rgba(255,255,255,0.1)";

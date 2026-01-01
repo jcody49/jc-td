@@ -25,7 +25,8 @@ const gameState = {
   lives: 10
 };
 
-let selectedTowerType = null;
+export let selectedTowerType = null;
+
 
 
 
@@ -146,6 +147,11 @@ const pathCells = [
 
   ];
 
+
+  // Convert pathCells to a simple array of "col,row" strings for quick lookup
+  const pathOccupied = pathCells.map(cell => `${cell.col},${cell.row}`);
+
+
   const path = pathCells.map(cell => ({
     x: cell.col * gridSize + gridSize / 2,
     y: cell.row * gridSize + gridSize / 2
@@ -181,12 +187,15 @@ const towerCards = document.querySelectorAll(".towerCard");
 towerCards.forEach(card => {
   card.addEventListener("click", () => {
     const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$",""));
-    const towerName = card.querySelector(".towerName").textContent;
+    
+    const towerName = card.querySelector(".towerName").textContent.replace(":", "").trim();
 
     if (gameState.money >= cost) {
       gameState.money -= cost;         // subtract money
       hud.update();                    // refresh HUD
       selectedTowerType = towerName;   // store which tower is selected
+      window.selectedTowerType = selectedTowerType;
+
     } else {
       alert("Not enough money!");
     }
@@ -194,25 +203,53 @@ towerCards.forEach(card => {
 });
 
 
+
 canvas.addEventListener("click", e => {
-  if (!selectedTowerType) return; // do nothing if no tower selected
+  if (!selectedTowerType) return;
 
-  const rect = canvas.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const y = e.clientY - rect.top;
+  const col = Math.floor(mouseX / gridSize);
+  const row = Math.floor(mouseY / gridSize);
 
-  const col = Math.floor(x / gridSize);
-  const row = Math.floor(y / gridSize);
-  const snappedX = col * gridSize + gridSize / 2;
-  const snappedY = row * gridSize + gridSize / 2;
+  const cellKey = `${col},${row}`;
+const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
 
-  if (!gridOccupied[col][row]) {
+
+
+  if (validPlacement) {
+    const snappedX = col * gridSize + gridSize / 2;
+    const snappedY = row * gridSize + gridSize / 2;
+
     gameState.towers.push(new Tower({ x: snappedX, y: snappedY, ctx }));
     gridOccupied[col][row] = true;
+
     selectedTowerType = null; // clear selection after placement
-    hud.update();             // update money in HUD
+    window.selectedTowerType = null;
+
+    hud.update();             // update HUD money display
   }
 });
+
+
+
+let mouseX = 0;
+let mouseY = 0;
+
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  mouseX = e.clientX - rect.left;
+  mouseY = e.clientY - rect.top;
+
+  window.mouseX = mouseX;
+  window.mouseY = mouseY;
+});
+
+
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') selectedTowerType = null;
+});
+
+
 
 
 function startGame() {
@@ -229,8 +266,14 @@ function startGame() {
   startNextWave(gameState, path, gridSize, ctx, canvas, waveText, document.getElementById("skipButton"));
 
   // START GAME LOOP
-  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
+  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud, selectedTowerType);
 }
 
 
 document.getElementById("startButton").addEventListener("click", startGame);
+
+
+window.selectedTowerType = selectedTowerType;
+window.mouseX = mouseX;
+window.mouseY = mouseY;
+
