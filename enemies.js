@@ -1,86 +1,73 @@
 export class Enemy {
     constructor({ path, gridSize, ctx, canvas }) {
-        this.path = path;
-        this.gridSize = gridSize;
-        this.ctx = ctx;
-        this.canvas = canvas;
-      
-        this.pathIndex = 0;
-        this.x = path[0].x;
-        this.y = path[0].y;
-      
-        this.speed = 1.2;              // base speed
-        this.slowMultiplier = 1;       // 1 = normal speed
-        this.slowTimer = 0;            // frames remaining slowed
-      
-        this.hp = 100;
-        this.size = gridSize * 0.5;
-      
-        this.isFlashing = false;
-        this.flashTimer = 0;
-        this.flashLines = [];
-      
-        this.escaped = false;
-        this.remove = false;
-        this.reward = 1;
-      }
-      
+      this.path = path;
+      this.gridSize = gridSize;
+      this.ctx = ctx;
+      this.canvas = canvas;
+  
+      this.pathIndex = 0;
+      this.x = path[0].x;
+      this.y = path[0].y;
+  
+      this.baseSpeed = 1.2;         // base speed (never changes)
+      this.speed = this.baseSpeed;  // actual speed each frame
+      this.slowMultiplier = 1;      // 1 = normal speed
+      this.slowTimer = 0;           // frames remaining slowed
+  
+      this.hp = 100;
+      this.size = gridSize * 0.5;
+  
+      this.isFlashing = false;
+      this.flashTimer = 0;
+      this.flashLines = [];
+  
+      this.escaped = false;
+      this.remove = false;
+      this.reward = 1;
+    }
   
     update(gameState) {
-      // reached end of path
-      if (this.pathIndex >= this.path.length - 1) {
-        if (!this.escaped) {
-          this.escaped = true;
-          gameState.lives--;
+        // reached end of path
+        if (this.pathIndex >= this.path.length - 1) {
+          if (!this.escaped) {
+            this.escaped = true;
+            gameState.lives--;
+          }
+          this.remove = true;
+          return;
         }
-        this.remove = true; // disappear immediately
-        return;
-      }
-
-      // handle slow effect
+      
+        // --- SLOW HANDLING ---
         if (this.slowTimer > 0) {
-            this.slowTimer--;
+          this.slowTimer--;                       // countdown slow duration
+          this.speed = this.baseSpeed * this.slowMultiplier; // apply slow
         } else {
-            this.slowMultiplier = 1;
+          this.slowMultiplier = 1;               // reset to normal speed
+          this.speed = this.baseSpeed;
         }
-  
-  
-      // flashing / zap effect (optional)
-      const zapTriggerIndex = this.path.length - 3;
-      if (this.pathIndex >= zapTriggerIndex && this.pathIndex < this.path.length - 1) {
-        this.isFlashing = true;
-        this.flashTimer = 10;
-        this.flashLines = Array.from({ length: 6 }, () => ({
-          angle: Math.random() * Math.PI * 2,
-          length: Math.random() * this.size * 2 + this.size
-        }));
+      
+        // enemy dies when hp <= 0
+        if (this.hp <= 0) {
+          this.remove = true;
+          return;
+        }
+      
+        // move along path
+        const target = this.path[this.pathIndex + 1];
+        const dx = target.x - this.x;
+        const dy = target.y - this.y;
+        const dist = Math.hypot(dx, dy);
+      
+        if (dist < this.speed) {
+          this.x = target.x;
+          this.y = target.y;
+          this.pathIndex++;
+        } else {
+          this.x += (dx / dist) * this.speed;
+          this.y += (dy / dist) * this.speed;
+        }
       }
-  
-      // enemy dies when hp <= 0
-      if (this.hp <= 0) {
-        this.remove = true;
-        return;
-      }
-  
-      // move along path
-      const target = this.path[this.pathIndex + 1];
-      const dx = target.x - this.x;
-      const dy = target.y - this.y;
-      const dist = Math.hypot(dx, dy);
-  
-      const actualSpeed = this.speed * this.slowMultiplier;
-
-        if (dist < actualSpeed) {
-
-        this.x = target.x;
-        this.y = target.y;
-        this.pathIndex++;
-      } else {
-        this.x += (dx / dist) * actualSpeed;
-        this.y += (dy / dist) * actualSpeed;
-
-      }
-    }
+      
   
     draw() {
       const ctx = this.ctx;
@@ -101,11 +88,9 @@ export class Enemy {
         return;
       }
   
-      // draw enemy
-      // draw enemy with slow effect color
-        ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red"; // icy blue if slowed
-        ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
-
+      // draw enemy (icy blue if slowed)
+      ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
+      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
   
       // health bar
       const hpBarWidth = this.size;
