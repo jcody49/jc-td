@@ -1,10 +1,10 @@
-// projectile.js
 export class Projectile {
-    constructor({ x, y, target, ctx }) {
+    constructor({ x, y, target, ctx, type = "cannon" }) {
       this.x = x;
       this.y = y;
       this.target = target;
       this.ctx = ctx;
+      this.type = type;      // new!
       this.speed = 4;
       this.radius = 3;
       this.hit = false;
@@ -19,7 +19,13 @@ export class Projectile {
       const dist = Math.hypot(dx, dy);
   
       if (dist < this.radius + 10) {
-        this.target.hp -= 60;
+        if (this.type === "cannon") {
+          this.target.hp -= 60;  // cannon damage
+        } else if (this.type === "frost") {
+          this.target.slowMultiplier = 0.5;
+          this.target.slowTimer = 120;
+        }
+  
         this.hit = true;
         return;
       }
@@ -34,15 +40,18 @@ export class Projectile {
     draw() {
       const ctx = this.ctx;
   
-      ctx.fillStyle = "rgba(255,255,0,0.5)";
+      if (this.type === "cannon") ctx.fillStyle = "rgba(255,255,0,0.5)";
+      else if (this.type === "frost") ctx.fillStyle = "rgba(0,200,255,0.5)";
+  
       this.trail.forEach(pos => {
         ctx.beginPath();
         ctx.arc(pos.x, pos.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
       });
   
-      ctx.fillStyle = "yellow";
       ctx.beginPath();
+      if (this.type === "cannon") ctx.fillStyle = "yellow";
+      else if (this.type === "frost") ctx.fillStyle = "#6ecbff";
       ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
       ctx.fill();
     }

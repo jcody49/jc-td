@@ -1,8 +1,13 @@
 import { gameLoop } from './game-engine.js';
 import { Enemy } from './enemies.js';
-import { Tower } from './towers.js';
+import { Tower } from './towers/Tower.js';
 import { startWave, startNextWave, waveState } from './waves.js';
 import { initHUD } from './hud.js';
+
+//TOWER IMPORTS
+import { CannonTower } from './towers/CannonTower.js';
+import { FrostTower } from './towers/FrostTower.js';
+
 
 
 
@@ -21,7 +26,7 @@ const gameState = {
   enemies: [],
   towers: [],
   projectiles: [],
-  money: 100,
+  money: 90,
   lives: 10
 };
 
@@ -210,23 +215,26 @@ canvas.addEventListener("click", e => {
   const row = Math.floor(mouseY / gridSize);
 
   const cellKey = `${col},${row}`;
-const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
-
-
+  const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
 
   if (validPlacement) {
     const snappedX = col * gridSize + gridSize / 2;
     const snappedY = row * gridSize + gridSize / 2;
 
-    gameState.towers.push(new Tower({ x: snappedX, y: snappedY, ctx }));
-    gridOccupied[col][row] = true;
+    // Create the correct tower type based on selection
+    if (selectedTowerType === "Cannon") {
+      gameState.towers.push(new CannonTower({ x: snappedX, y: snappedY, ctx }));
+    } else if (selectedTowerType === "Frost") {
+      gameState.towers.push(new FrostTower({ x: snappedX, y: snappedY, ctx }));
+    }
 
-    selectedTowerType = null; // clear selection after placement
-    window.selectedTowerType = null;
-
-    hud.update();             // update HUD money display
+    gridOccupied[col][row] = true;      // mark cell as occupied
+    selectedTowerType = null;           // clear selection
+    window.selectedTowerType = null;    // also clear ghost
+    hud.update();                       // update HUD (e.g., money)
   }
 });
+
 
 
 

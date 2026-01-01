@@ -1,25 +1,30 @@
 export class Enemy {
     constructor({ path, gridSize, ctx, canvas }) {
-      this.path = path;
-      this.gridSize = gridSize;
-      this.ctx = ctx;
-      this.canvas = canvas;
-  
-      this.pathIndex = 0;
-      this.x = path[0].x;
-      this.y = path[0].y;
-      this.speed = 2;
-      this.hp = 100;
-      this.size = gridSize * 0.5;
-  
-      this.isFlashing = false;
-      this.flashTimer = 0;
-      this.flashLines = [];
+        this.path = path;
+        this.gridSize = gridSize;
+        this.ctx = ctx;
+        this.canvas = canvas;
       
-      this.escaped = false;
-      this.remove = false;
-      this.reward = 1; // default $1 per enemy
-    }
+        this.pathIndex = 0;
+        this.x = path[0].x;
+        this.y = path[0].y;
+      
+        this.speed = 1.2;              // base speed
+        this.slowMultiplier = 1;       // 1 = normal speed
+        this.slowTimer = 0;            // frames remaining slowed
+      
+        this.hp = 100;
+        this.size = gridSize * 0.5;
+      
+        this.isFlashing = false;
+        this.flashTimer = 0;
+        this.flashLines = [];
+      
+        this.escaped = false;
+        this.remove = false;
+        this.reward = 1;
+      }
+      
   
     update(gameState) {
       // reached end of path
@@ -31,6 +36,14 @@ export class Enemy {
         this.remove = true; // disappear immediately
         return;
       }
+
+      // handle slow effect
+        if (this.slowTimer > 0) {
+            this.slowTimer--;
+        } else {
+            this.slowMultiplier = 1;
+        }
+  
   
       // flashing / zap effect (optional)
       const zapTriggerIndex = this.path.length - 3;
@@ -55,13 +68,17 @@ export class Enemy {
       const dy = target.y - this.y;
       const dist = Math.hypot(dx, dy);
   
-      if (dist < this.speed) {
+      const actualSpeed = this.speed * this.slowMultiplier;
+
+        if (dist < actualSpeed) {
+
         this.x = target.x;
         this.y = target.y;
         this.pathIndex++;
       } else {
-        this.x += (dx / dist) * this.speed;
-        this.y += (dy / dist) * this.speed;
+        this.x += (dx / dist) * actualSpeed;
+        this.y += (dy / dist) * actualSpeed;
+
       }
     }
   
@@ -85,8 +102,10 @@ export class Enemy {
       }
   
       // draw enemy
-      ctx.fillStyle = "red";
-      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+      // draw enemy with slow effect color
+        ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red"; // icy blue if slowed
+        ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+
   
       // health bar
       const hpBarWidth = this.size;

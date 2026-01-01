@@ -1,6 +1,10 @@
 export const cannonImg = new Image();
 cannonImg.src = './assets/cannon.png';
 
+export const frostImg = new Image();
+frostImg.src = './assets/frost-tower.png';
+
+
 export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
     // Check game over first
     if (gameState.lives <= 0) {
