@@ -25,16 +25,37 @@ if (window.selectedTowerType === "Cannon") {
         !pathOccupied.includes(cellKey);
 
     ctx.save();
-    ctx.globalAlpha = 0.35; // semi-transparent
+
+    // move origin to center of cell
+    const centerX = col * gridSize + gridSize / 2;
+    const centerY = row * gridSize + gridSize / 2;
+    ctx.translate(centerX, centerY);
+
+    // rotate so the cannon faces left (+90 degrees from down)
+    ctx.rotate(Math.PI / 2);
+
+    // make semi-transparent
+    ctx.globalAlpha = 0.35;
+
+    // draw red background if invalid
+    if (!validPlacement) {
+        ctx.fillStyle = "red";
+        ctx.fillRect(-gridSize / 2, -gridSize / 2, gridSize, gridSize);
+    }
+
+    // draw the cannon image
     ctx.drawImage(
-        cannonImg,              // image
-        col * gridSize,         // x
-        row * gridSize,         // y
-        gridSize,               // width
-        gridSize                // height
+        cannonImg,
+        -gridSize / 2,
+        -gridSize / 2,
+        gridSize,
+        gridSize
     );
+
     ctx.restore();
 }
+
+
 
 
 
