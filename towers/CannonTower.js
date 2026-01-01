@@ -5,8 +5,8 @@ export class CannonTower extends Tower {
     constructor(opts) {
         super({ ...opts, towerType: "cannon" });
         this.range = 100;
-        this.fireRate = 50;
-        this.damage = 60;
+        this.fireRate = 35;
+        this.damage = 55;
     }
 
     draw() {

@@ -9,6 +9,7 @@ export class FrostTower extends Tower {
         this.fireRate = 45;     // frames between shots
         this.cooldown = 0;
         this.towerType = "frost";
+        this.damage = 35;
     }
 
     findTarget(enemies) {
@@ -55,7 +56,7 @@ export class FrostTower extends Tower {
                     type: "frost",
                     damage: 0,
                     slowMultiplier: 0.5,
-                    slowDuration: 180
+                    slowDuration: 210
                 })
             );
 
