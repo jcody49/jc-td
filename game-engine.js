@@ -1,5 +1,6 @@
-const cannonImg = new Image();
+export const cannonImg = new Image();
 cannonImg.src = './assets/cannon.png';
+
 export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
     // Check game over first
     if (gameState.lives <= 0) {
