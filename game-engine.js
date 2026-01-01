@@ -19,7 +19,7 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
 
 
 // --- Ghost tower (visual only) ---
-if (window.selectedTowerType === "Cannon") {
+if (window.selectedTowerType) {
     const col = Math.floor(window.mouseX / gridSize);
     const row = Math.floor(window.mouseY / gridSize);
 
@@ -36,29 +36,37 @@ if (window.selectedTowerType === "Cannon") {
     const centerY = row * gridSize + gridSize / 2;
     ctx.translate(centerX, centerY);
 
-    // rotate so the cannon faces left (+90 degrees from down)
-    ctx.rotate(Math.PI / 2);
+    // rotate the image if needed
+    let rotation = 0;
+    let imgToDraw = null;
 
-    // make semi-transparent
+    if (window.selectedTowerType === "Cannon") {
+        imgToDraw = cannonImg;
+        rotation = Math.PI / 2; // Cannon faces left
+    } else if (window.selectedTowerType === "Frost") {
+        imgToDraw = frostImg;
+        rotation = 0; // Frost faces up by default, change if needed
+    }
+
+    ctx.rotate(rotation);
+
+    // semi-transparent
     ctx.globalAlpha = 0.35;
 
-    // draw red background if invalid
+    // red background if invalid
     if (!validPlacement) {
         ctx.fillStyle = "red";
         ctx.fillRect(-gridSize / 2, -gridSize / 2, gridSize, gridSize);
     }
 
-    // draw the cannon image
-    ctx.drawImage(
-        cannonImg,
-        -gridSize / 2,
-        -gridSize / 2,
-        gridSize,
-        gridSize
-    );
+    // draw the image
+    if (imgToDraw) {
+        ctx.drawImage(imgToDraw, -gridSize / 2, -gridSize / 2, gridSize, gridSize);
+    }
 
     ctx.restore();
 }
+
 
 
 
