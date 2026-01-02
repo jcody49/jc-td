@@ -83,14 +83,12 @@ canvas {
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
 
-    /* Radial gradient from dark cyan center to bright cyan edge */
     background: radial-gradient(circle at center, 
-        #001b22 0%,    /* deep, rich dark cyan under text */
-        #003344 28%,   /* mid-tone cyan */
-        #00cccc 100%   /* bright cyan at border */
+        #001b22 0%,   
+        #003344 28%,   
+        #00cccc 100%   
     );
 
-    /* Subtle neon glow for text */
     text-shadow: 
         0 0 2px #00cccc,
         0 0 6px #00cccc,
@@ -108,7 +106,7 @@ canvas {
 
 #gameContainer {
     display: flex;
-    gap: 10px; /* space between canvas and menu */
+    gap: 10px; 
   }
 
   #towerMenu {
