@@ -1,5 +1,5 @@
 export class Enemy {
-    constructor({ path, gridSize, ctx, canvas }) {
+    constructor({ path, gridSize, ctx, canvas, isFlying = false }) {
       this.path = path;
       this.gridSize = gridSize;
       this.ctx = ctx;
@@ -25,7 +25,9 @@ export class Enemy {
       this.remove = false;
       this.reward = 1;
   
-      this.activeDoTs = [];           // for acid/DoT effects
+      this.activeDoTs = [];           
+      
+      this.isFlying = isFlying;
     }
   
     update(gameState) {
