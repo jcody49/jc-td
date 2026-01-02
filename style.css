@@ -1,7 +1,7 @@
 body {
     margin: 0;
     background: #111;
-    font-family: sans-serif;
+    font-family: 'Audiowide', sans-serif;
     background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
 }
 
@@ -328,7 +328,7 @@ canvas {
 
   .towerCard p {
     margin: 2px 0;
-    font-size: .8em;
+    font-size: .68em;
     hyphens: auto;   
     align-content:center;
   }
@@ -414,4 +414,6 @@ canvas {
     align-items: center;
     justify-content: center;
 }
+
+
 
