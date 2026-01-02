@@ -8,8 +8,7 @@ import { initHUD } from './hud.js';
 import { CannonTower } from './towers/CannonTower.js';
 import { FrostTower } from './towers/FrostTower.js';
 import { AcidTower } from './towers/AcidTower.js';
-
-
+import { TankTower } from './towers/TankTower.js';
 
 
 
@@ -231,6 +230,10 @@ canvas.addEventListener("click", e => {
     else if (selectedTowerType === "Acid") {
       gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx }));
     }
+    if (selectedTowerType === "Tank") {
+      gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx }));
+  }
+  
     
 
     gridOccupied[col][row] = true;      // mark cell as occupied

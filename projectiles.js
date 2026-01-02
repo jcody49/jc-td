@@ -1,5 +1,5 @@
 export class Projectile {
-    constructor({ x, y, target, ctx, type = "cannon", damage = 0, slowMultiplier = 1, slowDuration = 0, dotDamage = 0, dotDuration = 0 }) {
+    constructor({ x, y, target, ctx, type = "cannon", damage = 60, slowMultiplier = 1, slowDuration = 0, dotDuration = 0, splashRadius = 0 }) {
         this.x = x;
         this.y = y;
         this.target = target;
@@ -7,18 +7,17 @@ export class Projectile {
         this.type = type;
         this.speed = 4;
         this.radius = 3;
-        this.hit = false;
         this.trail = [];
+        this.hit = false;
         this.damage = damage;
-
         this.slowMultiplier = slowMultiplier;
         this.slowDuration = slowDuration;
-
-        this.dotDamage = dotDamage;
-        this.dotDuration = dotDuration || 0;
+        this.dotDuration = dotDuration;
+        this.splashRadius = splashRadius; // new
     }
+    
 
-    update() {
+    update(gameState) {
         if (!this.target) return;
     
         const dx = this.target.x - this.x;
@@ -26,31 +25,42 @@ export class Projectile {
         const dist = Math.hypot(dx, dy);
     
         if (dist < this.radius + 10) {
-
-            // instant damage
-            if (this.damage > 0) {
-              this.target.hp -= this.damage;
+            // --- Tank AOE ---
+            if (this.type === "tank" && this.splashRadius > 0) {
+                // Make sure gameState is passed in!
+                gameState.enemies.forEach(enemy => {
+                    const d = Math.hypot(enemy.x - this.x, enemy.y - this.y);
+                    if (d <= this.splashRadius) {
+                        enemy.hp -= this.damage;
+                    }
+                });
+            } 
+            // --- Acid DoT ---
+            else if (this.type === "acid" && this.damage > 0 && this.dotDuration > 0) {
+                if (!this.target.activeDoTs) this.target.activeDoTs = [];
+                this.target.activeDoTs.push({
+                    damagePerTick: this.damage,   // use this.damage
+                    remaining: this.dotDuration
+                });
+            } 
+            // --- Frost slow ---
+            else if (this.type === "frost") {
+                if (!this.target.slowTimer || this.target.slowTimer < this.slowDuration) {
+                    this.target.slowMultiplier = this.slowMultiplier;
+                    this.target.slowTimer = this.slowDuration;
+                }
+                // apply instant damage if desired
+                if (this.damage > 0) this.target.hp -= this.damage;
+            } 
+            // --- Default single-target damage ---
+            else {
+                if (this.damage > 0) this.target.hp -= this.damage;
             }
-          
-            // slow
-            if (this.type === "frost") {
-              if (!this.target.slowTimer || this.target.slowTimer < this.slowDuration) {
-                this.target.slowMultiplier = this.slowMultiplier;
-                this.target.slowTimer = this.slowDuration;
-              }
-            }
-          
-            // DoT (acid)
-            if (this.type === "acid" && this.dotDamage > 0 && this.dotDuration > 0) {
-              this.target.activeDoTs.push({
-                damagePerTick: this.dotDamage,
-                remaining: this.dotDuration
-              });
-            }
-          
+        
             this.hit = true;
             return;
-          }
+        }
+        
           
     
         this.x += (dx / dist) * this.speed;

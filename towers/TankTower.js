@@ -9,7 +9,7 @@ export class TankTower extends Tower {
         this.range = 120;       // slightly longer range
         this.fireRate = 90;     // slower firing
         this.damage = 30;       // moderate damage per enemy
-        this.splashRadius = 40; // radius of AOE damage
+        this.splashRadius = 50; // radius of AOE damage
     }
 
     update(gameState) {

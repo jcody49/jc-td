@@ -1,3 +1,4 @@
+//TOWER IMG EXPORTS
 export const cannonImg = new Image();
 cannonImg.src = './assets/cannon.png';
 
@@ -6,6 +7,9 @@ frostImg.src = './assets/frost-tower.png';
 
 export const acidImg = new Image();
 acidImg.src = './assets/acid-tower.png';
+
+export const tankImg = new Image();
+tankImg.src = './assets/tank-tower.png';
 
 
 
@@ -53,7 +57,10 @@ if (window.selectedTowerType) {
     } else if (window.selectedTowerType === "Acid") {
         imgToDraw = acidImg;
         rotation = 0;
-    }
+    } else if (window.selectedTowerType === "Tank") {
+        imgToDraw = tankImg;
+        rotation = 0;
+    } 
     
 
     ctx.rotate(rotation);
@@ -124,7 +131,7 @@ if (window.selectedTowerType) {
 
     // Update and draw projectiles
     gameState.projectiles.forEach(p => {
-        p.update();
+        p.update(gameState);
         p.draw();
     });
 
