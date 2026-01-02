@@ -17,12 +17,15 @@ export class AcidTower extends Tower {
             this.cooldown--;
             return;
         }
-
+    
         const target = gameState.enemies.find(
             e => Math.hypot(this.x - e.x, this.y - e.y) < this.range
         );
-
+    
         if (target) {
+            const totalDoTPercent = 0.3; // tower will remove 30% of target max HP
+            const damagePerTick = (target.maxHp * totalDoTPercent) / this.dotDuration;
+    
             gameState.projectiles.push(
                 new Projectile({
                     x: this.x,
@@ -30,11 +33,10 @@ export class AcidTower extends Tower {
                     target,
                     ctx: this.ctx,
                     type: "acid",
-                    damage: this.damage,
-                    slowMultiplier: 1,
-                    slowDuration: 0,
-                    dotDuration: this.dotDuration
-                })
+                    damage: 0,
+                    dotDamage: .3,
+                    dotDuration: 180
+                  })
             );
             this.cooldown = this.fireRate;
         }

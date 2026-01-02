@@ -13,7 +13,7 @@ export class Enemy {
       this.speed = this.baseSpeed;   // actual speed each frame
       this.slowMultiplier = 1;       // 1 = normal speed
       this.slowTimer = 0;            // frames remaining slowed
-  
+      this.maxHp = 100;
       this.hp = 100;
       this.size = gridSize * 0.5;
   
@@ -50,14 +50,13 @@ export class Enemy {
   
       // --- Apply DoTs ---
       if (this.activeDoTs.length > 0) {
-        // --- DoT HANDLING ---
         this.activeDoTs.forEach(dot => {
-            this.hp -= dot.damagePerTick; // now correctly per tick
+            this.hp -= dot.damagePerTick;
             dot.remaining--;
         });
-        this.activeDoTs = this.activeDoTs.filter(dot => dot.remaining > 0);
-
-      }
+    
+            this.activeDoTs = this.activeDoTs.filter(dot => dot.remaining > 0);
+        }
   
       // --- Check death ---
       if (this.hp <= 0) {

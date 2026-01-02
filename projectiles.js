@@ -1,5 +1,5 @@
 export class Projectile {
-    constructor({ x, y, target, ctx, type = "cannon", damage = 60, slowMultiplier = 1, slowDuration = 0, dotDuration = 0 }) {
+    constructor({ x, y, target, ctx, type = "cannon", damage = 0, slowMultiplier = 1, slowDuration = 0, dotDamage = 0, dotDuration = 0 }) {
         this.x = x;
         this.y = y;
         this.target = target;
@@ -14,8 +14,8 @@ export class Projectile {
         this.slowMultiplier = slowMultiplier;
         this.slowDuration = slowDuration;
 
-        // ✅ add this line
-        this.dotDuration = dotDuration; 
+        this.dotDamage = dotDamage;
+        this.dotDuration = dotDuration || 0;
     }
 
     update() {
@@ -26,31 +26,32 @@ export class Projectile {
         const dist = Math.hypot(dx, dy);
     
         if (dist < this.radius + 10) {
-            // Apply damage for ALL projectiles
-            if (this.damage && this.damage > 0 && this.type !== "acid") {
-                this.target.hp -= this.damage;
-            }
-    
-            // Frost slow
-            if (this.type === "frost") {
-                if (!this.target.slowTimer || this.target.slowTimer < this.slowDuration) {
-                    this.target.slowMultiplier = this.slowMultiplier;
-                    this.target.slowTimer = this.slowDuration;
-                }
-            }
 
-            // Acid DoT
-            if (this.type === "acid") {
-                if (!this.target.activeDoTs) this.target.activeDoTs = [];
-                this.target.activeDoTs.push({
-                    damagePerTick: this.damage / this.dotDuration, // spread damage evenly
-                    remaining: this.dotDuration
-                });
-            }            
-    
+            // instant damage
+            if (this.damage > 0) {
+              this.target.hp -= this.damage;
+            }
+          
+            // slow
+            if (this.type === "frost") {
+              if (!this.target.slowTimer || this.target.slowTimer < this.slowDuration) {
+                this.target.slowMultiplier = this.slowMultiplier;
+                this.target.slowTimer = this.slowDuration;
+              }
+            }
+          
+            // DoT (acid)
+            if (this.type === "acid" && this.dotDamage > 0 && this.dotDuration > 0) {
+              this.target.activeDoTs.push({
+                damagePerTick: this.dotDamage,
+                remaining: this.dotDuration
+              });
+            }
+          
             this.hit = true;
             return;
-        }
+          }
+          
     
         this.x += (dx / dist) * this.speed;
         this.y += (dy / dist) * this.speed;
