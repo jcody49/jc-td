@@ -46,7 +46,7 @@ if (window.selectedTowerType) {
 
     if (window.selectedTowerType === "Cannon") {
         imgToDraw = cannonImg;
-        rotation = Math.PI / 2; // Cannon faces left
+        rotation = 0;
     } else if (window.selectedTowerType === "Frost") {
         imgToDraw = frostImg;
         rotation = 0; // Frost faces up by default, change if needed

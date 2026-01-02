@@ -4,8 +4,8 @@ import { cannonImg } from '../game-engine.js';
 export class CannonTower extends Tower {
     constructor(opts) {
         super({ ...opts, towerType: "cannon" });
-        this.range = 100;
-        this.fireRate = 35;
+        this.range = 95;
+        this.fireRate = 60;
         this.damage = 55;
     }
 
@@ -13,7 +13,7 @@ export class CannonTower extends Tower {
         const ctx = this.ctx;
         ctx.save();
         ctx.translate(this.x, this.y);
-        ctx.rotate(Math.PI / 2); // left-facing
+
 
         const size = 27; // new smaller image size
         // center the image automatically

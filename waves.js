@@ -29,7 +29,7 @@ export function startWave(gameState, path, gridSize, ctx, canvas, waveText, skip
     );
 
     enemiesSpawned++;
-  }, 1000);
+  }, 1300);
 }
 
 export function startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton) {

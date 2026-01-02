@@ -9,7 +9,7 @@ export class Enemy {
       this.x = path[0].x;
       this.y = path[0].y;
   
-      this.baseSpeed = 1.2;          // base speed (never changes)
+      this.baseSpeed = .7;          // base speed (never changes)
       this.speed = this.baseSpeed;   // actual speed each frame
       this.slowMultiplier = 1;       // 1 = normal speed
       this.slowTimer = 0;            // frames remaining slowed
