@@ -7,7 +7,7 @@ export class TankTower extends Tower {
     constructor(opts) {
         super({ ...opts, towerType: "tank" });
         this.range = 120;       // slightly longer range
-        this.fireRate = 90;     // slower firing
+        this.fireRate = 100;     // slower firing
         this.damage = 30;       // moderate damage per enemy
         this.splashRadius = 50; // radius of AOE damage
     }
