@@ -52,8 +52,10 @@ export class Projectile {
     draw() {
         const ctx = this.ctx;
 
-        // Frost bullets will now show icy blue
-        ctx.fillStyle = this.type === "frost" ? "#6ecbff" : "yellow";
+        if (this.type === "cannon") ctx.fillStyle = "yellow";
+        else if (this.type === "frost") ctx.fillStyle = "#6ecbff";
+        else if (this.type === "acid") ctx.fillStyle = "rgba(124,255,0,0.5)";
+
 
         this.trail.forEach(pos => {
             ctx.beginPath();

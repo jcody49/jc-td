@@ -7,6 +7,7 @@ import { initHUD } from './hud.js';
 //TOWER IMPORTS
 import { CannonTower } from './towers/CannonTower.js';
 import { FrostTower } from './towers/FrostTower.js';
+import { AcidTower } from './towers/AcidTower.js';
 
 
 
@@ -227,6 +228,10 @@ canvas.addEventListener("click", e => {
     } else if (selectedTowerType === "Frost") {
       gameState.towers.push(new FrostTower({ x: snappedX, y: snappedY, ctx }));
     }
+    else if (selectedTowerType === "Acid") {
+      gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx }));
+    }
+    
 
     gridOccupied[col][row] = true;      // mark cell as occupied
     selectedTowerType = null;           // clear selection
@@ -273,7 +278,16 @@ function startGame() {
   startNextWave(gameState, path, gridSize, ctx, canvas, waveText, document.getElementById("skipButton"));
 
   // START GAME LOOP
-  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud, selectedTowerType);
+  gameLoop(
+    ctx,
+    canvas,
+    gridCols,
+    gridRows,
+    gridSize,
+    gameState,
+    hud
+  );
+  
 }
 
 

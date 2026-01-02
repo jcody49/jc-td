@@ -4,6 +4,10 @@ cannonImg.src = './assets/cannon.png';
 export const frostImg = new Image();
 frostImg.src = './assets/frost-tower.png';
 
+export const acidImg = new Image();
+acidImg.src = './assets/acid-tower.png';
+
+
 
 export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
     // Check game over first
@@ -46,7 +50,11 @@ if (window.selectedTowerType) {
     } else if (window.selectedTowerType === "Frost") {
         imgToDraw = frostImg;
         rotation = 0; // Frost faces up by default, change if needed
+    } else if (window.selectedTowerType === "Acid") {
+        imgToDraw = acidImg;
+        rotation = 0;
     }
+    
 
     ctx.rotate(rotation);
 

@@ -24,6 +24,10 @@ export class Enemy {
       this.escaped = false;
       this.remove = false;
       this.reward = 1;
+
+      this.poisonTimer = 0;
+        this.poisonDamage = 0;
+
     }
   
     update(gameState) {
@@ -45,6 +49,13 @@ export class Enemy {
           this.slowMultiplier = 1;               // reset to normal speed
           this.speed = this.baseSpeed;
         }
+
+        // --- POISON HANDLING ---
+        if (this.poisonTimer > 0) {
+            this.hp -= this.poisonDamage;
+            this.poisonTimer--;
+        }
+        
       
         // enemy dies when hp <= 0
         if (this.hp <= 0) {
