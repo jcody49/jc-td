@@ -1,5 +1,5 @@
 export class Projectile {
-    constructor({ x, y, target, ctx, type = "cannon", damage = 60, slowMultiplier = 1, slowDuration = 0 }) {
+    constructor({ x, y, target, ctx, type = "cannon", damage = 60, slowMultiplier = 1, slowDuration = 0, dotDuration = 0 }) {
         this.x = x;
         this.y = y;
         this.target = target;
@@ -13,6 +13,9 @@ export class Projectile {
 
         this.slowMultiplier = slowMultiplier;
         this.slowDuration = slowDuration;
+
+        // ✅ add this line
+        this.dotDuration = dotDuration; 
     }
 
     update() {
@@ -23,18 +26,26 @@ export class Projectile {
         const dist = Math.hypot(dx, dy);
     
         if (dist < this.radius + 10) {
-            // Apply damage for ALL projectiles, regardless of type
-            if (this.damage && this.damage > 0) {
+            // Apply damage for ALL projectiles
+            if (this.damage && this.damage > 0 && this.type !== "acid") {
                 this.target.hp -= this.damage;
             }
     
-            // Apply slow only if frost
+            // Frost slow
             if (this.type === "frost") {
-                // refresh slow only if longer than current
                 if (!this.target.slowTimer || this.target.slowTimer < this.slowDuration) {
                     this.target.slowMultiplier = this.slowMultiplier;
                     this.target.slowTimer = this.slowDuration;
                 }
+            }
+
+            // Acid DoT
+            if (this.type === "acid") {
+                if (!this.target.activeDoTs) this.target.activeDoTs = [];
+                this.target.activeDoTs.push({
+                    damage: this.damage,
+                    remaining: this.dotDuration
+                });
             }
     
             this.hit = true;
@@ -47,7 +58,6 @@ export class Projectile {
         this.trail.push({ x: this.x, y: this.y });
         if (this.trail.length > 5) this.trail.shift();
     }
-    
 
     draw() {
         const ctx = this.ctx;
@@ -55,7 +65,6 @@ export class Projectile {
         if (this.type === "cannon") ctx.fillStyle = "yellow";
         else if (this.type === "frost") ctx.fillStyle = "#6ecbff";
         else if (this.type === "acid") ctx.fillStyle = "rgba(124,255,0,0.5)";
-
 
         this.trail.forEach(pos => {
             ctx.beginPath();

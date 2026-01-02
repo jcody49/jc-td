@@ -1,18 +1,23 @@
 import { Projectile } from '../projectiles.js';
 
 export class Tower {
-    constructor({ x, y, ctx, towerType = "cannon" }) {
+    constructor({ x, y, target, ctx, type = "cannon", damage = 60, slowMultiplier = 1, slowDuration = 0, dotDuration = 0 }) {
         this.x = x;
         this.y = y;
+        this.target = target;
         this.ctx = ctx;
-        this.range = 100;
-        this.cooldown = 0;
-        this.fireRate = 45;
-        this.towerType = towerType; // cannon or frost
-        this.damage = 20;           // default damage
-        this.slowMultiplier = 1;    // default no slow
-        this.slowDuration = 0;      // default no slow
+        this.type = type;
+        this.speed = 4;
+        this.radius = 3;
+        this.hit = false;
+        this.trail = [];
+        this.damage = damage;
+    
+        this.slowMultiplier = slowMultiplier;
+        this.slowDuration = slowDuration;
+        this.dotDuration = dotDuration; // <-- add this
     }
+    
 
     findTarget(enemies) {
         return enemies.find(

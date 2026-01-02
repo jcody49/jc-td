@@ -9,10 +9,10 @@ export class Enemy {
       this.x = path[0].x;
       this.y = path[0].y;
   
-      this.baseSpeed = 1.2;         // base speed (never changes)
-      this.speed = this.baseSpeed;  // actual speed each frame
-      this.slowMultiplier = 1;      // 1 = normal speed
-      this.slowTimer = 0;           // frames remaining slowed
+      this.baseSpeed = 1.2;          // base speed (never changes)
+      this.speed = this.baseSpeed;   // actual speed each frame
+      this.slowMultiplier = 1;       // 1 = normal speed
+      this.slowTimer = 0;            // frames remaining slowed
   
       this.hp = 100;
       this.size = gridSize * 0.5;
@@ -24,65 +24,65 @@ export class Enemy {
       this.escaped = false;
       this.remove = false;
       this.reward = 1;
-
-      this.poisonTimer = 0;
-        this.poisonDamage = 0;
-
+  
+      this.activeDoTs = [];           // for acid/DoT effects
     }
   
     update(gameState) {
-        // reached end of path
-        if (this.pathIndex >= this.path.length - 1) {
-          if (!this.escaped) {
-            this.escaped = true;
-            gameState.lives--;
-          }
-          this.remove = true;
-          return;
+      // --- Check if reached end of path ---
+      if (this.pathIndex >= this.path.length - 1) {
+        if (!this.escaped) {
+          this.escaped = true;
+          gameState.lives--;
         }
-      
-        // --- SLOW HANDLING ---
-        if (this.slowTimer > 0) {
-          this.slowTimer--;                       // countdown slow duration
-          this.speed = this.baseSpeed * this.slowMultiplier; // apply slow
-        } else {
-          this.slowMultiplier = 1;               // reset to normal speed
-          this.speed = this.baseSpeed;
-        }
-
-        // --- POISON HANDLING ---
-        if (this.poisonTimer > 0) {
-            this.hp -= this.poisonDamage;
-            this.poisonTimer--;
-        }
-        
-      
-        // enemy dies when hp <= 0
-        if (this.hp <= 0) {
-          this.remove = true;
-          return;
-        }
-      
-        // move along path
-        const target = this.path[this.pathIndex + 1];
-        const dx = target.x - this.x;
-        const dy = target.y - this.y;
-        const dist = Math.hypot(dx, dy);
-      
-        if (dist < this.speed) {
-          this.x = target.x;
-          this.y = target.y;
-          this.pathIndex++;
-        } else {
-          this.x += (dx / dist) * this.speed;
-          this.y += (dy / dist) * this.speed;
-        }
+        this.remove = true;
+        return;
       }
-      
+  
+      // --- Apply slow ---
+      if (this.slowTimer > 0) {
+        this.slowTimer--;
+        this.speed = this.baseSpeed * this.slowMultiplier;
+      } else {
+        this.slowMultiplier = 1;
+        this.speed = this.baseSpeed;
+      }
+  
+      // --- Apply DoTs ---
+      if (this.activeDoTs.length > 0) {
+        this.activeDoTs.forEach(dot => {
+          this.hp -= dot.damage;
+          dot.remaining--;
+        });
+        this.activeDoTs = this.activeDoTs.filter(dot => dot.remaining > 0);
+      }
+  
+      // --- Check death ---
+      if (this.hp <= 0) {
+        this.remove = true;
+        return;
+      }
+  
+      // --- Move along path ---
+      const target = this.path[this.pathIndex + 1];
+      const dx = target.x - this.x;
+      const dy = target.y - this.y;
+      const dist = Math.hypot(dx, dy);
+  
+      if (dist < this.speed) {
+        this.x = target.x;
+        this.y = target.y;
+        this.pathIndex++;
+      } else {
+        this.x += (dx / dist) * this.speed;
+        this.y += (dy / dist) * this.speed;
+      }
+    }
   
     draw() {
       const ctx = this.ctx;
   
+      // Flash effect
       if (this.isFlashing) {
         ctx.strokeStyle = "yellow";
         ctx.lineWidth = 2;
@@ -99,11 +99,11 @@ export class Enemy {
         return;
       }
   
-      // draw enemy (icy blue if slowed)
+      // Enemy body (icy blue if slowed)
       ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
       ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
   
-      // health bar
+      // Health bar
       const hpBarWidth = this.size;
       const hpBarHeight = 4;
       const hpPercent = Math.max(this.hp / 100, 0);

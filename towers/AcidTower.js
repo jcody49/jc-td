@@ -1,17 +1,15 @@
+// AcidTower.js
+import { Tower } from './Tower.js';
 import { Projectile } from '../projectiles.js';
 import { acidImg } from '../game-engine.js';
 
-export class AcidTower {
-    constructor({ x, y, ctx }) {
-        this.x = x;
-        this.y = y;
-        this.ctx = ctx;
-        this.damage= 20
+export class AcidTower extends Tower {
+    constructor(opts) {
+        super({ ...opts, towerType: "acid" });
         this.range = 100;
-        this.cooldown = 0;
-
-        this.towerType = "acid";
-        this.fireRate = 50; // slower than cannon
+        this.fireRate = 50;
+        this.damage = 0.4;         // base DOT damage per tick
+        this.dotDuration = 120;   // frames
     }
 
     update(gameState) {
@@ -31,39 +29,23 @@ export class AcidTower {
                     y: this.y,
                     target,
                     ctx: this.ctx,
-                    type: this.towerType
+                    type: "acid",
+                    damage: this.damage,
+                    slowMultiplier: 1,
+                    slowDuration: 0,
+                    dotDuration: this.dotDuration
                 })
             );
-
             this.cooldown = this.fireRate;
         }
     }
 
     draw() {
         const ctx = this.ctx;
-
         ctx.save();
         ctx.translate(this.x, this.y);
-
-        // Adjust rotation if your acid tower sprite needs it
-        ctx.rotate(0);
-
-        ctx.drawImage(
-            acidImg,
-            -20,
-            -20,
-            40,
-            40
-        );
-
+        ctx.rotate(0); // facing up by default
+        ctx.drawImage(acidImg, -20, -20, 40, 40);
         ctx.restore();
-
-        // Optional: acid "sizzle" flash on fire
-        if (this.cooldown === this.fireRate - 1) {
-            ctx.fillStyle = "rgba(124,255,0,0.6)";
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, 14, 0, Math.PI * 2);
-            ctx.fill();
-        }
     }
 }
