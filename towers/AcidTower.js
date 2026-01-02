@@ -7,9 +7,9 @@ export class AcidTower extends Tower {
     constructor(opts) {
         super({ ...opts, towerType: "acid" });
         this.range = 100;
-        this.fireRate = 50;
-        this.damage = 0.4;         // base DOT damage per tick
-        this.dotDuration = 120;   // frames
+        this.fireRate = 45;
+        this.damage = 43;         // base DOT damage per tick
+        this.dotDuration = 630;   // frames
     }
 
     update(gameState) {

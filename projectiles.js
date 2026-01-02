@@ -43,10 +43,10 @@ export class Projectile {
             if (this.type === "acid") {
                 if (!this.target.activeDoTs) this.target.activeDoTs = [];
                 this.target.activeDoTs.push({
-                    damage: this.damage,
+                    damagePerTick: this.damage / this.dotDuration, // spread damage evenly
                     remaining: this.dotDuration
                 });
-            }
+            }            
     
             this.hit = true;
             return;

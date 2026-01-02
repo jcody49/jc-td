@@ -50,11 +50,13 @@ export class Enemy {
   
       // --- Apply DoTs ---
       if (this.activeDoTs.length > 0) {
+        // --- DoT HANDLING ---
         this.activeDoTs.forEach(dot => {
-          this.hp -= dot.damage;
-          dot.remaining--;
+            this.hp -= dot.damagePerTick; // now correctly per tick
+            dot.remaining--;
         });
         this.activeDoTs = this.activeDoTs.filter(dot => dot.remaining > 0);
+
       }
   
       // --- Check death ---
