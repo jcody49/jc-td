@@ -57,7 +57,7 @@ body {
   
   /* Buttons */
   button {
-    font-size: 16px;
+    font-family: 'Audiowide', sans-serif;
     padding: 6px 12px;
     margin-top: 6px;
   }
@@ -77,13 +77,28 @@ canvas {
     margin: 10px auto 0 auto;
     width: 805px; /* same as canvas */
     padding: 12px;
-    font-size: 18px;
-    background-color: #222;
-    color: #fff;
-    border: 2px solid #00ffff;
+    font-size: 30px;
+    color: #fff; /* white text */
+    border: 3px solid #00cccc;
     cursor: pointer;
     transition: background 0.2s, color 0.2s;
+
+    /* Radial gradient from dark cyan center to bright cyan edge */
+    background: radial-gradient(circle at center, 
+        #001b22 0%,    /* deep, rich dark cyan under text */
+        #003344 28%,   /* mid-tone cyan */
+        #00cccc 100%   /* bright cyan at border */
+    );
+
+    /* Subtle neon glow for text */
+    text-shadow: 
+        0 0 2px #00cccc,
+        0 0 6px #00cccc,
+        0 0 12px #00cccc;
 }
+
+
+
 
 #startButton:hover, #skipButton:hover {
     background-color: #555;
