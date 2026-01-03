@@ -39,12 +39,19 @@ export let selectedTowerType = null;
 //TOWER INTERACTION MODAL
 function showTowerModal(tower, x, y) {
   const modal = document.getElementById('towerModal');
-  modal.style.left = `${x + 10}px`; // offset from mouse click
-  modal.style.top = `${y + 10}px`;
+
+  // get modal height so we can move it above the click/tower
+  const rect = modal.getBoundingClientRect();
+
+  modal.style.left = `${x + 10}px`;            // still a little to the right
+  modal.style.top = `${y - modal.offsetHeight - 230}px`; // subtract modal height to go up
+
+
   document.getElementById('modalTitle').textContent = tower.type;
   document.getElementById('modalInfo').textContent = `Level: ${tower.level || 1}`;
   modal.style.display = 'block';
 }
+
 
 function hideTowerModal() {
   const modal = document.getElementById('towerModal');

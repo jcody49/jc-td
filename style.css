@@ -417,3 +417,29 @@ canvas {
 
 
 
+/* TOWER MODAL */
+#towerModal {
+    position: absolute;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-family: sans-serif;
+    font-size: 14px;
+    line-height: 1.2;
+    width: 200px;       /* keeps it from being too wide */
+    max-height: 200px;
+    display: none;          /* hidden by default */
+    pointer-events: none;   /* lets clicks pass through unless you style buttons */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  }
+  
+  #modalTitle {
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+  
+  #modalInfo {
+    margin: 0;
+  }
+  
