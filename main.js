@@ -30,8 +30,26 @@ const gameState = {
   lives: 10
 };
 
+
+
+let selectedTower = null; // currently selected tower
+
 export let selectedTowerType = null;
 
+//TOWER INTERACTION MODAL
+function showTowerModal(tower, x, y) {
+  const modal = document.getElementById('towerModal');
+  modal.style.left = `${x + 10}px`; // offset from mouse click
+  modal.style.top = `${y + 10}px`;
+  document.getElementById('modalTitle').textContent = tower.type;
+  document.getElementById('modalInfo').textContent = `Level: ${tower.level || 1}`;
+  modal.style.display = 'block';
+}
+
+function hideTowerModal() {
+  const modal = document.getElementById('towerModal');
+  modal.style.display = 'none';
+}
 
 
 
@@ -168,6 +186,23 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 
 
   
+function getTowerAtPosition(x, y) {
+  for (let tower of gameState.towers) {
+    const size = gridSize * 0.8; // adjust if needed
+    if (
+      x >= tower.x - size / 2 &&
+      x <= tower.x + size / 2 &&
+      y >= tower.y - size / 2 &&
+      y <= tower.y + size / 2
+    ) {
+      return tower;
+    }
+  }
+  return null;
+}
+
+
+
 /***********************
 * START GAME
 ***********************/
@@ -209,39 +244,56 @@ towerCards.forEach(card => {
 
 
 canvas.addEventListener("click", e => {
-  if (!selectedTowerType) return;
+  const rect = canvas.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const clickY = e.clientY - rect.top;
 
-  const col = Math.floor(mouseX / gridSize);
-  const row = Math.floor(mouseY / gridSize);
+  // ----------------------------------
+  // 1️⃣ TOWER PLACEMENT MODE
+  // ----------------------------------
+  if (selectedTowerType) {
+    const col = Math.floor(clickX / gridSize);
+    const row = Math.floor(clickY / gridSize);
 
-  const cellKey = `${col},${row}`;
-  const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
+    const cellKey = `${col},${row}`;
+    const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
 
-  if (validPlacement) {
-    const snappedX = col * gridSize + gridSize / 2;
-    const snappedY = row * gridSize + gridSize / 2;
+    if (validPlacement) {
+      const snappedX = col * gridSize + gridSize / 2;
+      const snappedY = row * gridSize + gridSize / 2;
 
-    // Create the correct tower type based on selection
-    if (selectedTowerType === "Cannon") {
-      gameState.towers.push(new CannonTower({ x: snappedX, y: snappedY, ctx }));
-    } else if (selectedTowerType === "Frost") {
-      gameState.towers.push(new FrostTower({ x: snappedX, y: snappedY, ctx }));
+      if (selectedTowerType === "Cannon") {
+        gameState.towers.push(new CannonTower({ x: snappedX, y: snappedY, ctx }));
+      } else if (selectedTowerType === "Frost") {
+        gameState.towers.push(new FrostTower({ x: snappedX, y: snappedY, ctx }));
+      } else if (selectedTowerType === "Acid") {
+        gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx }));
+      } else if (selectedTowerType === "Tank") {
+        gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx }));
+      }
+
+      gridOccupied[col][row] = true;
+      selectedTowerType = null;
+      window.selectedTowerType = null;
+      hud.update();
     }
-    else if (selectedTowerType === "Acid") {
-      gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx }));
-    }
-    if (selectedTowerType === "Tank") {
-      gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx }));
+
+    return; // exit here if we just placed a tower
   }
-  
-    
 
-    gridOccupied[col][row] = true;      // mark cell as occupied
-    selectedTowerType = null;           // clear selection
-    window.selectedTowerType = null;    // also clear ghost
-    hud.update();                       // update HUD (e.g., money)
+  // ----------------------------------
+  // 2️⃣ TOWER SELECTION MODE
+  // ----------------------------------
+  const tower = getTowerAtPosition(clickX, clickY);
+  if (tower) {
+    selectedTower = tower;
+    showTowerModal(tower, e.clientX, e.clientY);
+  } else {
+    selectedTower = null;
+    hideTowerModal();
   }
 });
+
 
 
 
@@ -303,3 +355,8 @@ window.mouseY = mouseY;
 
 window.gridOccupied = gridOccupied;
 window.pathOccupied = pathOccupied;
+
+
+// Make modal functions globally accessible for HTML onclick
+window.hideTowerModal = hideTowerModal;
+window.showTowerModal = showTowerModal;
