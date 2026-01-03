@@ -43,11 +43,14 @@ export class AcidTower extends Tower {
     }
 
     draw() {
+        super.draw();
         const ctx = this.ctx;
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(0); // facing up by default
         ctx.drawImage(acidImg, -20, -20, 40, 40);
         ctx.restore();
+
+        
     }
 }

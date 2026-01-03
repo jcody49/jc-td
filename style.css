@@ -420,18 +420,19 @@ canvas {
 /* TOWER MODAL */
 #towerModal {
     position: absolute;
-    background: rgba(0,0,0,0.85);
-    color: #fff;
+    font-family: monospace!important;
+    background-color: rgba(0, 255, 255)!important;
+    color:#000;
     padding: 8px 12px;
     border-radius: 8px;
     font-family: sans-serif;
     font-size: 14px;
     line-height: 1.2;
-    width: 200px;       /* keeps it from being too wide */
-    max-height: 200px;
-    display: none;          /* hidden by default */
-    pointer-events: none;   /* lets clicks pass through unless you style buttons */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    width: 250px;       
+    height: 250px;
+    display: none;          
+    pointer-events: none;   
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
   }
   
   #modalTitle {

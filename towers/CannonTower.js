@@ -10,13 +10,14 @@ export class CannonTower extends Tower {
     }
 
     draw() {
+        super.draw();
         const ctx = this.ctx;
         ctx.save();
         ctx.translate(this.x, this.y);
 
 
         const size = 27; // new smaller image size
-        // center the image automatically
+        
         ctx.drawImage(cannonImg, -size / 2, -size / 2, size, size);
 
         ctx.restore();

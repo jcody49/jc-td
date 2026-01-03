@@ -123,11 +123,16 @@ if (window.selectedTowerType) {
     });
 
 
+
     // Update and draw towers
     gameState.towers.forEach(tower => {
+        const hoverRadius = 25; // or half the tower image width
+        tower.isHovered = Math.hypot(window.mouseX - tower.x, window.mouseY - tower.y) < hoverRadius;
+
         tower.update(gameState);
         tower.draw();
     });
+    
 
     // Update and draw projectiles
     gameState.projectiles.forEach(p => {

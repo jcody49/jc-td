@@ -53,6 +53,7 @@ export class FrostTower extends Tower {
     }
 
     draw() {
+        super.draw();
         const ctx = this.ctx;
         ctx.save();
         ctx.translate(this.x, this.y);

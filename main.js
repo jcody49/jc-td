@@ -43,8 +43,8 @@ function showTowerModal(tower, x, y) {
   // get modal height so we can move it above the click/tower
   const rect = modal.getBoundingClientRect();
 
-  modal.style.left = `${x + 10}px`;            // still a little to the right
-  modal.style.top = `${y - modal.offsetHeight - 230}px`; // subtract modal height to go up
+  modal.style.left = `${x + 11}px`;            // still a little to the right
+  modal.style.top = `${y - modal.offsetHeight - 290}px`; // subtract modal height to go up
 
 
   document.getElementById('modalTitle').textContent = tower.type;
@@ -315,6 +315,14 @@ canvas.addEventListener('mousemove', e => {
 
   window.mouseX = mouseX;
   window.mouseY = mouseY;
+
+  // ----- Hover effect -----
+  const tower = getTowerAtPosition(mouseX, mouseY);
+  if (tower) {
+    canvas.style.cursor = "pointer"; // or "crosshair" for more tower-like feel
+  } else {
+    canvas.style.cursor = "default";
+  }
 });
 
 

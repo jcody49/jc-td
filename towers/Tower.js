@@ -54,6 +54,22 @@ export class Tower {
     }
 
     draw() {
-        // overridden by subclasses
+        if (!this.ctx) return;
+    
+        // Draw hover effect if mouse is over this tower
+        if (this.isHovered) {
+            const size = 40; // size of the square (match tower image size)
+            this.ctx.save();
+            this.ctx.fillStyle = "rgba(0,255,255,0.2)"; // semi-transparent neon cyan
+            this.ctx.shadowColor = "rgba(0,255,255,0.8)";
+            this.ctx.shadowBlur = 10; // glow spread
+            this.ctx.fillRect(this.x - size/2, this.y - size/2, size, size); // centered on tower
+            this.ctx.restore();
+        }
+        
+        
+    
+        // Actual tower drawing is still handled by subclasses
     }
+    
 }
