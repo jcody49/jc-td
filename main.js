@@ -43,7 +43,7 @@ function showTowerModal(tower, x, y) {
 
   // move above and slightly right of the tower/click
   modal.style.left = `${x + 15}px`;
-  modal.style.top = `${y - modal.offsetHeight - 150}px`;
+  modal.style.top = `${y - modal.offsetHeight - 460}px`;
 
   // Set general tower info
   document.getElementById('modalTitle').textContent = tower.type;
