@@ -37,20 +37,31 @@ let selectedTower = null; // currently selected tower
 export let selectedTowerType = null;
 
 //TOWER INTERACTION MODAL
+
 function showTowerModal(tower, x, y) {
   const modal = document.getElementById('towerModal');
 
-  // get modal height so we can move it above the click/tower
-  const rect = modal.getBoundingClientRect();
+  // move above and slightly right of the tower/click
+  modal.style.left = `${x + 15}px`;
+  modal.style.top = `${y - modal.offsetHeight - 150}px`;
 
-  modal.style.left = `${x + 11}px`;            // still a little to the right
-  modal.style.top = `${y - modal.offsetHeight - 290}px`; // subtract modal height to go up
-
-
+  // Set general tower info
   document.getElementById('modalTitle').textContent = tower.type;
   document.getElementById('modalInfo').textContent = `Level: ${tower.level || 1}`;
+
+  // Set upgrade preview if it exists
+  if (tower.upgradeData) {
+    const previewImg = document.getElementById('upgradePreview');
+    previewImg.src = tower.upgradeData.previewImg.src;
+    previewImg.style.display = 'block';
+  
+    document.getElementById('upgradeCost').textContent = `$${tower.upgradeData.cost}`;
+  }
+  
+
   modal.style.display = 'block';
 }
+
 
 
 function hideTowerModal() {

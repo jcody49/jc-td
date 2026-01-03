@@ -32,11 +32,47 @@
             </div>
 
             <!-- Tower Modal -->
-            <div id="towerModal" style="display:none; position:absolute; background:white; border:2px solid black; padding:10px; z-index:100;">
-                <h3 id="modalTitle"></h3>
-                <p id="modalInfo"></p>
+            <div id="towerModal" style="display:none;">
+                <!-- Tower Info Section -->
+                <div class="tower-modal-info">
+                    <h3 id="modalTitle"></h3>
+                    <p id="modalInfo"></p>
+                </div>
+            
+                <!-- Options Grid Section -->
+                <div class="tower-modal-options">
+                    <!-- Upgrade -->
+                    <div class="tower-modal-option tower-upgrade" id="towerUpgradeOption">
+                        <img id="upgradePreview" src="/assets/flamethrower-icon.png" alt="Upgrade Preview">
+                        <span class="upgradeCost" id="upgradeCost">$50</span>
+                        <span class="towerKey">U</span>
+                    </div>
+                
+                    <!-- Sell -->
+                    <div class="tower-modal-option tower-sell">
+                        <span id="sell-icon" class="option-icon">$</span>
+                        <span class="towerKey">S</span>
+                    </div>
+                
+                    <!-- Attack -->
+                    <div class="tower-modal-option tower-attack" id="towerAttackOption">
+                        <img src="/assets/crosshair.png" alt="Attack" />
+                        <span class="towerKey">A</span>
+                    </div>
+                      
+                
+                    <!-- Blank / Special -->
+                    <div class="tower-modal-option tower-special">
+                        <!-- optional for towers with special abilities -->
+                    </div>
+                </div>
+                
+            
+                <!-- Close Button -->
                 <button onclick="hideTowerModal()">Close</button>
             </div>
+            
+            
 
     </div>
       
