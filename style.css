@@ -475,6 +475,7 @@ canvas {
     justify-content: center;
     background-color: rgba(0, 255, 255, 0.9);
     transition: border-color 0.2s, box-shadow 0.2s;
+    border-color: #792BFB;
 }
 
 .tower-modal-option:hover {
@@ -492,10 +493,15 @@ canvas {
     position: absolute;
     top: 4px;
     right: 4px;
-    font-size: 14px;
-    color: #fff;
-    text-shadow: 0 0 4px #000;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow: 
+        0 0 2px #000,       /* base shadow for contrast */
+        0 0 4px #00FFFF,    /* subtle cyan neon glow */
+        0 0 6px #00FFFF;    /* extended glow for pop */
 }
+
 
 
 /* Close Button */
@@ -547,13 +553,20 @@ canvas {
   
 
   #sell-icon.option-icon {
-    font-size: 85px;
+    font-size: 105px;
     font-style: italic;
-    color: #F4243F;  /* dark neon red */
+    color: #E91E36;  /* slightly darker neon red */
     text-shadow: 
-        0 0 3px rgba(170, 31, 46, 0.7),  /* slightly bigger, darker glow */
-        0 0 6px rgba(170, 31, 46, 0.45); /* subtle outer glow */
+        0 0 3px rgba(233, 30, 54, 0.7),  /* subtle red glow */
+        0 0 6px rgba(233, 30, 54, 0.45),
+        1px 1px 0 #fff,   /* top-left inner highlight */
+        2px 2px 0 #fff,   /* stronger inner highlight */
+        -1px -1px 0 #fff, /* bottom-right inner highlight */
+        -2px -2px 0 #fff; /* stronger inner highlight */
 }
+
+
+
 
 
 
