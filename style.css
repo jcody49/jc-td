@@ -451,7 +451,7 @@ canvas {
     transform: translateY(-25px);
     text-align: center;
     font-family: 'Audiowide', monospace;
-    font-size: 35px;
+    font-size: 42px;
     font-weight: bold;
     color: #fff;
 
@@ -514,13 +514,23 @@ canvas {
     position: absolute;
     top: 4px;
     right: 4px;
-    font-size: 24px;
+    font-size: 20px;
+    font-family: 'Audiowide';
     font-weight: bold;
     color: #ffffff;
-    text-shadow: 
-        0 0 2px #000,       /* base shadow for contrast */
-        0 0 4px #00FFFF,    /* subtle cyan neon glow */
-        0 0 6px #00FFFF;    /* extended glow for pop */
+    text-shadow:
+        /* DARK INNER OUTLINE (contrast) */
+        1px 1px 0 #000,
+       -1px 1px 0 #000,
+        1px -1px 0 #000,
+       -1px -1px 0 #000,
+
+        /* BASE SHADOW */
+        0 0 1px #000,
+
+        /* NEON GLOW */
+        0 0 7px #00D6D6,   /* slightly darker cyan */
+        0 0 14px #6A22E6;   /* extended glow for pop */
 }
 
 
@@ -617,7 +627,77 @@ canvas {
 }
 
 #towerModal {
-    zoom: 0.7;
+    zoom: 0.6;
 }
 
 
+.tower-modal-option {
+    position: relative;
+    width: 100px;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 255, 255, 0.9);
+    border: 2px solid #792BFB;  /* purple border */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tower-modal-option img,
+.tower-modal-option .option-icon {
+    flex-shrink: 0;
+    width: 60%-80%; /* keep the icon reasonably big */
+    height: auto;
+    margin-bottom: 5px; /* space to label */
+}
+
+.tower-modal-option .optionLabel {
+    font-family: 'Audiowide', monospace;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow:
+        0 0 2px #000,
+        0 0 4px #00FFFF;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Wrapper holds the square + label */
+.tower-option-wrapper {
+    display: flex;
+    flex-direction: column;  /* stack icon + label vertically */
+    align-items: center;     /* center horizontally */
+    justify-content: flex-start;
+    width: 100%;             /* allow the grid to control overall width */
+  }
+  
+  /* Keep squares the same size */
+  .tower-option-wrapper .tower-modal-option {
+    width: 100px;       /* or 25% / auto depending on grid */
+    aspect-ratio: 1 / 1;
+    margin-bottom: 6px; /* space for label */
+  }
+  
+  /* Label styling */
+  .tower-option-wrapper .optionLabel {
+    font-family: 'Audiowide', monospace;
+    font-size: 23px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 5%;
+  
+    /* subtle dark outline for readability */
+    text-shadow:
+        1px 1px 0 #000,
+       -1px 1px 0 #000,
+        1px -1px 0 #000,
+       -1px -1px 0 #000;
+  }
+  
+  
+  
