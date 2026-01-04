@@ -416,6 +416,10 @@ canvas {
 }
 
 
+#gameWrapper {
+    position: relative;   /* 👈 ADD IT HERE */
+}
+
 
 /* ----------------------------
    TOWER MODAL

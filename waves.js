@@ -43,7 +43,7 @@ export function startNextWave(gameState, path, gridSize, ctx, canvas, waveText, 
 
   waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
 
-  waveState.countdownInterval = setInterval(() => {
+  waveState.countdownInterval = (() => {
     waveState.countdown--;
     waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
 
