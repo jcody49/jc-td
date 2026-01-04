@@ -5,141 +5,120 @@
   <title>Tower Defense</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
-
-
-
 </head>
 <body>
-    <!-- Header -->
-    <header id="gameHeader">
-      <h1>⬡⬡ JC'S ⬡ TD ⬡⬡</h1>
-    </header>
-  
-    <!-- Main content: canvas + menu -->
-    <div id="gameContainer">
-      
-        <!-- Left: canvas and buttons -->
-        <div id="gameWrapper">
-            <div id="waveText"></div>
-            <canvas id="game" width="800" height="470"></canvas>
-            <button id="startButton">Start Game</button>
-        
-            <!-- HUD Panel: appears only when timer is active -->
-            <div id="hud" style="display: none;">
-                <button id="skipButton">Skip Countdown</button>
-                <div id="lives">Lives: 20</div>
-                <div id="money">Money: 100</div>
-            </div>
 
-            <!-- Tower Modal -->
-            <div id="towerModal" style="display:none;">
-                <!-- Tower Info Section -->
-                <div class="tower-modal-info">
-                    <h3 id="modalTitle"></h3>
-                    <p id="modalInfo"></p>
-                </div>
-            
+<header id="gameHeader">
+  <h1>⬡⬡ JC'S ⬡ TD ⬡⬡</h1>
+</header>
 
-                <div class="tower-modal-content">
+<div id="gameContainer">
 
-                    <!-- Options Grid Section -->
-                <!-- Options Grid Section -->
-                <div class="tower-modal-options">
-
-                    <!-- Upgrade -->
-                    <div class="tower-option-wrapper">
-                    <div class="tower-modal-option tower-upgrade" id="towerUpgradeOption">
-                        <img id="upgradePreview" src="/assets/flamethrower-icon.png" alt="Upgrade Preview">
-                        <span class="upgradeCost" id="upgradeCost">$50</span>
-                        <span class="towerKey">U</span>
-                    </div>
-                    <span class="optionLabel">Upgrade</span>
-                    </div>
-                
-                    <!-- Sell -->
-                    <div class="tower-option-wrapper">
-                    <div class="tower-modal-option tower-sell">
-                        <span id="sell-icon" class="option-icon">$</span>
-                        <span class="towerKey">S</span>
-                    </div>
-                    <span class="optionLabel">Sell</span>
-                    </div>
-                
-                    <!-- Attack -->
-                    <div class="tower-option-wrapper">
-                    <div class="tower-modal-option tower-attack" id="towerAttackOption">
-                        <img src="/assets/crosshair.png" alt="Attack" />
-                        <span class="towerKey">A</span>
-                    </div>
-                    <span class="optionLabel">Attack</span>
-                    </div>
-                
-                    <!-- Special -->
-                    <div class="tower-option-wrapper">
-                    <div class="tower-modal-option tower-special">
-                        <!-- optional content -->
-                    </div>
-                    <span class="optionLabel">Special</span>
-                    </div>
-                
-                </div>
-  
-                
-            
-                <!-- Close Button -->
-                <button onclick="hideTowerModal()">Close</button>
-            </div>
-
-                </div>
-
-
-                
-            
-            
-
+  <!-- Top row: Canvas (2/3) + Tower Menu (1/3) -->
+  <div id="mainGameArea">
+    <!-- Left: Canvas -->
+    <div id="gameWrapper">
+      <div id="waveText"></div>
+      <canvas id="game" width="800" height="500"></canvas>
     </div>
-      
-  
-        <!-- Right: tower menu -->
-        <div id="towerMenu">
 
-            <div class="basic-container">
-                <h3>Basic Towers</h3>
-        
-                <div class="towerGrid">
-                    <div class="towerCard cannon-card-title"><p class="towerName">Cannon:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard frost-card-title"><p class="towerName">Frost:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard acid-card-title"><p class="towerName">Acid:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard tank-card-title"><p class="towerName">Tank:</p><p class="towerCost">$60</p></div>
-                    <div class="towerCard antiair-card-title"><p class="towerName">Anti-Air:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard shadow-card-title"><p class="towerName">Shadow:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard light-card-title"><p class="towerName">Light:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard earth-card-title"><p class="towerName">Earth:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard booster-card-title"><p class="towerName">Booster:</p><p class="towerCost">$50</p></div>
-                </div>
-            </div>
-            
-            
-            <div class="advanced-container">
-                <h3>Advanced Towers</h3>
-        
-                <div class="towerGrid">
-                    <div class="towerCard laser-card-title"><p class="towerName">Laser:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard shockwave-card-title"><p class="towerName">Shockwave:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard critical-card-title"><p class="towerName">Critical:</p><p class="towerCost">$50</p></div>
-                    <div class="towerCard air-reaper-card-title"><p class="towerName">Air Reaper:</p><p class="towerCost">$60</p></div>
-                    <div class="towerCard heavy-cannon-card-title"><p class="towerName">Heavy Cannon:</p><p class="towerCost">$50</p></div>
-                </div> 
-            </div>
-            
-            
+    <!-- Right: Tower Menu -->
+    <div id="towerMenu">
+      <!-- Basic Towers -->
+      <div class="basic-container">
+        <h3>Basic Towers</h3>
+        <div class="towerGrid">
+          <div class="towerCard cannon-card-title"><p class="towerName">Cannon:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard frost-card-title"><p class="towerName">Frost:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard acid-card-title"><p class="towerName">Acid:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard tank-card-title"><p class="towerName">Tank:</p><p class="towerCost">$60</p></div>
+          <div class="towerCard antiair-card-title"><p class="towerName">Anti-Air:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard shadow-card-title"><p class="towerName">Shadow:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard light-card-title"><p class="towerName">Light:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard earth-card-title"><p class="towerName">Earth:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard booster-card-title"><p class="towerName">Booster:</p><p class="towerCost">$50</p></div>
         </div>
-      
-  
-    </div>
-  
+      </div>
 
-    <script type="module" src="main.js"></script>
-  </body>
-  
+      <!-- Advanced Towers -->
+      <div class="advanced-container">
+        <h3>Advanced Towers</h3>
+        <div class="towerGrid">
+          <div class="towerCard laser-card-title"><p class="towerName">Laser:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard shockwave-card-title"><p class="towerName">Shockwave:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard critical-card-title"><p class="towerName">Critical:</p><p class="towerCost">$50</p></div>
+          <div class="towerCard air-reaper-card-title"><p class="towerName">Air Reaper:</p><p class="towerCost">$60</p></div>
+          <div class="towerCard heavy-cannon-card-title"><p class="towerName">Heavy Cannon:</p><p class="towerCost">$50</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HUD: full width below canvas + tower menu -->
+  <div id="hud">
+    <div id="hudLeft">
+      <button id="startButton">Start Game</button>
+      <button id="skipButton">Skip Countdown</button>
+      <div id="lives">Lives: 20</div>
+      <div id="money">Money: 100</div>
+    </div>
+    <div id="hudRight">
+      <p>Extra Menu / Tower Interaction Placeholder</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Tower Modal -->
+<div id="towerModal" style="display:none;">
+  <div class="tower-modal-info">
+    <h3 id="modalTitle"></h3>
+    <p id="modalInfo"></p>
+  </div>
+
+  <div class="tower-modal-content">
+    <div class="tower-modal-options">
+
+      <!-- Upgrade -->
+      <div class="tower-option-wrapper">
+        <div class="tower-modal-option tower-upgrade" id="towerUpgradeOption">
+          <img id="upgradePreview" src="/assets/flamethrower-icon.png" alt="Upgrade Preview">
+          <span class="upgradeCost" id="upgradeCost">$50</span>
+          <span class="towerKey">U</span>
+        </div>
+        <span class="optionLabel">Upgrade</span>
+      </div>
+
+      <!-- Sell -->
+      <div class="tower-option-wrapper">
+        <div class="tower-modal-option tower-sell">
+          <span id="sell-icon" class="option-icon">$</span>
+          <span class="towerKey">S</span>
+        </div>
+        <span class="optionLabel">Sell</span>
+      </div>
+
+      <!-- Attack -->
+      <div class="tower-option-wrapper">
+        <div class="tower-modal-option tower-attack" id="towerAttackOption">
+          <img src="/assets/crosshair.png" alt="Attack" />
+          <span class="towerKey">A</span>
+        </div>
+        <span class="optionLabel">Attack</span>
+      </div>
+
+      <!-- Special -->
+      <div class="tower-option-wrapper">
+        <div class="tower-modal-option tower-special"></div>
+        <span class="optionLabel">Special</span>
+      </div>
+
+    </div>
+  </div>
+
+  <button onclick="hideTowerModal()">Close</button>
+</div>
+
+<script type="module" src="main.js"></script>
+</body>
 </html>

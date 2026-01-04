@@ -83,7 +83,6 @@ let spawnInterval;
 /**********************
  * WAVE TEXT
  **********************/
-//const startButton = document.getElementById("startButton");
 const waveText = document.getElementById("waveText");
   
 
@@ -354,8 +353,10 @@ function startGame() {
 
   document.getElementById("startButton").style.display = "none";
 
+  /*
   // SHOW HUD
   hud.show();
+  */
 
   // START COUNTDOWN FOR FIRST WAVE
   waveState.status = "countdown";
