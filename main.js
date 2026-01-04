@@ -45,7 +45,7 @@ function showTowerModal(tower) {
   const modalHeight = modal.offsetHeight;
 
   // 2️⃣ Position modal above and slightly right of tower
-  const offsetX = 15;   // tweak for horizontal spacing
+  const offsetX = 150;   // tweak for horizontal spacing
   const offsetY = 5;   // tweak for vertical spacing
   modal.style.left = `${tower.x + offsetX}px`;
   modal.style.top  = `${tower.y - modalHeight - offsetY}px`;
