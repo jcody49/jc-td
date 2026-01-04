@@ -41,26 +41,22 @@ export let selectedTowerType = null;
 function showTowerModal(tower, x, y) {
   const modal = document.getElementById('towerModal');
 
-  // move above and slightly right of the tower/click
-  modal.style.left = `${x + 15}px`;
-  modal.style.top = `${y - modal.offsetHeight - 460}px`;
+  // 1️⃣ Show it FIRST so height is real
+  modal.style.display = 'block';
 
-  // Set general tower info
+  // 2️⃣ Force layout read
+  const modalHeight = modal.offsetHeight;
+
+  // 3️⃣ Position using the real height
+  modal.style.left = `${x + 15}px`;
+  modal.style.top = `${y - modalHeight + 5}px`; // <-- THIS NOW WORKS
+
+  // Tower info
   document.getElementById('modalTitle').textContent = tower.type;
   document.getElementById('modalInfo').textContent = `Level: ${tower.level || 1}`;
-
-  // Set upgrade preview if it exists
-  if (tower.upgradeData) {
-    const previewImg = document.getElementById('upgradePreview');
-    previewImg.src = tower.upgradeData.previewImg.src;
-    previewImg.style.display = 'block';
-  
-    document.getElementById('upgradeCost').textContent = `$${tower.upgradeData.cost}`;
-  }
-  
-
-  modal.style.display = 'block';
 }
+
+
 
 
 
