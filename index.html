@@ -63,61 +63,61 @@
       <div id="money">Money: 100</div>
     </div>
     <div id="hudRight">
-      <p>Extra Menu / Tower Interaction Placeholder</p>
+      <!-- Tower Modal -->
+        <div id="towerInteraction Menu">
+            <div class="tower-modal-info">
+            <h3 id="modalTitle"></h3>
+            <p id="modalInfo"></p>
+            </div>
+        
+            <div class="tower-modal-content">
+            <div class="tower-modal-options">
+        
+                <!-- Upgrade -->
+                <div class="tower-option-wrapper">
+                <div class="tower-modal-option tower-upgrade" id="towerUpgradeOption">
+                    <img id="upgradePreview" src="/assets/flamethrower-icon.png" alt="Upgrade Preview">
+                    <span class="upgradeCost" id="upgradeCost">$50</span>
+                    <span class="towerKey">U</span>
+                </div>
+                <span class="optionLabel">Upgrade</span>
+                </div>
+        
+                <!-- Sell -->
+                <div class="tower-option-wrapper">
+                <div class="tower-modal-option tower-sell">
+                    <span id="sell-icon" class="option-icon">$</span>
+                    <span class="towerKey">S</span>
+                </div>
+                <span class="optionLabel">Sell</span>
+                </div>
+        
+                <!-- Attack -->
+                <div class="tower-option-wrapper">
+                <div class="tower-modal-option tower-attack" id="towerAttackOption">
+                    <img src="/assets/crosshair.png" alt="Attack" />
+                    <span class="towerKey">A</span>
+                </div>
+                <span class="optionLabel">Attack</span>
+                </div>
+        
+                <!-- Special -->
+                <div class="tower-option-wrapper">
+                <div class="tower-modal-option tower-special"></div>
+                <span class="optionLabel">Special</span>
+                </div>
+        
+            </div>
+            </div>
+        
+        </div>
+        
     </div>
   </div>
 
 </div>
 
-<!-- Tower Modal -->
-<div id="towerModal" style="display:none;">
-  <div class="tower-modal-info">
-    <h3 id="modalTitle"></h3>
-    <p id="modalInfo"></p>
-  </div>
 
-  <div class="tower-modal-content">
-    <div class="tower-modal-options">
-
-      <!-- Upgrade -->
-      <div class="tower-option-wrapper">
-        <div class="tower-modal-option tower-upgrade" id="towerUpgradeOption">
-          <img id="upgradePreview" src="/assets/flamethrower-icon.png" alt="Upgrade Preview">
-          <span class="upgradeCost" id="upgradeCost">$50</span>
-          <span class="towerKey">U</span>
-        </div>
-        <span class="optionLabel">Upgrade</span>
-      </div>
-
-      <!-- Sell -->
-      <div class="tower-option-wrapper">
-        <div class="tower-modal-option tower-sell">
-          <span id="sell-icon" class="option-icon">$</span>
-          <span class="towerKey">S</span>
-        </div>
-        <span class="optionLabel">Sell</span>
-      </div>
-
-      <!-- Attack -->
-      <div class="tower-option-wrapper">
-        <div class="tower-modal-option tower-attack" id="towerAttackOption">
-          <img src="/assets/crosshair.png" alt="Attack" />
-          <span class="towerKey">A</span>
-        </div>
-        <span class="optionLabel">Attack</span>
-      </div>
-
-      <!-- Special -->
-      <div class="tower-option-wrapper">
-        <div class="tower-modal-option tower-special"></div>
-        <span class="optionLabel">Special</span>
-      </div>
-
-    </div>
-  </div>
-
-  <button onclick="hideTowerModal()">Close</button>
-</div>
 
 <script type="module" src="main.js"></script>
 </body>
