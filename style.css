@@ -84,7 +84,7 @@ canvas {
   display: flex;
   flex-direction: column; /* stack main area + HUD vertically */
   gap: 0;
-  max-width: 1130px;
+  max-width: 1330px;
   margin: 15px auto;
 }
 
