@@ -467,18 +467,29 @@ canvas {
         0 0 14px #6A22E6;
 }
 
-
+/*TOWER-MODAL-INFO*/
 #modalTitle {
     font-weight: bold;
     margin-bottom: 2px;
     text-align: right;
+    font-size: 1.1em;
+    letter-spacing: 3px;
 }
 
 #modalInfo {
     margin: 0;
     font-size: .8em;
     text-align: right;
+    letter-spacing: 3px;
 }
+
+.selected-label{
+  font-size: .66em;
+  text-align: right;
+  letter-spacing: 4px;
+  color:rgba(0, 255, 255, 0.9);
+}
+
 .tower-modal-content {
   display: flex;
   flex-direction: row;
@@ -537,26 +548,6 @@ canvas {
 }
 
 
-.selected-label{
-  font-size: .62em;
-  text-align: right;
-}
-
-
-
-/* $ ICON */
-.tower-modal-option.tower-sell,
-.tower-modal-option.tower-attack {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Audiowide', sans-serif;
-    font-size: 32px;
-    
-}
-
-
-
 .tower-modal-option .option-icon {
     pointer-events: none; 
 }
@@ -608,7 +599,7 @@ canvas {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 255, 255, 0.9);
+    background-color: rgba(0, 255, 255, 0.902);
     border: 2px solid #792BFB;  /* purple border */
     transition: border-color 0.2s, box-shadow 0.2s;
 }
