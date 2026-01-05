@@ -488,6 +488,7 @@ canvas {
   text-align: right;
   letter-spacing: 4px;
   color:rgba(0, 255, 255, 0.9);
+  font-style: italic;
 }
 
 .tower-modal-content {
