@@ -5,6 +5,9 @@ body {
     background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
 }
 
+body {
+  margin: 26px;
+}
 
 /* Header */
 #gameHeader {
@@ -184,7 +187,6 @@ canvas {
   justify-content: center;
   color: #fff;
   font-family: 'Audiowide', sans-serif;
-  font-size: 16px;
 }
 
 
@@ -322,6 +324,9 @@ canvas {
     overflow: hidden;
   }
 
+  .advanced-container{
+    padding-top: 5%;
+  }
   
 
 
@@ -432,24 +437,18 @@ canvas {
 
 
 
+
+
 /* ----------------------------
    TOWER MODAL
 ---------------------------- */
-#towerModal {
-    border-radius: 8px;
-    font-size: 20px;
-    line-height: 1.1;
-    display: flex;
-    pointer-events: auto;
-    z-index: 50;
-}
 
 .tower-modal-info {
     padding-top: 0;
-    transform: translateY(-25px);
+
     text-align: center;
     font-family: 'Audiowide', monospace;
-    font-size: 42px;
+    font-size: 24px;
     font-weight: bold;
     color: #fff;
 
@@ -479,11 +478,16 @@ canvas {
     margin: 0;
     font-size: .7em;
 }
+.tower-modal-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+}
 
 /* Option squares */
 .tower-modal-option {
     position: relative;
-    width: 100%;
     aspect-ratio: 1 / 1;
     border-radius: 8px;
     overflow: hidden;
@@ -510,9 +514,9 @@ canvas {
 
 .tower-modal-option .upgradeCost {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    font-size: 20px;
+    top: 2px;
+    right: 2px;
+    font-size: 13px;
     font-family: 'Audiowide';
     font-weight: bold;
     color: #ffffff;
@@ -532,25 +536,11 @@ canvas {
 }
 
 
+.selected-label{
+  font-size: .62em;
 
-/* Close Button */
-#towerModal button {
-    margin: 10px auto;
-    align-self: center;
-    border: 2px solid #792BFB;
-    border-radius: 6px;
-    font-size: 20px;
-    box-shadow: 0 0 6px rgba(121, 43, 251, 0.45),
-                0 0 12px rgba(121, 43, 251, 0.35);
-    transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-#towerModal button:hover {
-    cursor: pointer;
-    color: #fff;
-    background-color: rgba(121, 43, 251, 0.82);
-    box-shadow: 0 0 10px rgba(121, 43, 251, 0.83);
-}
 
 
 /* $ ICON */
@@ -597,7 +587,6 @@ canvas {
 
 .tower-modal-content {
     display: flex;
-    flex-direction: column;
     align-items: center;
     gap: 15px;      /* space between grid and button */
 }
@@ -605,9 +594,7 @@ canvas {
 .tower-modal-options {
     display: flex;
     grid-template-columns: repeat(2, 1fr);  /* still 2x2 */
-    gap: 5%;   /* gap is % of container width */
-    width: 60%; /* options take 90% of modal width */
-    justify-items: center;
+    gap: 23px;   /* gap is % of container width */
     align-items: center;
 }
 
@@ -615,7 +602,6 @@ canvas {
 
 .tower-modal-option {
     position: relative;
-    width: 100px;
     aspect-ratio: 1 / 1;
     border-radius: 8px;
     overflow: hidden;
@@ -628,14 +614,6 @@ canvas {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.tower-modal-option img,
-.tower-modal-option .option-icon {
-    flex-shrink: 0;
-    width: 55%-80%; /* keep the icon reasonably big */
-    height: auto;
-    margin-bottom: 2px; /* space to label */
-}
-
 
 /* Wrapper holds the square + label */
 .tower-option-wrapper {
@@ -643,20 +621,19 @@ canvas {
     flex-direction: column;  /* stack icon + label vertically */
     align-items: center;     /* center horizontally */
     justify-content: flex-start;
-    width: 100%;             /* allow the grid to control overall width */
   }
   
   /* Keep squares the same size */
   .tower-option-wrapper .tower-modal-option {
-    width: 50px;       /* or 25% / auto depending on grid */
+    width: 50px;      
     aspect-ratio: 1 / 1;
-    margin-bottom: 6px; /* space for label */
+    margin-bottom: 6px; 
   }
   
   /* Label styling */
   .tower-option-wrapper .optionLabel {
     font-family: 'Audiowide', monospace;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
     color: #fff;
     text-align: center;
@@ -670,5 +647,18 @@ canvas {
        -1px -1px 0 #000;
   }
   
+  #towerInteractionMenu {
+    display: flex;
+    flex-direction: row;
+    align-items: center; /* vertically center info next to icons */
+    gap: 20px; /* space between info + icons */
+  }
   
+  
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  
+
   
