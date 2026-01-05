@@ -1,7 +1,7 @@
 import { Projectile } from '../projectiles.js';
 
 export class Tower {
-    constructor({ x, y, target, ctx, type = "cannon", damage = 60, slowMultiplier = 1, slowDuration = 0, dotDuration = 0 }) {
+    constructor({ x, y, target, ctx, type = "cannon", damage = 60, slowMultiplier = 1, slowDuration = 0, dotDuration = 0, opts }) {
         this.x = x;
         this.y = y;
         this.target = target;
@@ -15,7 +15,8 @@ export class Tower {
     
         this.slowMultiplier = slowMultiplier;
         this.slowDuration = slowDuration;
-        this.dotDuration = dotDuration; // <-- add this
+        this.dotDuration = dotDuration;
+        this.hasSpecial = opts.hasSpecial || false;
     }
     
 

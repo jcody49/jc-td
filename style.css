@@ -132,7 +132,7 @@ canvas {
   border-radius: 0 0 8px 8px;
   color: white;
   font-family: 'Audiowide', sans-serif;
-  height: 110px;
+  height: 116px;
   box-sizing: border-box;
   margin-top: 0; 
 
@@ -589,6 +589,7 @@ canvas {
     grid-template-columns: repeat(2, 1fr);  /* still 2x2 */
     gap: 23px;   /* gap is % of container width */
     align-items: center;
+    margin-right: 23px;
 }
 
 .tower-modal-option {
@@ -665,4 +666,18 @@ canvas {
 .tower-modal-info{
   margin-left: 145px;
   margin-right: 5%;
+}
+
+
+#settingsContainer {
+  display: flex;
+  justify-content: flex-end; /* hug far right */
+  align-items: center;
+  margin-top: 4px; /* optional spacing from HUD row */
+}
+
+#settingsButton {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
 }
