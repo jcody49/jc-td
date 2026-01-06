@@ -167,6 +167,8 @@ canvas.addEventListener("click", e => {
       const snappedX = col * gridSize + gridSize / 2;
       const snappedY = row * gridSize + gridSize / 2;
 
+      console.log("Placing tower:", window.selectedTowerType, `"${window.selectedTowerType.length}"`);
+
       switch (window.selectedTowerType) {
         case "Cannon":
           gameState.towers.push(new CannonTower({ x: snappedX, y: snappedY, ctx, opts: {} }));
@@ -178,7 +180,7 @@ canvas.addEventListener("click", e => {
           gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: false } }));
           break;
         case "Tank":
-          gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx, opts: {} }));
+          gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: false } }));
           break;
       }
 

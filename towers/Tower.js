@@ -17,6 +17,7 @@ export class Tower {
 
         // Stats (set by levelData)
         this.damage = 0;
+        this.splashRadius = 0;
         this.range = 0;
         this.fireRate = 0;
         this.cooldown = 0;
@@ -94,6 +95,8 @@ export class Tower {
     }
 
     fire(target, gameState) {
+        console.log("TOWER FIRE", this.type, this.damage, this.splashRadius);
+
         gameState.projectiles.push(
             new Projectile({
                 x: this.x,
@@ -102,11 +105,14 @@ export class Tower {
                 ctx: this.ctx,
                 type: this.type,
                 damage: this.damage,
+    
                 slowMultiplier: this.slowMultiplier,
                 slowDuration: this.slowDuration,
+                splashRadius: this.splashRadius || 0
             })
         );
     }
+    
 
     draw() {
         if (!this.ctx) return;
