@@ -4,7 +4,7 @@ import { cannonImg } from '../game-engine.js';
 export class CannonTower extends Tower {
     constructor(opts) {
         super({ ...opts, towerType: "cannon" });
-        this.range = 95;
+        this.range = 115;
         this.fireRate = 60;
         this.damage = 55;
     }
