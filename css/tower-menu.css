@@ -94,15 +94,6 @@
     background: #3a2f22;
     border-color: #d2b48c;
   }
-  
-  /* booster — crimson */
-  .booster-card-title {
-    background: #3a1218;
-    border-color: crimson;
-  }
-
-
-
 
 
 
@@ -173,7 +164,10 @@
   
 
 
-
+  /* booster — crimson */
+  .booster-card-title::after {
+    border-color: crimson;
+  }
 
   .laser-card-title::after {
     border-color: #ff2f92;
