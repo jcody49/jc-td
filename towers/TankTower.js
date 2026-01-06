@@ -6,7 +6,7 @@ export class TankTower extends Tower {
             ...opts,
             type: "tank",
             maxLevel: 5,
-            upgradeCosts: [10, 10, 350, 700, 3500],
+            upgradeCosts: [60, 65, 400, 500, 4000],
             levelData: {
                 1: {
                     damage: 300,
