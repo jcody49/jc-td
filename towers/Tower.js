@@ -54,10 +54,31 @@ export class Tower {
     }
 
     findTarget(enemies) {
-        return enemies.find(
-            e => Math.hypot(this.x - e.x, this.y - e.y) < this.range
-        );
+        const inRange = enemies
+            .map(e => ({
+                e,
+                dist: Math.hypot(this.x - e.x, this.y - e.y)
+            }))
+            .filter(obj => obj.dist < this.range);
+    
+        if (inRange.length === 0) return null;
+    
+        // Frost logic
+        if (this.targetingMode === "unslowedFirst") {
+            const unslowed = inRange.filter(
+                obj => !obj.e.slowTimer || obj.e.slowTimer <= 0
+            );
+            if (unslowed.length > 0) {
+                unslowed.sort((a, b) => a.dist - b.dist);
+                return unslowed[0].e;
+            }
+        }
+    
+        // Default closest
+        inRange.sort((a, b) => a.dist - b.dist);
+        return inRange[0].e;
     }
+    
 
     update(gameState) {
         if (this.cooldown > 0) {

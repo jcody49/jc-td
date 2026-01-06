@@ -1,63 +1,57 @@
-import { Tower } from './tower.js';
-import { frostImg } from '../game-engine.js';
+import { Tower } from './Tower.js';
 
 export class FrostTower extends Tower {
     constructor(opts) {
-        super({ ...opts, towerType: "frost" });
-        this.range = 120;          // slightly bigger range
-        this.fireRate = 45;        // frames between shots
-        this.cooldown = 0;
-        this.damage = 40;          // frost damage
-        this.slowMultiplier = 0.5; // 50% speed
-        this.slowDuration = 210;   // 3.5 seconds at 60fps
-    }
-
-    // target closest unslowed enemy first, else closest slowed
-    findTarget(enemies) {
-        let unslowed = [];
-        let slowed = [];
-
-        enemies.forEach(e => {
-            const dist = Math.hypot(this.x - e.x, this.y - e.y);
-            if (dist > this.range) return;
-
-            if (!e.slowTimer || e.slowTimer <= 0) unslowed.push({ e, dist });
-            else slowed.push({ e, dist });
+        super({
+            ...opts,
+            type: "frost",
+            maxLevel: 5,
+            upgradeCosts: [50, 50, 300, 600, 3000],
+            opts: {
+                targetingMode: "unslowedFirst"
+            },
+            levelData: {
+                1: {
+                    damage: 35,
+                    range: 120,
+                    fireRate: 45,
+                    slowMultiplier: 0.5,
+                    slowDuration: 210,
+                    sprite: "frost-tower.png"
+                },
+                2: {
+                    damage: 55,
+                    range: 125,
+                    fireRate: 42,
+                    slowMultiplier: 0.45,
+                    slowDuration: 230,
+                    sprite: "frost-tower2.png"
+                },
+                3: {
+                    damage: 75,
+                    range: 130,
+                    fireRate: 40,
+                    slowMultiplier: 0.4,
+                    slowDuration: 250,
+                    sprite: "frost-tower2.png"
+                },
+                4: {
+                    damage: 100,
+                    range: 135,
+                    fireRate: 38,
+                    slowMultiplier: 0.35,
+                    slowDuration: 270,
+                    sprite: "frost-tower2.png"
+                },
+                5: {
+                    damage: 140,
+                    range: 145,
+                    fireRate: 35,
+                    slowMultiplier: 0.3,
+                    slowDuration: 300,
+                    sprite: "frost-tower2.png"
+                }
+            }
         });
-
-        if (unslowed.length > 0) {
-            unslowed.sort((a, b) => a.dist - b.dist);
-            return unslowed[0].e;
-        }
-
-        if (slowed.length > 0) {
-            slowed.sort((a, b) => a.dist - b.dist);
-            return slowed[0].e;
-        }
-
-        return null;
-    }
-
-    update(gameState) {
-        if (this.cooldown > 0) {
-            this.cooldown--;
-            return;
-        }
-
-        const target = this.findTarget(gameState.enemies);
-        if (target) {
-            // use base fire method to create projectile
-            this.fire(target, gameState);
-            this.cooldown = this.fireRate;
-        }
-    }
-
-    draw() {
-        super.draw();
-        const ctx = this.ctx;
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.drawImage(frostImg, -16, -16, 32, 32);
-        ctx.restore();
     }
 }
