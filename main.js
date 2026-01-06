@@ -131,14 +131,16 @@ towerCards.forEach(card => {
     const towerName = card.querySelector(".towerName").textContent.replace(":", "").trim();
 
     if (gameState.money >= cost) {
-      gameState.money -= cost;
-      hud.updateMoneyLives();  // new function to update money/lives in HUD
-      window.selectedTowerType = towerName;
+      gameState.money -= cost;         // subtract money
+      hud.update();                    // refresh HUD
+      selectedTowerType = towerName;   // store which tower is selected
+      window.selectedTowerType = selectedTowerType;
     } else {
       alert("Not enough money!");
     }
   });
 });
+
 
 
 /***********************
