@@ -43,13 +43,14 @@ export function startNextWave(gameState, path, gridSize, ctx, canvas, waveText, 
 
   waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
 
-  waveState.countdownInterval = (() => {
+  waveState.countdownInterval = setInterval(() => {
     waveState.countdown--;
     waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
 
     if (waveState.countdown <= 0) {
-      clearInterval(waveState.countdownInterval);
-      startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+        clearInterval(waveState.countdownInterval);
+        startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
     }
   }, 1000);
+
 }

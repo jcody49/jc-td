@@ -651,12 +651,17 @@ canvas {
     padding: 0;
   }
   
-  
+
+
 #towerInteractionMenu {
   display: flex;
   align-items: center; /* vertical alignment */
   width: 100%;
 }
+  /* Hide everything initially */
+  #towerInteractionMenu {
+    display: none; /* hidden by default */
+  }
 
 .tower-modal-content {
   display: flex;       /* icons in a row */
