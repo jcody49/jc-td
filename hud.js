@@ -19,7 +19,6 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
       if (upgradeCost) upgradeCost.textContent = tower.upgradeCost ? `$${tower.upgradeCost}` : '';
     }
   
-    // Show modal
     function showTowerModal(tower) {
       selectedTower = tower;
   
@@ -29,7 +28,6 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
       updateTowerMenu(tower);
     }
   
-    // Hide modal
     function hideTowerModal() {
       selectedTower = null;
   
