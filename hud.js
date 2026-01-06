@@ -1,55 +1,57 @@
-export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, waveState, startWave }) {
-    const hud = document.getElementById('hud');
-    const skipButton = document.getElementById("skipButton");
-
-    // Ensure HUD is always visible
-    hud.style.display = 'flex';
-
-    // Skip button behavior
-    skipButton.addEventListener("click", () => {
-        if (waveState.status === "countdown") {
-            clearInterval(waveState.countdownInterval);
-            startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
-        }
-    });
-
-    // -------------------------------
-    // Tower modal update logic
-    // -------------------------------
-    function updateTowerModal(selectedTower) {
-        if (!selectedTower) return; // no tower selected
-
-        const modalTitle = document.getElementById('modalTitle');
-        const modalInfo = document.getElementById('modalInfo');
-
-        modalTitle.textContent = selectedTower.name;
-        modalInfo.textContent = `Level: ${selectedTower.level}`;
-
-        // Conditional Special option
-        const specialOptionWrapper = document.querySelector('.tower-special').parentElement;
-        if (selectedTower.hasSpecial) {
-            specialOptionWrapper.style.display = 'flex';
-        } else {
-            specialOptionWrapper.style.display = 'none';
-        }
-
-        // Optional: update upgrade cost if needed
-        const upgradeCost = document.getElementById('upgradeCost');
-        if (upgradeCost && selectedTower.upgradeCost !== undefined) {
-            upgradeCost.textContent = `$${selectedTower.upgradeCost}`;
-        }
+export function initHUD({ gameState }) {
+    let selectedTower = null;
+  
+    // Update money and lives
+    function updateHUD() {
+      const moneyEl = document.getElementById('money');
+      const livesEl = document.getElementById('lives');
+  
+      if (moneyEl) moneyEl.textContent = `Money: ${gameState.money}`;
+      if (livesEl) livesEl.textContent = `Lives: ${gameState.lives}`;
     }
-
-    // -------------------------------
-    // HUD update logic
-    // -------------------------------
-    function update() {
-        document.getElementById('lives').textContent = `Lives: ${gameState.lives}`;
-        document.getElementById('money').textContent = `Money: ${gameState.money}`;
+  
+    // Update tower modal info
+    function updateTowerMenu(tower) {
+      const modalTitle = document.getElementById('modalTitle');
+      const modalInfo = document.getElementById('modalInfo');
+      const upgradeCost = document.getElementById('upgradeCost');
+  
+      if (!tower) {
+        if (modalTitle) modalTitle.textContent = '';
+        if (modalInfo) modalInfo.textContent = '';
+        if (upgradeCost) upgradeCost.textContent = '';
+        return;
+      }
+  
+      if (modalTitle) modalTitle.textContent = tower.type;
+      if (modalInfo) modalInfo.textContent = `Level: ${tower.level || 1}`;
+      if (upgradeCost) upgradeCost.textContent = tower.upgradeCost ? `$${tower.upgradeCost}` : '';
     }
-
+  
+    // Show modal
+    function showTowerModal(tower) {
+      selectedTower = tower;
+      const modal = document.querySelector('.tower-modal-content');
+      if (modal) modal.style.display = 'flex';
+      updateTowerMenu(tower);
+    }
+  
+    // Hide modal
+    function hideTowerModal() {
+      selectedTower = null;
+      updateTowerMenu(null);
+      const modal = document.querySelector('.tower-modal-content');
+      if (modal) modal.style.display = 'none';
+    }
+  
+    // Initialize HUD values on start
+    updateHUD();
+  
     return {
-        update,
-        updateTowerModal, // expose this so game logic can call it when a tower is selected
+      updateHUD,
+      updateTowerMenu,
+      showTowerModal,
+      hideTowerModal
     };
-}
+  }
+  
