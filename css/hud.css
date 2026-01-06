@@ -1,0 +1,318 @@
+#hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background: rgba(0,0,0,0.5);
+    border: 2px solid #7fff00;
+    border-radius: 0 0 8px 8px;
+    color: white;
+    font-family: 'Audiowide', sans-serif;
+    height: 116px;
+    box-sizing: border-box;
+    margin-top: 0; 
+  
+    width: 100%; /* full width of container */
+    max-width: none;
+  }
+
+
+
+  /* Left side of HUD */
+#hudLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  #hudLeft div {
+    font-size: 18px;
+    color: #fff;
+    padding: 0 10px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+
+  /* Buttons */
+#hudLeft button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-family: 'Audiowide', sans-serif;
+    background: linear-gradient(145deg, #007f8f, #00b2cc, #0099aa);
+    color: #fff;
+    border: 2px solid #00ffff;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.15s, transform 0.15s;
+    padding: 0 12px;
+  }
+  
+  #hudLeft button:hover {
+    background: linear-gradient(145deg, #0099aa, #00ccff, #00b2cc);
+    transform: scale(1.02);
+  }
+  
+  /* Right side of HUD: placeholder menu */
+  #hudRight {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-family: 'Audiowide', sans-serif;
+  }
+
+
+  /* ----------------------------
+   TOWER MODAL
+---------------------------- */
+
+.tower-modal-info {
+    padding-top: 0;
+
+    text-align: center;
+    font-family: 'Audiowide', monospace;
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+
+    text-shadow:
+        /* DARK INNER OUTLINE (contrast) */
+        1px 1px 0 #000,
+       -1px 1px 0 #000,
+        1px -1px 0 #000,
+       -1px -1px 0 #000,
+
+        /* BASE SHADOW */
+        0 0 3px #000,
+
+        /* NEON GLOW */
+        0 0 7px #00D6D6,   /* slightly darker cyan */
+        0 0 14px #6A22E6;
+}
+
+/*TOWER-MODAL-INFO*/
+#modalTitle {
+    font-weight: bold;
+    margin-bottom: 2px;
+    text-align: right;
+    font-size: 1.1em;
+    letter-spacing: 3px;
+}
+
+#modalInfo {
+    margin: 0;
+    font-size: .8em;
+    text-align: right;
+    letter-spacing: 3px;
+}
+
+.selected-label{
+  font-size: .66em;
+  text-align: right;
+  letter-spacing: 4px;
+  color:rgba(0, 255, 255, 0.9);
+  font-style: italic;
+}
+
+.tower-modal-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Option squares */
+.tower-modal-option {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid rgba(255,255,255,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 255, 255, 0.9);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    border-color: #792BFB;
+}
+
+.tower-modal-option:hover {
+    border-color: #792BFB;
+    box-shadow: 0 0 12px rgba(121, 43, 251, 0.6);
+}
+
+.tower-modal-option img {
+    width: 80%;
+    height: 80%;
+    object-fit: cover;
+}
+
+.tower-modal-option .upgradeCost {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: 13px;
+    font-family: 'Audiowide';
+    font-weight: bold;
+    color: #ffffff;
+    text-shadow:
+        /* DARK INNER OUTLINE (contrast) */
+        1px 1px 0 #000,
+       -1px 1px 0 #000,
+        1px -1px 0 #000,
+       -1px -1px 0 #000,
+
+        /* BASE SHADOW */
+        0 0 1px #000,
+
+        /* NEON GLOW */
+        0 0 7px #00D6D6,   /* slightly darker cyan */
+        0 0 14px #6A22E6;   /* extended glow for pop */
+}
+
+
+.tower-modal-option .option-icon {
+    pointer-events: none; 
+}
+
+/* KEYBOARD SHORTCUT BOTTOM LEFT */
+.tower-modal-option span.towerKey {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #792BFB;
+    text-shadow: 0 0 2px #000;
+  }
+  
+
+  #sell-icon.option-icon {
+    font-size: 105px;
+    font-style: italic;
+    color: #E91E36;  /* slightly darker neon red */
+    text-shadow: 
+        0 0 3px rgba(233, 30, 54, 0.7),  /* subtle red glow */
+        0 0 6px rgba(233, 30, 54, 0.45),
+        1px 1px 0 #fff,   /* top-left inner highlight */
+        2px 2px 0 #fff,   /* stronger inner highlight */
+        -1px -1px 0 #fff, /* bottom-right inner highlight */
+        -2px -2px 0 #fff; /* stronger inner highlight */
+}
+
+.tower-modal-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;      /* space between grid and button */
+}
+
+.tower-modal-options {
+    display: flex;
+    grid-template-columns: repeat(2, 1fr);  /* still 2x2 */
+    gap: 23px;   /* gap is % of container width */
+    align-items: center;
+    margin-right: 23px;
+}
+
+.tower-modal-option {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 255, 255, 0.902);
+    border: 2px solid #792BFB;  /* purple border */
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+
+/* Wrapper holds the square + label */
+.tower-option-wrapper {
+    display: flex;
+    flex-direction: column;  /* stack icon + label vertically */
+    align-items: center;     /* center horizontally */
+    justify-content: flex-start;
+  }
+  
+  /* Keep squares the same size */
+  .tower-option-wrapper .tower-modal-option {
+    width: 50px;      
+    aspect-ratio: 1 / 1;
+    margin-bottom: 6px; 
+  }
+  
+  /* Label styling */
+  .tower-option-wrapper .optionLabel {
+    font-family: 'Audiowide', monospace;
+    font-size: 12px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 40%;
+  
+    /* subtle dark outline for readability */
+    text-shadow:
+        1px 1px 0 #000,
+       -1px 1px 0 #000,
+        1px -1px 0 #000,
+       -1px -1px 0 #000;
+  }
+  
+  #towerInteractionMenu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  
+  * {
+    margin: 0;
+    padding: 0;
+  }
+  
+
+
+#towerInteractionMenu {
+  display: flex;
+  align-items: center; /* vertical alignment */
+  width: 100%;
+}
+  /* Hide everything initially */
+  #towerInteractionMenu {
+    display: none; /* hidden by default */
+  }
+
+.tower-modal-content {
+  display: flex;       /* icons in a row */
+  margin-left: auto;   /* 🔥 pushes it to the far right */
+}
+
+.tower-modal-info{
+  margin-left: 145px;
+  margin-right: 5%;
+}
+
+
+#settingsContainer {
+  display: flex;
+  justify-content: flex-end; /* hug far right */
+  align-items: center;
+  margin-top: 4px; /* optional spacing from HUD row */
+}
+
+#settingsButton {
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}

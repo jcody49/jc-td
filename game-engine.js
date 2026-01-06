@@ -144,7 +144,11 @@ if (window.selectedTowerType) {
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
 
     // Update HUD
-    if (hud) hud.update();
+    if (hud) {
+        hud.updateMoneyLives(); // money & lives
+        hud.update();           // tower modal info
+    }
+    
 
     // Continue the loop
     requestAnimationFrame(() =>

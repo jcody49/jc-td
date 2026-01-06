@@ -1,50 +1,49 @@
-// TankTower.js
 import { Tower } from './Tower.js';
-import { Projectile } from '../projectiles.js';
-import { tankImg } from '../game-engine.js';
 
 export class TankTower extends Tower {
     constructor(opts) {
-        super({ ...opts, towerType: "tank" });
-        this.range = 120;       // slightly longer range
-        this.fireRate = 100;     // slower firing
-        this.damage = 30;       // moderate damage per enemy
-        this.splashRadius = 50; // radius of AOE damage
-    }
-
-    update(gameState) {
-        if (this.cooldown > 0) {
-            this.cooldown--;
-            return;
-        }
-
-        // find target (closest to exit or just first in range)
-        const target = gameState.enemies.find(
-            e => Math.hypot(this.x - e.x, this.y - e.y) < this.range
-        );
-
-        if (target) {
-            gameState.projectiles.push(
-                new Projectile({
-                    x: this.x,
-                    y: this.y,
-                    target,
-                    ctx: this.ctx,
-                    type: "tank",
-                    damage: this.damage,
-                    splashRadius: this.splashRadius
-                })
-            );
-            this.cooldown = this.fireRate;
-        }
-    }
-
-    draw() {
-        super.draw();
-        const ctx = this.ctx;
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.drawImage(tankImg, -20, -20, 40, 40);
-        ctx.restore();
+        super({
+            ...opts,
+            type: "tank",
+            maxLevel: 5,
+            upgradeCosts: [60, 65, 400, 500, 4000],
+            levelData: {
+                1: {
+                    damage: 35,
+                    range: 125,
+                    fireRate: 120,
+                    splashRadius: 60,
+                    sprite: "tank-tower.png"
+                },
+                2: {
+                    damage: 45,
+                    range: 125,
+                    fireRate: 105,
+                    splashRadius: 70,
+                    sprite: "tank-tower2.png"
+                },
+                3: {
+                    damage: 70,
+                    range: 130,
+                    fireRate: 90,
+                    splashRadius: 80,
+                    sprite: "tank-tower2.png"
+                },
+                4: {
+                    damage: 105,
+                    range: 135,
+                    fireRate: 85,
+                    splashRadius: 90,
+                    sprite: "tank-tower2.png"
+                },
+                5: {
+                    damage: 150,
+                    range: 145,
+                    fireRate: 80,
+                    splashRadius: 100,
+                    sprite: "tank-tower2.png"
+                }
+            }
+        });
     }
 }

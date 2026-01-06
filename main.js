@@ -4,14 +4,11 @@ import { Tower } from './towers/Tower.js';
 import { startWave, startNextWave, waveState } from './waves.js';
 import { initHUD } from './hud.js';
 
-//TOWER IMPORTS
+// TOWER IMPORTS
 import { CannonTower } from './towers/CannonTower.js';
 import { FrostTower } from './towers/FrostTower.js';
 import { AcidTower } from './towers/AcidTower.js';
 import { TankTower } from './towers/TankTower.js';
-
-
-
 
 /**********************
  * CANVAS SETUP
@@ -30,49 +27,8 @@ const gameState = {
   lives: 10
 };
 
-
-
-let selectedTower = null; // currently selected tower
-
-export let selectedTowerType = null;
-
-//TOWER INTERACTION MODAL
-function showTowerModal(tower) {
-  const modal = document.getElementById('towerModal');
-
-  // 1️⃣ Show modal so we can get height
-  modal.style.display = 'block';
-  const modalHeight = modal.offsetHeight;
-
-  // 2️⃣ Position modal above and slightly right of tower
-  const offsetX = 150;   // tweak for horizontal spacing
-  const offsetY = 5;   // tweak for vertical spacing
-  modal.style.left = `${tower.x + offsetX}px`;
-  modal.style.top  = `${tower.y - modalHeight - offsetY}px`;
-
-  // 3️⃣ Fill in tower info
-  document.getElementById('modalTitle').textContent = tower.type;
-  document.getElementById('modalInfo').textContent = `Level: ${tower.level || 1}`;
-
-  // 4️⃣ Upgrade preview
-  if (tower.upgradeData) {
-      const previewImg = document.getElementById('upgradePreview');
-      previewImg.src = tower.upgradeData.previewImg.src;
-      previewImg.style.display = 'block';
-      document.getElementById('upgradeCost').textContent = `$${tower.upgradeData.cost}`;
-  }
-}
-
-
-
-
-
-function hideTowerModal() {
-  const modal = document.getElementById('towerModal');
-  modal.style.display = 'none';
-}
-
-
+// We'll use window.selectedTowerType as the global source of truth
+window.selectedTowerType = null;
 
 /**********************
  * GAME CONTROL
@@ -84,9 +40,6 @@ let spawnInterval;
  * WAVE TEXT
  **********************/
 const waveText = document.getElementById("waveText");
-  
-
-
 
 /**********************
  * UTILS
@@ -95,138 +48,62 @@ function distance(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
-
 /**********************
  * GRID SETTINGS
  **********************/
-const gridCols = 25; // 25 columns
-const gridRows = 15; // 15 rows
+const gridCols = 25;
+const gridRows = 15;
 const gridSizeX = canvas.width / gridCols;
 const gridSizeY = canvas.height / gridRows;
-const gridSize = Math.min(gridSizeX, gridSizeY); // square cells
-
+const gridSize = Math.min(gridSizeX, gridSizeY);
 
 /**********************
  * PATHING
  **********************/
 const pathCells = [
+  // ... your path cells as before ...
+  { col: 0, row: 7 }, { col: 1, row: 7 }, { col: 2, row: 7 }, { col: 3, row: 7 }, { col: 4, row: 7 },
+  { col: 4, row: 6 }, { col: 4, row: 5 }, { col: 4, row: 4 }, { col: 4, row: 3 },
+  { col: 5, row: 3 }, { col: 6, row: 3 },
+  { col: 6, row: 4 }, { col: 6, row: 5 }, { col: 6, row: 6 }, { col: 6, row: 7 }, { col: 6, row: 8 },
+  { col: 6, row: 9 }, { col: 6, row: 10 }, { col: 6, row: 11 },
+  { col: 7, row: 11 }, { col: 8, row: 11 },
+  { col: 8, row: 10 }, { col: 8, row: 9 }, { col: 8, row: 8 }, { col: 8, row: 7 }, { col: 8, row: 6 },
+  { col: 8, row: 5 }, { col: 8, row: 4 }, { col: 8, row: 3 },
+  { col: 9, row: 3 }, { col: 10, row: 3 },
+  { col: 10, row: 4 }, { col: 10, row: 5 }, { col: 10, row: 6 }, { col: 10, row: 7 },
+  { col: 11, row: 7 }, { col: 12, row: 7 }, { col: 13, row: 7 }, { col: 14, row: 7 }, { col: 15, row: 7 },
+  { col: 16, row: 7 }, { col: 17, row: 7 }, { col: 18, row: 7 }, { col: 19, row: 7 }, { col: 20, row: 7 },
+  { col: 21, row: 7 }, { col: 22, row: 7 }, { col: 23, row: 7 }, { col: 24, row: 7 }, { col: 25, row: 7 },
+  { col: 26, row: 7 },
+];
 
-    // start--4 cells right
-    { col: 0, row: 7 }, 
-    { col: 1, row: 7 },
-    { col: 2, row: 7 },
-    { col: 3, row: 7 },
-    { col: 4, row: 7 }, 
-    
-    
-    // move up
-    { col: 4, row: 6 }, 
-    { col: 4, row: 5 },
-    { col: 4, row: 4 }, 
-    { col: 4, row: 3 }, 
-  
-    // new segment: right 2
-    { col: 5, row: 3 },
-    { col: 6, row: 3 },
+// Quick lookup arrays
+const pathOccupied = pathCells.map(cell => `${cell.col},${cell.row}`);
+const path = pathCells.map(cell => ({
+  x: cell.col * gridSize + gridSize / 2,
+  y: cell.row * gridSize + gridSize / 2
+}));
 
-  
-    // new segment: down 7
-    { col: 6, row: 4 },
-    { col: 6, row: 5 },
-    { col: 6, row: 6 },
-    { col: 6, row: 7 },
-    { col: 6, row: 8 },
-    { col: 6, row: 9 },
-    { col: 6, row: 10 },
-    { col: 6, row: 11 },
-
-
-    // new segment: right 2
-    { col: 7, row: 11 },
-    { col: 8, row: 11 },
-
-
-    // new segment: up 7
-    { col: 8, row: 10 },
-    { col: 8, row: 9 },
-    { col: 8, row: 8 },
-    { col: 8, row: 7 },
-    { col: 8, row: 6 },
-    { col: 8, row: 5 },
-    { col: 8, row: 4 },
-    { col: 8, row: 3 },
-
-
-    // new segment: right 2
-    { col: 9, row: 3 },
-    { col: 10, row: 3 },
-
-
-    // new segment: down 5
-    { col: 10, row: 4 },
-    { col: 10, row: 5 },
-    { col: 10, row: 6 },
-    { col: 10, row: 7 },
-
-
-    // new segment: right 3
-    { col: 11, row: 7 },
-    { col: 12, row: 7 },
-    { col: 13, row: 7 },
-    { col: 14, row: 7 },
-    { col: 15, row: 7 },
-    { col: 16, row: 7 },
-    { col: 17, row: 7 },
-    { col: 18, row: 7 },
-    { col: 19, row: 7 },
-    { col: 20, row: 7 },
-    { col: 21, row: 7 },
-    { col: 22, row: 7 },
-    { col: 23, row: 7 },
-    { col: 24, row: 7 },
-    { col: 25, row: 7 },
-    { col: 26, row: 7 },
-
-  ];
-
-
-  // Convert pathCells to a simple array of "col,row" strings for quick lookup
-  const pathOccupied = pathCells.map(cell => `${cell.col},${cell.row}`);
-
-
-  const path = pathCells.map(cell => ({
-    x: cell.col * gridSize + gridSize / 2,
-    y: cell.row * gridSize + gridSize / 2
-  }));
-
-// Optional: keep track of which tiles are occupied
 const gridOccupied = Array.from({ length: gridCols }, () =>
   Array(gridRows).fill(false)
 );
 
-
-  
+// Get tower at canvas position
 function getTowerAtPosition(x, y) {
   for (let tower of gameState.towers) {
-    const size = gridSize * 0.8; // adjust if needed
-    if (
-      x >= tower.x - size / 2 &&
-      x <= tower.x + size / 2 &&
-      y >= tower.y - size / 2 &&
-      y <= tower.y + size / 2
-    ) {
+    const size = gridSize * 0.8;
+    if (x >= tower.x - size/2 && x <= tower.x + size/2 &&
+        y >= tower.y - size/2 && y <= tower.y + size/2) {
       return tower;
     }
   }
   return null;
 }
 
-
-
 /***********************
-* START GAME
+* INIT HUD
 ***********************/
-
 const hud = initHUD({
   gameState,
   path,
@@ -238,15 +115,19 @@ const hud = initHUD({
   startWave
 });
 
+console.log(hud);
 
+// Expose HUD modal functions globally
+window.showTowerModal = (tower) => hud.showTowerModal(tower);
+window.hideTowerModal = () => hud.hideTowerModal();
 
-// Select all tower cards
+/***********************
+* TOWER CARD SELECTION
+***********************/
 const towerCards = document.querySelectorAll(".towerCard");
-
 towerCards.forEach(card => {
   card.addEventListener("click", () => {
     const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$",""));
-    
     const towerName = card.querySelector(".towerName").textContent.replace(":", "").trim();
 
     if (gameState.money >= cost) {
@@ -254,7 +135,6 @@ towerCards.forEach(card => {
       hud.update();                    // refresh HUD
       selectedTowerType = towerName;   // store which tower is selected
       window.selectedTowerType = selectedTowerType;
-
     } else {
       alert("Not enough money!");
     }
@@ -263,64 +143,66 @@ towerCards.forEach(card => {
 
 
 
+/***********************
+* CANVAS CLICK
+***********************/
 canvas.addEventListener("click", e => {
   const rect = canvas.getBoundingClientRect();
   const clickX = e.clientX - rect.left;
   const clickY = e.clientY - rect.top;
 
-  // ----------------------------------
-  // 1️⃣ TOWER PLACEMENT MODE
-  // ----------------------------------
-  if (selectedTowerType) {
+  // 1️⃣ Tower Placement
+  if (window.selectedTowerType) {
     const col = Math.floor(clickX / gridSize);
     const row = Math.floor(clickY / gridSize);
 
+    if (!gridOccupied[col] || gridOccupied[col][row] === undefined) return;
+
     const cellKey = `${col},${row}`;
-    const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
+    const validPlacement =
+      !gridOccupied[col][row] &&
+      !pathOccupied.includes(cellKey);
 
     if (validPlacement) {
       const snappedX = col * gridSize + gridSize / 2;
       const snappedY = row * gridSize + gridSize / 2;
 
-      if (selectedTowerType === "Cannon") {
-        gameState.towers.push(new CannonTower({ x: snappedX, y: snappedY, ctx }));
-      } else if (selectedTowerType === "Frost") {
-        gameState.towers.push(new FrostTower({ x: snappedX, y: snappedY, ctx }));
-      } else if (selectedTowerType === "Acid") {
-        gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx }));
-      } else if (selectedTowerType === "Tank") {
-        gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx }));
+      console.log("Placing tower:", window.selectedTowerType, `"${window.selectedTowerType.length}"`);
+
+      switch (window.selectedTowerType) {
+        case "Cannon":
+          gameState.towers.push(new CannonTower({ x: snappedX, y: snappedY, ctx, opts: {} }));
+          break;
+        case "Frost":
+          gameState.towers.push(new FrostTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: true } }));
+          break;
+        case "Acid":
+          gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: false } }));
+          break;
+        case "Tank":
+          gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: false } }));
+          break;
       }
 
       gridOccupied[col][row] = true;
-      selectedTowerType = null;
       window.selectedTowerType = null;
-      hud.update();
+      hud.update(); // refresh HUD if needed
     }
-
-    return; // exit here if we just placed a tower
+    return;
   }
 
-  // ----------------------------------
-  // 2️⃣ TOWER SELECTION MODE
-  // ----------------------------------
+  // 2️⃣ Tower Selection (show modal)
   const tower = getTowerAtPosition(clickX, clickY);
-  if (tower) {
-    selectedTower = tower;
-    showTowerModal(tower, e.clientX, e.clientY);
-  } else {
-    selectedTower = null;
-    hideTowerModal();
-  }
+  if (tower) hud.showTowerModal(tower);
+  else hud.hideTowerModal();
 });
 
 
-
-
-
+/***********************
+* MOUSE HOVER
+***********************/
 let mouseX = 0;
 let mouseY = 0;
-
 canvas.addEventListener('mousemove', e => {
   const rect = canvas.getBoundingClientRect();
   mouseX = e.clientX - rect.left;
@@ -329,64 +211,59 @@ canvas.addEventListener('mousemove', e => {
   window.mouseX = mouseX;
   window.mouseY = mouseY;
 
-  // ----- Hover effect -----
   const tower = getTowerAtPosition(mouseX, mouseY);
-  if (tower) {
-    canvas.style.cursor = "pointer"; // or "crosshair" for more tower-like feel
-  } else {
-    canvas.style.cursor = "default";
-  }
+  canvas.style.cursor = tower ? "pointer" : "default";
 });
 
-
-
+/***********************
+* ESC KEY
+***********************/
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') selectedTowerType = null;
+  if (e.key === 'Escape') window.selectedTowerType = null;
 });
 
-
-
-
+/***********************
+* START GAME
+***********************/
 function startGame() {
   if (gameStarted) return;
   gameStarted = true;
 
-  document.getElementById("startButton").style.display = "none";
+  const startButton = document.getElementById("startButton");
+  const skipButton = document.getElementById("skipButton");
 
-  /*
-  // SHOW HUD
-  hud.show();
-  */
+  // Hide the start button
+  startButton.style.display = "none";
 
-  // START COUNTDOWN FOR FIRST WAVE
+  // Begin countdown for next wave
   waveState.status = "countdown";
-  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, document.getElementById("skipButton"));
+  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
 
-  // START GAME LOOP
-  gameLoop(
-    ctx,
-    canvas,
-    gridCols,
-    gridRows,
-    gridSize,
-    gameState,
-    hud
-  );
-  
+  // Start the main game loop
+  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
 }
 
+/***********************
+* HUD BUTTONS
+***********************/
+const startButton = document.getElementById("startButton");
+const skipButton = document.getElementById("skipButton");
 
-document.getElementById("startButton").addEventListener("click", startGame);
+// Start button listener
+startButton.addEventListener("click", startGame);
 
+// Skip button listener
+skipButton.addEventListener("click", () => {
+  if (waveState.countdownInterval) {
+    clearInterval(waveState.countdownInterval); // stop the countdown
+    startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton); // start wave immediately
+    skipButton.disabled = true; // optional: disable after skipping
+  }
+});
 
-window.selectedTowerType = selectedTowerType;
-window.mouseX = mouseX;
-window.mouseY = mouseY;
-
+/***********************
+* EXPOSE GLOBALS
+***********************/
 window.gridOccupied = gridOccupied;
 window.pathOccupied = pathOccupied;
 
-
-// Make modal functions globally accessible for HTML onclick
-window.hideTowerModal = hideTowerModal;
-window.showTowerModal = showTowerModal;

@@ -1,0 +1,143 @@
+body {
+    margin: 0;
+    background: #111;
+    font-family: 'Audiowide', sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+}
+
+body {
+  margin: 26px;
+}
+
+/* Header */
+#gameHeader {
+    font-family: 'Audiowide', sans-serif;
+    font-size: 60px;
+    text-align: center;
+    letter-spacing: 2px;
+    
+    /* Gradient fill */
+    background: linear-gradient(135deg, #4682B4, #5F9EA0, #7FFFD4);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* must be transparent for the gradient to show */
+
+    /* Outline and glow */
+    text-shadow:
+        -2px -2px 0 #000,
+         2px -2px 0 #7fff00,
+        -2px  2px 0 #000,
+         2px  2px 0 #000,
+         0px 0px 20px rgba(0,255,255,0.6);
+
+    /* Animate gradient */
+    animation: gradientShift 3s ease infinite;
+
+    /* Fallback for browsers that don’t support -webkit-background-clip */
+    color: #5F9EA0; /* muted steel-blue fallback */
+}
+
+
+
+  
+  /* Container for canvas + menu */
+  #gameContainer {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    margin: 15px auto; /* centers horizontally with automatic side margins */
+    max-width: 1130px; /* optional, prevents stretching */
+}
+
+  
+#gameWrapper {
+  position: relative; /* container for absolute positioning */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* top-align the canvas */
+}
+
+#waveText {
+  position: absolute;  /* overlay on top of canvas */
+  top: 25px;           /* distance from top of canvas */
+  left: 50%;           /* center horizontally */
+  transform: translateX(-50%);
+  color: white;
+  font-size: 20px;
+  font-family: monospace;
+  text-align: center;
+  pointer-events: none; /* so clicks go through to canvas */
+  z-index: 10;         /* ensure it sits above canvas */
+}
+
+
+
+
+
+canvas {
+    background: #1e1e1e;
+    border: 2px solid #7fff00;
+    display: block;
+    margin: 0 auto;
+}
+
+
+/* Container for everything */
+#gameContainer {
+  display: flex;
+  flex-direction: column; /* stack main area + HUD vertically */
+  gap: 0;
+  max-width: 1330px;
+  margin: 15px auto;
+}
+
+/* Top row: canvas + tower menu */
+#mainGameArea {
+  display: flex;
+
+}
+
+/* Canvas wrapper = 2/3 */
+#gameWrapper {
+  flex: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Tower menu = 1/3 */
+#towerMenu {
+  flex: 1;
+  border: 2px solid #7fff00; /* optional styling */
+  padding: 10px;
+}
+
+/* Canvas */
+canvas {
+  background: #1e1e1e;
+  border: 2px solid #7fff00;
+  display: block;
+  margin: 0 auto;
+}
+
+
+
+
+
+
+#gameWrapper {
+  position: relative;
+}
+
+
+
+#waveText {
+  color: white;
+  font-size: 20px;
+  font-family: monospace;
+  text-align: center;
+}
+  
+
+  
