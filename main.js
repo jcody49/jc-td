@@ -132,13 +132,14 @@ towerCards.forEach(card => {
 
     if (gameState.money >= cost) {
       gameState.money -= cost;
-      hud.update();
-      window.selectedTowerType = towerName; // <- always set global
+      hud.updateMoneyLives();  // new function to update money/lives in HUD
+      window.selectedTowerType = towerName;
     } else {
       alert("Not enough money!");
     }
   });
 });
+
 
 /***********************
 * CANVAS CLICK
@@ -224,17 +225,36 @@ function startGame() {
   if (gameStarted) return;
   gameStarted = true;
 
-  document.getElementById("startButton").style.display = "none";
+  const startButton = document.getElementById("startButton");
+  const skipButton = document.getElementById("skipButton");
 
+  // Hide the start button
+  startButton.style.display = "none";
+
+  // Begin countdown for next wave
   waveState.status = "countdown";
-  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, document.getElementById("skipButton"));
+  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
 
+  // Start the main game loop
   gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const startBtn = document.getElementById("startButton");
-  startBtn.addEventListener("click", startGame);
+/***********************
+* HUD BUTTONS
+***********************/
+const startButton = document.getElementById("startButton");
+const skipButton = document.getElementById("skipButton");
+
+// Start button listener
+startButton.addEventListener("click", startGame);
+
+// Skip button listener
+skipButton.addEventListener("click", () => {
+  if (waveState.countdownInterval) {
+    clearInterval(waveState.countdownInterval); // stop the countdown
+    startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton); // start wave immediately
+    skipButton.disabled = true; // optional: disable after skipping
+  }
 });
 
 /***********************
@@ -242,3 +262,4 @@ document.addEventListener('DOMContentLoaded', () => {
 ***********************/
 window.gridOccupied = gridOccupied;
 window.pathOccupied = pathOccupied;
+

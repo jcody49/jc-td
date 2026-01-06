@@ -19,6 +19,7 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
       if (upgradeCost) upgradeCost.textContent = tower.upgradeCost ? `$${tower.upgradeCost}` : '';
     }
   
+    // Show tower modal
     function showTowerModal(tower) {
       selectedTower = tower;
   
@@ -28,6 +29,7 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
       updateTowerMenu(tower);
     }
   
+    // Hide tower modal
     function hideTowerModal() {
       selectedTower = null;
   
@@ -36,12 +38,20 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
   
       updateTowerMenu(null);
     }
+
+    // ✅ New function: update money & lives
+    function updateMoneyLives() {
+      const moneyEl = document.getElementById('money');
+      const livesEl = document.getElementById('lives');
+      if (moneyEl) moneyEl.textContent = `Money: ${gameState.money}`;
+      if (livesEl) livesEl.textContent = `Lives: ${gameState.lives}`;
+    }
   
     return {
       update: updateTowerMenu,
       updateTowerMenu,
       showTowerModal,
-      hideTowerModal
+      hideTowerModal,
+      updateMoneyLives  // <- expose it
     };
-  }
-  
+}
