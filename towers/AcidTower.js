@@ -1,56 +1,21 @@
 // AcidTower.js
 import { Tower } from './Tower.js';
-import { Projectile } from '../projectiles.js';
-import { acidImg } from '../game-engine.js';
 
 export class AcidTower extends Tower {
-    constructor(opts) {
-        super({ ...opts, towerType: "acid" });
-        this.range = 100;
-        this.fireRate = 45;
-        this.damage = 43;         // base DOT damage per tick
-        this.dotDuration = 630;   // frames
-    }
-
-    update(gameState) {
-        if (this.cooldown > 0) {
-            this.cooldown--;
-            return;
-        }
-    
-        const target = gameState.enemies.find(
-            e => Math.hypot(this.x - e.x, this.y - e.y) < this.range
-        );
-    
-        if (target) {
-            const totalDoTPercent = 0.3; // tower will remove 30% of target max HP
-            const damagePerTick = (target.maxHp * totalDoTPercent) / this.dotDuration;
-    
-            gameState.projectiles.push(
-                new Projectile({
-                    x: this.x,
-                    y: this.y,
-                    target,
-                    ctx: this.ctx,
-                    type: "acid",
-                    damage: 0,
-                    dotDamage: .3,
-                    dotDuration: 180
-                  })
-            );
-            this.cooldown = this.fireRate;
-        }
-    }
-
-    draw() {
-        super.draw();
-        const ctx = this.ctx;
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(0); // facing up by default
-        ctx.drawImage(acidImg, -20, -20, 40, 40);
-        ctx.restore();
-
-        
+    constructor(opts = {}) {
+        super({
+            ...opts,
+            type: "acid",
+            maxLevel: 5,
+            upgradeCosts: [50, 50, 400, 500, 4000],
+            levelData: {
+                1: { damage: 15, range: 120, fireRate: 85, dotDuration: 630, dotDamage: 37, sprite: "acid-tower.png" },
+                2: { damage: 20, range: 120, fireRate: 83, dotDuration: 650, dotDamage: 50, sprite: "acid-tower2.png" },
+                3: { damage: 20, range: 120, fireRate: 80, dotDuration: 700, dotDamage: 60, sprite: "acid-tower3.png" },
+                4: { damage: 20, range: 120, fireRate: 77, dotDuration: 750, dotDamage: 80, sprite: "acid-tower4.png" },
+                5: { damage: 20, range: 120, fireRate: 75, dotDuration: 800, dotDamage: 120, sprite: "acid-tower5.png" }
+            },
+            opts
+        });
     }
 }

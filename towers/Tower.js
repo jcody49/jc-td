@@ -95,8 +95,16 @@ export class Tower {
     }
 
     fire(target, gameState) {
-        console.log("TOWER FIRE", this.type, this.damage, this.splashRadius);
-
+        console.log("TOWER FIRE", this.type, this.damage, this.splashRadius, this.dotDuration, this.dotDamage);
+    
+        // Calculate per-frame DoT if this tower has dotDuration defined
+        let perFrameDot = 0;
+        if (this.dotDuration && this.dotDuration > 0) {
+            // If dotDamage is undefined, use damage as total DoT
+            const totalDot = this.dotDamage !== undefined ? this.dotDamage : this.damage;
+            perFrameDot = totalDot / this.dotDuration;
+        }
+    
         gameState.projectiles.push(
             new Projectile({
                 x: this.x,
@@ -104,14 +112,16 @@ export class Tower {
                 target,
                 ctx: this.ctx,
                 type: this.type,
-                damage: this.damage,
-    
+                damage: this.damage,             // instant damage
+                dotDamage: perFrameDot,          // per-frame DoT
+                dotDuration: this.dotDuration || 0,
                 slowMultiplier: this.slowMultiplier,
                 slowDuration: this.slowDuration,
                 splashRadius: this.splashRadius || 0
             })
         );
     }
+    
     
 
     draw() {
