@@ -151,23 +151,27 @@ canvas.addEventListener("click", e => {
   const clickX = e.clientX - rect.left;
   const clickY = e.clientY - rect.top;
 
-  // 1️⃣ Tower Placement
+  const tower = getTowerAtPosition(clickX, clickY);
+
+  if (tower) {
+    // Only show modal
+    hud.showTowerModal(tower);
+
+    // DO NOT set window.selectedTowerType = null here!
+    // Otherwise ghost placement disappears
+    return;
+  }
+
+  // Tower placement logic
   if (window.selectedTowerType) {
     const col = Math.floor(clickX / gridSize);
     const row = Math.floor(clickY / gridSize);
-
-    if (!gridOccupied[col] || gridOccupied[col][row] === undefined) return;
-
     const cellKey = `${col},${row}`;
-    const validPlacement =
-      !gridOccupied[col][row] &&
-      !pathOccupied.includes(cellKey);
+    const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
 
     if (validPlacement) {
       const snappedX = col * gridSize + gridSize / 2;
       const snappedY = row * gridSize + gridSize / 2;
-
-      console.log("Placing tower:", window.selectedTowerType, `"${window.selectedTowerType.length}"`);
 
       switch (window.selectedTowerType) {
         case "Cannon":
@@ -185,17 +189,12 @@ canvas.addEventListener("click", e => {
       }
 
       gridOccupied[col][row] = true;
-      window.selectedTowerType = null;
-      hud.update(); // refresh HUD if needed
+      window.selectedTowerType = null; // Only clear after placement
+      hud.update();
     }
-    return;
   }
-
-  // 2️⃣ Tower Selection (show modal)
-  const tower = getTowerAtPosition(clickX, clickY);
-  if (tower) hud.showTowerModal(tower);
-  else hud.hideTowerModal();
 });
+
 
 
 /***********************

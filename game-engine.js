@@ -1,4 +1,6 @@
-//TOWER IMG EXPORTS
+// =========================
+// TOWER IMAGE EXPORTS
+// =========================
 export const cannonImg = new Image();
 cannonImg.src = 'assets/cannon.png';
 
@@ -11,86 +13,64 @@ acidImg.src = 'assets/acid-tower.png';
 export const tankImg = new Image();
 tankImg.src = 'assets/tank-tower.png';
 
-
-
+// =========================
+// GAME LOOP
+// =========================
 export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
-    // Check game over first
+    const mouseX = window.mouseX || 0;
+    const mouseY = window.mouseY || 0;
+
+    // Check game over
     if (gameState.lives <= 0) {
         alert("Game Over!");
-        return; // stop the loop
+        return;
     }
 
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // =========================
+    // GHOST TOWER (visual only)
+    // =========================
+    if (window.selectedTowerType) {
+        let col = Math.floor(mouseX / gridSize);
+        let row = Math.floor(mouseY / gridSize);
 
+        // clamp indices to grid
+        col = Math.max(0, Math.min(col, gridCols - 1));
+        row = Math.max(0, Math.min(row, gridRows - 1));
 
+        const cellKey = `${col},${row}`;
+        const validPlacement = !window.gridOccupied[col][row] && !window.pathOccupied.includes(cellKey);
 
-// --- Ghost tower (visual only) ---
-if (window.selectedTowerType) {
-    const col = Math.floor(window.mouseX / gridSize);
-    const row = Math.floor(window.mouseY / gridSize);
+        let imgToDraw;
+        switch (window.selectedTowerType) {
+            case "Cannon": imgToDraw = cannonImg; break;
+            case "Frost": imgToDraw = frostImg; break;
+            case "Acid": imgToDraw = acidImg; break;
+            case "Tank": imgToDraw = tankImg; break;
+        }
 
-    const cellKey = `${col},${row}`;
-    const validPlacement =
-        gridOccupied[col] &&
-        gridOccupied[col][row] === false &&
-        !pathOccupied.includes(cellKey);
+        if (imgToDraw) {
+            const centerX = col * gridSize + gridSize / 2;
+            const centerY = row * gridSize + gridSize / 2;
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            ctx.globalAlpha = 0.35;
 
-    ctx.save();
+            if (!validPlacement) {
+                ctx.fillStyle = "red";
+                ctx.fillRect(-gridSize / 2, -gridSize / 2, gridSize, gridSize);
+            }
 
-    // move origin to center of cell
-    const centerX = col * gridSize + gridSize / 2;
-    const centerY = row * gridSize + gridSize / 2;
-    ctx.translate(centerX, centerY);
-
-    // rotate the image if needed
-    let rotation = 0;
-    let imgToDraw = null;
-
-    if (window.selectedTowerType === "Cannon") {
-        imgToDraw = cannonImg;
-        rotation = 0;
-    } else if (window.selectedTowerType === "Frost") {
-        imgToDraw = frostImg;
-        rotation = 0; // Frost faces up by default, change if needed
-    } else if (window.selectedTowerType === "Acid") {
-        imgToDraw = acidImg;
-        rotation = 0;
-    } else if (window.selectedTowerType === "Tank") {
-        imgToDraw = tankImg;
-        rotation = 0;
-    } 
-    
-
-    ctx.rotate(rotation);
-
-    // semi-transparent
-    ctx.globalAlpha = 0.35;
-
-    // red background if invalid
-    if (!validPlacement) {
-        ctx.fillStyle = "red";
-        ctx.fillRect(-gridSize / 2, -gridSize / 2, gridSize, gridSize);
+            ctx.drawImage(imgToDraw, -gridSize / 2, -gridSize / 2, gridSize, gridSize);
+            ctx.restore();
+        }
     }
 
-    // draw the image
-    if (imgToDraw) {
-        ctx.drawImage(imgToDraw, -gridSize / 2, -gridSize / 2, gridSize, gridSize);
-    }
-
-    ctx.restore();
-}
-
-
-
-
-
-
-
-  
-
-    // Draw grid lines
+    // =========================
+    // DRAW GRID
+    // =========================
     ctx.strokeStyle = "rgba(255,255,255,0.1)";
     for (let c = 0; c < gridCols; c++) {
         ctx.beginPath();
@@ -105,36 +85,37 @@ if (window.selectedTowerType) {
         ctx.stroke();
     }
 
-    // Update and draw enemies
+    // =========================
+    // UPDATE ENEMIES
+    // =========================
     gameState.enemies.forEach(enemy => {
         enemy.update(gameState);
         enemy.draw();
     });
 
-    // Cleanup enemies and give money for killed ones
+    // Cleanup enemies & give money
     gameState.enemies = gameState.enemies.filter(enemy => {
         if (enemy.remove) {
-            if (!enemy.escaped) {
-                gameState.money += enemy.reward || 1; // only give money for kills
-            }
-            return false; // remove from array
+            if (!enemy.escaped) gameState.money += enemy.reward || 1;
+            return false;
         }
-        return true; // keep alive
+        return true;
     });
 
-
-
-    // Update and draw towers
+    // =========================
+    // UPDATE TOWERS
+    // =========================
     gameState.towers.forEach(tower => {
-        const hoverRadius = 25; // or half the tower image width
-        tower.isHovered = Math.hypot(window.mouseX - tower.x, window.mouseY - tower.y) < hoverRadius;
+        const hoverRadius = 25; // adjust if needed
+        tower.isHovered = Math.hypot(mouseX - tower.x, mouseY - tower.y) < hoverRadius;
 
         tower.update(gameState);
         tower.draw();
     });
-    
 
-    // Update and draw projectiles
+    // =========================
+    // UPDATE PROJECTILES
+    // =========================
     gameState.projectiles.forEach(p => {
         p.update(gameState);
         p.draw();
@@ -143,14 +124,17 @@ if (window.selectedTowerType) {
     // Cleanup projectiles
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
 
-    // Update HUD
+    // =========================
+    // UPDATE HUD
+    // =========================
     if (hud) {
-        hud.updateMoneyLives(); // money & lives
-        hud.update();           // tower modal info
+        if (hud.updateMoneyLives) hud.updateMoneyLives(); // money & lives
+        if (hud.update) hud.update();                     // tower modal
     }
-    
 
-    // Continue the loop
+    // =========================
+    // LOOP
+    // =========================
     requestAnimationFrame(() =>
         gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud)
     );

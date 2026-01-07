@@ -1,103 +1,81 @@
 export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, waveState, startWave }) {
+    const towerInteractionMenu = document.getElementById("towerInteractionMenu");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalInfo = document.getElementById("modalInfo");
+    const towerUpgradeOption = document.getElementById("towerUpgradeOption");
+    const towerAttackOption = document.getElementById("towerAttackOption");
+    const settingsOption = document.getElementById("settingsOption");
+    const livesDisplay = document.getElementById("lives");
+    const moneyDisplay = document.getElementById("money");
+
     let selectedTower = null;
 
-    // ------------------------------
-    // Update tower info in the modal
-    // ------------------------------
-    function updateTowerMenu(tower) {
-        const modalTitle = document.getElementById('modalTitle');
-        const modalInfo = document.getElementById('modalInfo');
-        const upgradeCost = document.getElementById('upgradeCost');
-
-        if (!tower) {
-            if (modalTitle) modalTitle.textContent = '';
-            if (modalInfo) modalInfo.textContent = '';
-            if (upgradeCost) upgradeCost.textContent = '';
-            updateUpgradeButton(null);
-            return;
-        }
-
-        if (modalTitle) modalTitle.textContent = tower.type;
-        if (modalInfo) modalInfo.textContent = `Level: ${tower.level || 1}`;
-        if (upgradeCost) upgradeCost.textContent = tower.upgradeCosts[tower.level - 1] ? `$${tower.upgradeCosts[tower.level - 1]}` : '';
-
-        updateUpgradeButton(tower);
-    }
-
-    // ------------------------------
-    // Show/hide tower modal
-    // ------------------------------
     function showTowerModal(tower) {
         selectedTower = tower;
-        const modalContainer = document.getElementById('towerInteractionMenu');
-        if (modalContainer) modalContainer.style.display = 'flex';
-        updateTowerMenu(tower);
+        updateTowerModal();
     }
 
     function hideTowerModal() {
         selectedTower = null;
-        const modalContainer = document.getElementById('towerInteractionMenu');
-        if (modalContainer) modalContainer.style.display = 'none';
-        updateTowerMenu(null);
+        towerInteractionMenu.style.display = "none";
     }
 
-    // ------------------------------
-    // Upgrade button logic
-    // ------------------------------
-    function setupUpgradeButton() {
-        const upgradeBtn = document.getElementById("towerUpgradeOption");
-        if (!upgradeBtn) return;
+    function updateTowerModal() {
+        if (!selectedTower) return;
 
-        upgradeBtn.addEventListener("click", () => {
-            if (!selectedTower) return;
+        towerInteractionMenu.style.display = "flex";
+        modalTitle.textContent = selectedTower.getDisplayName ? selectedTower.getDisplayName() : selectedTower.type;
+        modalInfo.textContent = getTowerInfoText(selectedTower);
 
-            const upgraded = selectedTower.upgrade(gameState);
-
-            if (upgraded) {
-                // Refresh HUD and modal info
-                updateTowerMenu(selectedTower);
-                updateMoneyLives();
-            } else {
-                alert("Cannot upgrade: not enough money or max level reached");
-            }
-        });
+        updateUpgradeOption(selectedTower);
+        updateSellOption(selectedTower);
+        updateAttackOption(selectedTower);
     }
 
-    function updateUpgradeButton(tower) {
-        const upgradeBtn = document.getElementById("towerUpgradeOption");
-        if (!upgradeBtn) return;
-
-        if (!tower || tower.level >= tower.maxLevel || gameState.money < tower.upgradeCosts[tower.level - 1]) {
-            upgradeBtn.classList.add("disabled"); // optional CSS class
-            upgradeBtn.disabled = true;
-        } else {
-            upgradeBtn.classList.remove("disabled");
-            upgradeBtn.disabled = false;
-        }
+    function getTowerInfoText(tower) {
+        return `
+Damage: ${tower.damage}
+Range: ${tower.range}
+Fire Rate: ${tower.fireRate}
+Level: ${tower.level}
+`.trim();
     }
 
-    setupUpgradeButton(); // call once to attach event listener
+    function updateUpgradeOption(tower) {
+        if (tower.canUpgrade && tower.canUpgrade()) towerUpgradeOption.classList.remove("disabled");
+        else towerUpgradeOption.classList.add("disabled");
 
-    // ------------------------------
-    // Update HUD money and lives
-    // ------------------------------
+        towerUpgradeOption.onclick = () => {
+            if (!tower.canUpgrade || !tower.canUpgrade()) return;
+            tower.upgrade();
+            updateTowerModal();
+        };
+    }
+
+    function updateSellOption(tower) {
+        towerAttackOption.onclick = () => {
+            tower.sell();
+            hideTowerModal();
+        };
+    }
+
+    function updateAttackOption(tower) {
+        towerAttackOption.onclick = () => {
+            tower.toggleAttackMode && tower.toggleAttackMode();
+            updateTowerModal();
+        };
+    }
+
+    // NEW: update money & lives
     function updateMoneyLives() {
-        const livesDiv = document.getElementById("lives");
-        const moneyDiv = document.getElementById("money");
-
-        if (livesDiv) livesDiv.textContent = `Lives: ${gameState.lives}`;
-        if (moneyDiv) moneyDiv.textContent = `Money: ${gameState.money}`;
+        if (livesDisplay) livesDisplay.textContent = `Lives: ${gameState.lives}`;
+        if (moneyDisplay) moneyDisplay.textContent = `Money: ${gameState.money}`;
     }
 
-    // ------------------------------
-    // Return public HUD API
-    // ------------------------------
     return {
-        update: updateTowerMenu,
-        updateTowerMenu,
         showTowerModal,
         hideTowerModal,
+        update: updateTowerModal,
         updateMoneyLives
     };
-  }
-  
+}
