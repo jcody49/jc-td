@@ -141,3 +141,11 @@ canvas {
   
 
   
+
+
+/*CUSTOM CURSOR*/
+.selectable-hover {
+  cursor: url("/assets/select-crosshair.png") 50 50, auto;
+
+}
+
