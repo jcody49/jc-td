@@ -102,8 +102,15 @@
     font-weight: bold;
     margin-bottom: 2px;
     text-align: right;
-    font-size: 1.1em;
+    font-size: 1.23em;
     letter-spacing: 3px;
+    color: #fff; /* base color */
+    text-shadow:
+        0 0 1px #792BFB,                  /* crisp inner purple */
+        0 0 2px #FF5DFF,                  /* inner pink/magenta */
+        0 0 4px #FF80FF,                  /* outer magenta pop */
+        0 0 6px rgba(121, 43, 251, 0.7),  /* outer purple glow */
+        0 0 10px rgba(121, 43, 251, 0.5);
 }
 
 #modalInfo {
