@@ -205,60 +205,46 @@ canvas.addEventListener("click", e => {
 * CUSTOM CURSOR (SPINNING CROSSHAIR)
 ***********************/
 const fx = document.getElementById("cursor-fx");
-let cursorAngle = 0;
-let hovering = false;
+const fxImg = fx.querySelector("img");
 
-// Track mouse position
-let mouseX = 0;
-let mouseY = 0;
+// Add spinning animation in JS (perpetual)
+let angle = 0;
+function updateCursorSpin() {
+  angle += 3; // degrees per frame, adjust speed
+  fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+  requestAnimationFrame(updateCursorSpin);
+}
+updateCursorSpin(); // start spinning
 
+// Mousemove
 canvas.addEventListener("mousemove", e => {
   const rect = canvas.getBoundingClientRect();
-  mouseX = e.clientX - rect.left;
-  mouseY = e.clientY - rect.top;
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
 
   window.mouseX = mouseX;
   window.mouseY = mouseY;
 
-  // Move fx to mouse
+  // Position the spinning cursor
   fx.style.left = e.clientX + "px";
-  fx.style.top = e.clientY + "px";
+  fx.style.top  = e.clientY + "px";
 
-  // Check if hovering over tower/enemy
   const tower = getTowerAtPosition(mouseX, mouseY);
   const enemy = gameState.enemies.find(enemy => {
     const size = enemy.size;
     return (
-      mouseX >= enemy.x - size / 2 &&
-      mouseX <= enemy.x + size / 2 &&
-      mouseY >= enemy.y - size / 2 &&
-      mouseY <= enemy.y + size / 2
+      mouseX >= enemy.x - size/2 &&
+      mouseX <= enemy.x + size/2 &&
+      mouseY >= enemy.y - size/2 &&
+      mouseY <= enemy.y + size/2
     );
   });
 
-  hovering = !!(tower || enemy);
+  const hovering = tower || enemy;
 
-  canvas.classList.toggle("selectable-hover", hovering);
-  fx.classList.toggle("active", hovering);
+  if (hovering) fx.classList.add("active");
+  else fx.classList.remove("active");
 });
-
-// Spin loop
-function spinCursor() {
-  if (hovering) {
-    cursorAngle += 3; // degrees per frame, adjust speed
-    fx.style.transform = `translate(-50%, -50%) rotate(${cursorAngle}deg)`;
-  } else {
-    cursorAngle = 0;
-    fx.style.transform = "translate(-50%, -50%) rotate(0deg)";
-  }
-
-  requestAnimationFrame(spinCursor);
-}
-
-// Start the spin loop
-spinCursor();
-
-
 
 
 /***********************

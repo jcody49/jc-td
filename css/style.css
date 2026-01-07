@@ -142,25 +142,32 @@ canvas {
 
   
 
-
-/*CUSTOM CURSOR*/
-.selectable-hover {
-  cursor: url("../assets/select-crosshair.png") 50 50, auto;
-
+/* Default cursor for the whole page */
+body, html {
+  cursor: url("../assets/cursor-default.png") 6 6, auto;
 }
+
+/* Hovering over selectable objects on canvas */
+.selectable-hover {
+  cursor: url("../assets/select-crosshair.png") 25 25, auto;
+}
+
+/* spinning crosshair */
 #cursor-fx {
   position: fixed;
-  width: 100px;
-  height: 100px;
+  width: 50px;   /* keeps spinning cursor at 50x50 */
+  height: 50px;
   pointer-events: none;
   transform: translate(-50%, -50%) rotate(0deg); /* initial rotation */
   z-index: 9999;
   opacity: 0; /* hidden by default */
   transition: opacity 0.1s linear;
 }
+
 #cursor-fx.active {
   opacity: 1;
 }
+
 #cursor-fx img {
   width: 100%;
   height: 100%;
