@@ -33,13 +33,14 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     }
 
     function getTowerInfoText(tower) {
-        return `
-Damage: ${tower.damage}
-Range: ${tower.range}
-Fire Rate: ${tower.fireRate}
-Level: ${tower.level}
-`.trim();
+        return [
+            `Damage: ${tower.damage}`,
+            `Range: ${tower.range}`,
+            `Fire Rate: ${tower.fireRate}`,
+            `Level: ${tower.level}`
+        ].join(" | ");
     }
+    
 
     function updateUpgradeOption(tower) {
         if (tower.canUpgrade && tower.canUpgrade()) towerUpgradeOption.classList.remove("disabled");
