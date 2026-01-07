@@ -233,9 +233,20 @@ canvas.addEventListener("mousemove", e => {
 
   const hovering = tower || enemy;
 
-  canvas.classList.toggle("selectable-hover", hovering);
-  fx.classList.toggle("active", hovering);
+  // Only update class if different from current
+  if (hovering && !canvas.classList.contains("selectable-hover")) {
+    canvas.classList.add("selectable-hover");
+  } else if (!hovering && canvas.classList.contains("selectable-hover")) {
+    canvas.classList.remove("selectable-hover");
+  }
+
+  if (hovering && !fx.classList.contains("active")) {
+    fx.classList.add("active");
+  } else if (!hovering && fx.classList.contains("active")) {
+    fx.classList.remove("active");
+  }
 });
+
 
 
 
