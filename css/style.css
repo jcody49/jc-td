@@ -212,3 +212,11 @@ canvas {
      display: block;
    }
    
+   .tower-modal-option * {
+    pointer-events: none;
+  }
+  
+   
+   .towerCard:hover, .tower-modal-option:hover, .settings:hover{
+    cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
+   }
