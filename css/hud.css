@@ -145,9 +145,15 @@
 }
 
 .tower-modal-option:hover {
-    border-color: #792BFB;
-    box-shadow: 0 0 12px rgba(121, 43, 251, 0.6);
+  border-color: #792BFB;
+  box-shadow:
+      0 0 8px #792BFB,       /* subtle inner glow */
+      0 0 16px #792BFB,      /* main glow */
+      0 0 24px rgba(121, 43, 251, 0.8), /* outer glow */
+      0 0 32px rgba(121, 43, 251, 0.6); /* extra spread */
+  transition: all 0.2s ease-in-out;  /* smooth pop */
 }
+
 
 .tower-modal-option img {
     width: 80%;
