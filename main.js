@@ -205,11 +205,7 @@ let mouseX = 0;
 let mouseY = 0;
 
 const fx = document.getElementById("cursor-fx");
-
-window.addEventListener("mousemove", e => {
-  fx.style.left = e.clientX + "px";
-  fx.style.top  = e.clientY + "px";
-});
+let cursorAngle = 0;
 
 canvas.addEventListener("mousemove", e => {
   const rect = canvas.getBoundingClientRect();
@@ -220,7 +216,6 @@ canvas.addEventListener("mousemove", e => {
   window.mouseY = mouseY;
 
   const tower = getTowerAtPosition(mouseX, mouseY);
-
   const enemy = gameState.enemies.find(enemy => {
     const size = enemy.size;
     return (
@@ -233,19 +228,24 @@ canvas.addEventListener("mousemove", e => {
 
   const hovering = tower || enemy;
 
-  // Only update class if different from current
-  if (hovering && !canvas.classList.contains("selectable-hover")) {
-    canvas.classList.add("selectable-hover");
-  } else if (!hovering && canvas.classList.contains("selectable-hover")) {
-    canvas.classList.remove("selectable-hover");
-  }
+  // Toggle hover class
+  canvas.classList.toggle("selectable-hover", !!hovering);
+  fx.classList.toggle("active", !!hovering);
 
-  if (hovering && !fx.classList.contains("active")) {
-    fx.classList.add("active");
-  } else if (!hovering && fx.classList.contains("active")) {
-    fx.classList.remove("active");
+  // Move cursor
+  fx.style.left = e.clientX + "px";
+  fx.style.top = e.clientY + "px";
+
+  // Rotate if hovering
+  if (hovering) {
+    cursorAngle += 5; // degrees per frame
+    fx.style.transform = `translate(-50%, -50%) rotate(${cursorAngle}deg)`;
+  } else {
+    fx.style.transform = "translate(-50%, -50%) rotate(0deg)";
+    cursorAngle = 0; // reset when not hovering
   }
 });
+
 
 
 
