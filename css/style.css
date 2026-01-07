@@ -149,3 +149,30 @@ canvas {
 
 }
 
+#cursor-fx {
+  position: fixed;
+  width: 100px;
+  height: 100px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  opacity: 0; /* hidden by default */
+  transition: opacity 0.1s linear;
+}
+
+#cursor-fx.active {
+  opacity: 1;
+}
+
+#cursor-fx .ring {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 2px solid purple;
+  border-radius: 50%;
+  animation: ring-spin 1s linear infinite;
+}
+
+@keyframes ring-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}

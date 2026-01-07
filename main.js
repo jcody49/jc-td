@@ -203,17 +203,24 @@ canvas.addEventListener("click", e => {
 ***********************/
 let mouseX = 0;
 let mouseY = 0;
-canvas.addEventListener('mousemove', e => {
+
+const fx = document.getElementById("cursor-fx");
+
+window.addEventListener("mousemove", e => {
+  fx.style.left = e.clientX + "px";
+  fx.style.top  = e.clientY + "px";
+});
+
+canvas.addEventListener("mousemove", e => {
   const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+  mouseX = e.clientX - rect.left;
+  mouseY = e.clientY - rect.top;
 
   window.mouseX = mouseX;
   window.mouseY = mouseY;
 
   const tower = getTowerAtPosition(mouseX, mouseY);
 
-  // Enemy hover detection
   const enemy = gameState.enemies.find(enemy => {
     const size = enemy.size;
     return (
@@ -224,12 +231,12 @@ canvas.addEventListener('mousemove', e => {
     );
   });
 
-  if (tower || enemy) {
-    canvas.classList.add("selectable-hover");
-  } else {
-    canvas.classList.remove("selectable-hover");
-  }
+  const hovering = tower || enemy;
+
+  canvas.classList.toggle("selectable-hover", hovering);
+  fx.classList.toggle("active", hovering);
 });
+
 
 
 /***********************
