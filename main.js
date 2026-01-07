@@ -201,11 +201,16 @@ canvas.addEventListener("click", e => {
 /***********************
 * MOUSE HOVER
 ***********************/
-let mouseX = 0;
-let mouseY = 0;
-
+/***********************
+* CUSTOM CURSOR (SPINNING CROSSHAIR)
+***********************/
 const fx = document.getElementById("cursor-fx");
 let cursorAngle = 0;
+let hovering = false;
+
+// Track mouse position
+let mouseX = 0;
+let mouseY = 0;
 
 canvas.addEventListener("mousemove", e => {
   const rect = canvas.getBoundingClientRect();
@@ -215,6 +220,11 @@ canvas.addEventListener("mousemove", e => {
   window.mouseX = mouseX;
   window.mouseY = mouseY;
 
+  // Move fx to mouse
+  fx.style.left = e.clientX + "px";
+  fx.style.top = e.clientY + "px";
+
+  // Check if hovering over tower/enemy
   const tower = getTowerAtPosition(mouseX, mouseY);
   const enemy = gameState.enemies.find(enemy => {
     const size = enemy.size;
@@ -226,26 +236,27 @@ canvas.addEventListener("mousemove", e => {
     );
   });
 
-  const hovering = tower || enemy;
+  hovering = !!(tower || enemy);
 
-  // Toggle hover class
-  canvas.classList.toggle("selectable-hover", !!hovering);
-  fx.classList.toggle("active", !!hovering);
-
-  // Move cursor
-  fx.style.left = e.clientX + "px";
-  fx.style.top = e.clientY + "px";
-
-  // Rotate if hovering
-  if (hovering) {
-    cursorAngle += 5; // degrees per frame
-    fx.style.transform = `translate(-50%, -50%) rotate(${cursorAngle}deg)`;
-  } else {
-    fx.style.transform = "translate(-50%, -50%) rotate(0deg)";
-    cursorAngle = 0; // reset when not hovering
-  }
+  canvas.classList.toggle("selectable-hover", hovering);
+  fx.classList.toggle("active", hovering);
 });
 
+// Spin loop
+function spinCursor() {
+  if (hovering) {
+    cursorAngle += 3; // degrees per frame, adjust speed
+    fx.style.transform = `translate(-50%, -50%) rotate(${cursorAngle}deg)`;
+  } else {
+    cursorAngle = 0;
+    fx.style.transform = "translate(-50%, -50%) rotate(0deg)";
+  }
+
+  requestAnimationFrame(spinCursor);
+}
+
+// Start the spin loop
+spinCursor();
 
 
 
