@@ -141,41 +141,74 @@ canvas {
   
 
   
-
-/* Default cursor for the whole page */
-/* Default cursor for the whole page */
-body, html, * {
-  cursor: url("../assets/cursor-default.png") 6 6, auto !important;
-}
-
-/* Hover effect for everything outside the canvas */
-body *:not(#game):hover {
-  cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
-}
-
-/* Hovering over selectable objects on canvas */
-.selectable-hover {
-  cursor: url("../assets/select-crosshair.png") 25 25, auto !important;
-}
-
-/* spinning crosshair for canvas */
-#cursor-fx {
-  position: fixed;
-  width: 50px;
-  height: 50px;
-  pointer-events: none;
-  transform: translate(-50%, -50%) rotate(0deg);
-  z-index: 9999;
-  opacity: 0;
-  transition: opacity 0.1s linear;
-}
-
-#cursor-fx.active {
-  opacity: 1;
-}
-
-#cursor-fx img {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
+/* =========================
+   DEFAULT CURSOR (EVERYWHERE)
+   ========================= */
+   html,
+   body {
+     cursor: url("../assets/cursor-default.png") 6 6, auto;
+   }
+   
+   /* =========================
+      HARD OVERRIDE: kill browser pointer
+      ========================= */
+   button,
+   button:hover,
+   a,
+   a:hover,
+   input,
+   select,
+   textarea,
+   [role="button"] {
+     cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
+   }
+   
+   /* =========================
+      HUD BASELINE (non-clickable areas)
+      ========================= */
+   #hud,
+   #hud * {
+     cursor: url("../assets/cursor-default.png") 6 6, auto;
+   }
+   
+   /* =========================
+      CLICKABLE HUD ELEMENTS
+      ========================= */
+   #hud button:hover,
+   #hud .tower-modal-option:hover,
+   #hud .tower-option-wrapper:hover,
+   #hud .settings:hover {
+     cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
+   }
+   
+   /* =========================
+      CANVAS TARGETING
+      ========================= */
+   .selectable-hover {
+     cursor: url("../assets/select-crosshair.png") 25 25, auto !important;
+   }
+   
+   /* =========================
+      SPINNING CANVAS CURSOR FX
+      ========================= */
+   #cursor-fx {
+     position: fixed;
+     width: 50px;
+     height: 50px;
+     pointer-events: none;
+     transform: translate(-50%, -50%) rotate(0deg);
+     z-index: 9999;
+     opacity: 0;
+     transition: opacity 0.1s linear;
+   }
+   
+   #cursor-fx.active {
+     opacity: 1;
+   }
+   
+   #cursor-fx img {
+     width: 100%;
+     height: 100%;
+     display: block;
+   }
+   
