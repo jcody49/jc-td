@@ -1,15 +1,15 @@
 //TOWER IMG EXPORTS
 export const cannonImg = new Image();
-cannonImg.src = './assets/cannon.png';
+cannonImg.src = 'assets/cannon.png';
 
 export const frostImg = new Image();
-frostImg.src = './assets/frost-tower.png';
+frostImg.src = 'assets/frost-tower.png';
 
 export const acidImg = new Image();
-acidImg.src = './assets/acid-tower.png';
+acidImg.src = 'assets/acid-tower.png';
 
 export const tankImg = new Image();
-tankImg.src = './assets/tank-tower.png';
+tankImg.src = 'assets/tank-tower.png';
 
 
 

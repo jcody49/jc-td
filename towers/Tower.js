@@ -38,7 +38,7 @@ export class Tower {
 
         if (data.sprite) {
             this.image = new Image();
-            this.image.src = `/assets/${data.sprite}`;
+            this.image.src = `assets/${data.sprite}`;
         }
     }
 
