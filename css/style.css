@@ -143,24 +143,30 @@ canvas {
   
 
 /* Default cursor for the whole page */
-body, html {
-  cursor: url("../assets/cursor-default.png") 6 6, auto;
+/* Default cursor for the whole page */
+body, html, * {
+  cursor: url("../assets/cursor-default.png") 6 6, auto !important;
+}
+
+/* Hover effect for everything outside the canvas */
+body *:not(#game):hover {
+  cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
 }
 
 /* Hovering over selectable objects on canvas */
 .selectable-hover {
-  cursor: url("../assets/select-crosshair.png") 25 25, auto;
+  cursor: url("../assets/select-crosshair.png") 25 25, auto !important;
 }
 
-/* spinning crosshair */
+/* spinning crosshair for canvas */
 #cursor-fx {
   position: fixed;
-  width: 50px;   /* keeps spinning cursor at 50x50 */
+  width: 50px;
   height: 50px;
   pointer-events: none;
-  transform: translate(-50%, -50%) rotate(0deg); /* initial rotation */
+  transform: translate(-50%, -50%) rotate(0deg);
   z-index: 9999;
-  opacity: 0; /* hidden by default */
+  opacity: 0;
   transition: opacity 0.1s linear;
 }
 
