@@ -69,36 +69,47 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     // Sell logic
     // ------------------------------
     function updateSellOption(tower) {
-        if (!tower) return;
-
+        const towerSellOption = document.querySelector(".tower-sell");
         towerSellOption.onclick = () => {
             if (!tower) return;
-
-            // Total money spent on tower including upgrades
+    
+            // Ask for confirmation
+            const confirmed = window.confirm(
+                `Are you sure you want to sell this ${tower.type}? You'll get 50% of the money spent.`
+            );
+            if (!confirmed) return;
+    
+            // Calculate total money spent on this tower including upgrades
             const totalSpent = tower.upgradeCosts
                 .slice(0, tower.level)
                 .reduce((sum, cost) => sum + cost, 0);
             const refund = Math.floor(totalSpent * 0.5);
-
-            // Show money popup at tower location
+    
+            // Add refund to money
+            gameState.money += refund;
+    
+            // Show floating "+$X" at the tower's position
             const yOffset = 20;
             showMoneyPopup(refund, tower.x, tower.y + yOffset);
-
-            // Remove tower from game state
-            const index = gameState.towers.indexOf(tower);
-            if (index !== -1) gameState.towers.splice(index, 1);
-
-            // Free grid cell
+    
+            // Remove the tower from gameState
+            const towerIndex = gameState.towers.indexOf(tower);
+            if (towerIndex !== -1) gameState.towers.splice(towerIndex, 1);
+    
+            // Free the grid cell
             const col = Math.floor(tower.x / gridSize);
             const row = Math.floor(tower.y / gridSize);
             window.gridOccupied[col][row] = false;
-
-            // Hide modal and update HUD
+    
+            // Hide the modal
             hideTowerModal();
-            gameState.money += refund;
+    
+            // Update HUD money & lives
             updateMoneyLives();
         };
     }
+    
+    
 
     // ------------------------------
     // Attack option
