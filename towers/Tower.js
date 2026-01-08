@@ -24,6 +24,8 @@ export class Tower {
 
         this.hasSpecial = opts.hasSpecial || false;
 
+        this.totalSpent = upgradeCosts[0] || 0;
+
         // --- Stats ---
         this.damage = 0;
         this.splashRadius = 0;
@@ -75,15 +77,19 @@ export class Tower {
 
     // --- Upgrade tower ---
     upgrade(gameState) {
-        if (!this.canUpgrade(gameState)) return false;
-
+        if (this.level >= this.maxLevel) return false;
+    
         const cost = this.upgradeCosts[this.level - 1];
+        if (gameState.money < cost) return false;
+    
         gameState.money -= cost;
+        this.totalSpent += cost;  // track upgrades
         this.level++;
         this.applyLevel();
-
+    
         return true;
     }
+    
 
     // --- Targeting ---
     findTarget(enemies) {
@@ -151,6 +157,18 @@ export class Tower {
             })
         );
     }
+
+    sell(gameState) {
+        const refund = Math.floor(this.totalSpent * 0.5);
+        gameState.money += refund;
+    
+        // Remove the tower from gameState.towers
+        const index = gameState.towers.indexOf(this);
+        if (index > -1) gameState.towers.splice(index, 1);
+    
+        return refund;
+    }
+    
 
     // --- Draw tower ---
     draw() {
