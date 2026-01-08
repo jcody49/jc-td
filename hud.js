@@ -1,16 +1,21 @@
+import { showMoneyPopup } from './ui-effects.js';
+
 export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, waveState, startWave }) {
     const towerInteractionMenu = document.getElementById("towerInteractionMenu");
     const modalTitle = document.getElementById("modalTitle");
     const modalInfo = document.getElementById("modalInfo");
     const towerUpgradeOption = document.getElementById("towerUpgradeOption");
     const towerAttackOption = document.getElementById("towerAttackOption");
-    const towerSellOption = document.querySelector(".tower-sell"); // <---- here
+    const towerSellOption = document.querySelector(".tower-sell");
     const settingsOption = document.getElementById("settingsOption");
     const livesDisplay = document.getElementById("lives");
     const moneyDisplay = document.getElementById("money");
 
     let selectedTower = null;
 
+    // ------------------------------
+    // Show/hide tower modal
+    // ------------------------------
     function showTowerModal(tower) {
         selectedTower = tower;
         updateTowerModal();
@@ -29,7 +34,7 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
         modalInfo.textContent = getTowerInfoText(selectedTower);
 
         updateUpgradeOption(selectedTower);
-        updateSellOption(selectedTower);   // <---- update sell button
+        updateSellOption(selectedTower);
         updateAttackOption(selectedTower);
     }
 
@@ -42,43 +47,62 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
         ].join(" | ");
     }
 
+    // ------------------------------
+    // Upgrade logic
+    // ------------------------------
     function updateUpgradeOption(tower) {
         if (!tower) return;
-    
-        // Enable/disable button based on gameState
+
         if (tower.canUpgrade(gameState)) towerUpgradeOption.classList.remove("disabled");
         else towerUpgradeOption.classList.add("disabled");
-    
+
         towerUpgradeOption.onclick = () => {
             if (!tower.canUpgrade(gameState)) return;
-    
-            tower.upgrade(gameState);
-            updateTowerModal();     // refresh modal
-            updateMoneyLives();     // refresh money/lives in HUD
-        };
-    }
-    
 
-    function updateSellOption(tower) {
-        towerSellOption.onclick = () => {
-            if (!tower) return;
-    
-            // Calculate total spent
-            const totalSpent = tower.upgradeCosts.slice(0, tower.level).reduce((a, b) => a + b, 0);
-            const refund = Math.floor(totalSpent * 0.5);
-            gameState.money += refund;
-    
-            // Remove tower from gameState
-            const index = gameState.towers.indexOf(tower);
-            if (index !== -1) gameState.towers.splice(index, 1);
-    
-            hideTowerModal();
+            tower.upgrade(gameState);
+            updateTowerModal();
             updateMoneyLives();
         };
     }
-    
-    
 
+    // ------------------------------
+    // Sell logic
+    // ------------------------------
+    function updateSellOption(tower) {
+        if (!tower) return;
+
+        towerSellOption.onclick = () => {
+            if (!tower) return;
+
+            // Total money spent on tower including upgrades
+            const totalSpent = tower.upgradeCosts
+                .slice(0, tower.level)
+                .reduce((sum, cost) => sum + cost, 0);
+            const refund = Math.floor(totalSpent * 0.5);
+
+            // Show money popup at tower location
+            const yOffset = 20;
+            showMoneyPopup(refund, tower.x, tower.y + yOffset);
+
+            // Remove tower from game state
+            const index = gameState.towers.indexOf(tower);
+            if (index !== -1) gameState.towers.splice(index, 1);
+
+            // Free grid cell
+            const col = Math.floor(tower.x / gridSize);
+            const row = Math.floor(tower.y / gridSize);
+            window.gridOccupied[col][row] = false;
+
+            // Hide modal and update HUD
+            hideTowerModal();
+            gameState.money += refund;
+            updateMoneyLives();
+        };
+    }
+
+    // ------------------------------
+    // Attack option
+    // ------------------------------
     function updateAttackOption(tower) {
         if (!tower) return;
 
@@ -88,11 +112,17 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
         };
     }
 
+    // ------------------------------
+    // HUD money/lives update
+    // ------------------------------
     function updateMoneyLives() {
         if (livesDisplay) livesDisplay.textContent = `Lives: ${gameState.lives}`;
         if (moneyDisplay) moneyDisplay.textContent = `Money: ${gameState.money}`;
     }
 
+    // ------------------------------
+    // Public API
+    // ------------------------------
     return {
         showTowerModal,
         hideTowerModal,

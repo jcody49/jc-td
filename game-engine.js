@@ -1,3 +1,5 @@
+import { showMoneyPopup } from './ui-effects.js';
+
 // =========================
 // TOWER IMAGE EXPORTS
 // =========================
@@ -96,11 +98,18 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
     // Cleanup enemies & give money
     gameState.enemies = gameState.enemies.filter(enemy => {
         if (enemy.remove) {
-            if (!enemy.escaped) gameState.money += enemy.reward || 1;
+            if (!enemy.escaped) {
+                const reward = enemy.reward || 1;
+                gameState.money += reward;
+
+                // Show floating "+$X" popup over enemy
+                showMoneyPopup(reward, enemy.x, enemy.y);
+            }
             return false;
         }
         return true;
     });
+
 
     // =========================
     // UPDATE TOWERS
