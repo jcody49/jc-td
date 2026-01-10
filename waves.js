@@ -9,11 +9,8 @@ export const waveState = {
 
 let spawnInterval;
 
-export function startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton) {
+export function startWave(gameState, path, gridSize, ctx, canvas) {
   waveState.status = "spawning";
-  waveText.textContent = `Wave ${waveState.currentWave} in progress`;
-  skipButton.disabled = true;
-
   let enemiesSpawned = 0;
   const maxEnemies = 20; // smaller for testing
 
@@ -32,25 +29,19 @@ export function startWave(gameState, path, gridSize, ctx, canvas, waveText, skip
   }, 1300);
 }
 
-export function startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton) {
+export function startNextWave(gameState, path, gridSize, ctx, canvas) {
   waveState.currentWave++;
   waveState.countdown = 40;
   waveState.status = "countdown";
 
-  skipButton.disabled = false;
-
   if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
-
-  waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
 
   waveState.countdownInterval = setInterval(() => {
     waveState.countdown--;
-    waveText.textContent = `Wave ${waveState.currentWave} starting in: ${waveState.countdown}`;
 
     if (waveState.countdown <= 0) {
         clearInterval(waveState.countdownInterval);
-        startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+        startWave(gameState, path, gridSize, ctx, canvas);
     }
   }, 1000);
-
 }

@@ -27,14 +27,12 @@ const gameState = {
   lives: 10
 };
 
-// We'll use window.selectedTowerType as the global source of truth
 window.selectedTowerType = null;
 
 /**********************
  * GAME CONTROL
  **********************/
 let gameStarted = false;
-let spawnInterval;
 
 /**********************
  * WAVE TEXT
@@ -61,7 +59,6 @@ const gridSize = Math.min(gridSizeX, gridSizeY);
  * PATHING
  **********************/
 const pathCells = [
-  // ... your path cells as before ...
   { col: 0, row: 7 }, { col: 1, row: 7 }, { col: 2, row: 7 }, { col: 3, row: 7 }, { col: 4, row: 7 },
   { col: 4, row: 6 }, { col: 4, row: 5 }, { col: 4, row: 4 }, { col: 4, row: 3 },
   { col: 5, row: 3 }, { col: 6, row: 3 },
@@ -72,29 +69,32 @@ const pathCells = [
   { col: 8, row: 5 }, { col: 8, row: 4 }, { col: 8, row: 3 },
   { col: 9, row: 3 }, { col: 10, row: 3 },
   { col: 10, row: 4 }, { col: 10, row: 5 }, { col: 10, row: 6 }, { col: 10, row: 7 },
-  { col: 11, row: 7 }, { col: 12, row: 7 }, { col: 13, row: 7 }, { col: 14, row: 7 }, { col: 15, row: 7 },
-  { col: 16, row: 7 }, { col: 17, row: 7 }, { col: 18, row: 7 }, { col: 19, row: 7 }, { col: 20, row: 7 },
-  { col: 21, row: 7 }, { col: 22, row: 7 }, { col: 23, row: 7 }, { col: 24, row: 7 }, { col: 25, row: 7 },
-  { col: 26, row: 7 },
+  { col: 11, row: 7 }, { col: 12, row: 7 }, { col: 13, row: 7 }, { col: 14, row: 7 },
+  { col: 15, row: 7 }, { col: 16, row: 7 }, { col: 17, row: 7 },
+  { col: 18, row: 7 }, { col: 19, row: 7 }, { col: 20, row: 7 },
+  { col: 21, row: 7 }, { col: 22, row: 7 }, { col: 23, row: 7 }, { col: 24, row: 7 }
 ];
 
-// Quick lookup arrays
-const pathOccupied = pathCells.map(cell => `${cell.col},${cell.row}`);
-const path = pathCells.map(cell => ({
-  x: cell.col * gridSize + gridSize / 2,
-  y: cell.row * gridSize + gridSize / 2
+const pathOccupied = pathCells.map(c => `${c.col},${c.row}`);
+const path = pathCells.map(c => ({
+  x: c.col * gridSize + gridSize / 2,
+  y: c.row * gridSize + gridSize / 2
 }));
 
 const gridOccupied = Array.from({ length: gridCols }, () =>
   Array(gridRows).fill(false)
 );
 
-// Get tower at canvas position
+/**********************
+ * TOWER LOOKUP
+ **********************/
 function getTowerAtPosition(x, y) {
   for (let tower of gameState.towers) {
     const size = gridSize * 0.8;
-    if (x >= tower.x - size/2 && x <= tower.x + size/2 &&
-        y >= tower.y - size/2 && y <= tower.y + size/2) {
+    if (x >= tower.x - size / 2 &&
+        x <= tower.x + size / 2 &&
+        y >= tower.y - size / 2 &&
+        y <= tower.y + size / 2) {
       return tower;
     }
   }
@@ -102,199 +102,158 @@ function getTowerAtPosition(x, y) {
 }
 
 /***********************
-* INIT HUD
-***********************/
-const hud = initHUD({
-  gameState,
-  path,
-  gridSize,
-  ctx,
-  canvas,
-  waveText,
-  waveState,
-  startWave
-});
-
-console.log(hud);
-
-// Expose HUD modal functions globally
-window.showTowerModal = (tower) => hud.showTowerModal(tower);
+ * INIT HUD
+ ***********************/
+const hud = initHUD({ gameState, path, gridSize, ctx, canvas, waveText, waveState, startWave });
+window.showTowerModal = tower => hud.showTowerModal(tower);
 window.hideTowerModal = () => hud.hideTowerModal();
 
 /***********************
-* TOWER CARD SELECTION
-***********************/
-const towerCards = document.querySelectorAll(".towerCard");
-towerCards.forEach(card => {
+ * TOWER CARD SELECTION
+ ***********************/
+document.querySelectorAll(".towerCard").forEach(card => {
   card.addEventListener("click", () => {
     const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$",""));
-    const towerName = card.querySelector(".towerName").textContent.replace(":", "").trim();
+    const name = card.querySelector(".towerName").textContent.replace(":","").trim();
 
     if (gameState.money >= cost) {
-      gameState.money -= cost;         // subtract money
-      hud.update();                    // refresh HUD
-      selectedTowerType = towerName;   // store which tower is selected
-      window.selectedTowerType = selectedTowerType;
-    } else {
-      alert("Not enough money!");
+      gameState.money -= cost;
+      hud.update();
+      window.selectedTowerType = name;
     }
   });
 });
 
-
-
 /***********************
-* CANVAS CLICK
-***********************/
+ * CANVAS CLICK
+ ***********************/
 canvas.addEventListener("click", e => {
   const rect = canvas.getBoundingClientRect();
-  const clickX = e.clientX - rect.left;
-  const clickY = e.clientY - rect.top;
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
 
-  const tower = getTowerAtPosition(clickX, clickY);
-
+  const tower = getTowerAtPosition(x, y);
   if (tower) {
-    // Only show modal
     hud.showTowerModal(tower);
-
-    // DO NOT set window.selectedTowerType = null here!
-    // Otherwise ghost placement disappears
     return;
   }
 
-  // Tower placement logic
-  if (window.selectedTowerType) {
-    const col = Math.floor(clickX / gridSize);
-    const row = Math.floor(clickY / gridSize);
-    const cellKey = `${col},${row}`;
-    const validPlacement = !gridOccupied[col][row] && !pathOccupied.includes(cellKey);
+  if (!window.selectedTowerType) return;
 
-    if (validPlacement) {
-      const snappedX = col * gridSize + gridSize / 2;
-      const snappedY = row * gridSize + gridSize / 2;
+  const col = Math.floor(x / gridSize);
+  const row = Math.floor(y / gridSize);
+  const key = `${col},${row}`;
 
-      switch (window.selectedTowerType) {
-        case "Cannon":
-          gameState.towers.push(new CannonTower({ x: snappedX, y: snappedY, ctx, opts: {} }));
-          break;
-        case "Frost":
-          gameState.towers.push(new FrostTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: true } }));
-          break;
-        case "Acid":
-          gameState.towers.push(new AcidTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: false } }));
-          break;
-        case "Tank":
-          gameState.towers.push(new TankTower({ x: snappedX, y: snappedY, ctx, opts: { hasSpecial: false } }));
-          break;
-      }
+  if (gridOccupied[col][row] || pathOccupied.includes(key)) return;
 
-      gridOccupied[col][row] = true;
-      window.selectedTowerType = null; // Only clear after placement
-      hud.update();
-    }
+  const px = col * gridSize + gridSize / 2;
+  const py = row * gridSize + gridSize / 2;
+
+  switch (window.selectedTowerType) {
+    case "Cannon": gameState.towers.push(new CannonTower({ x:px, y:py, ctx })); break;
+    case "Frost":  gameState.towers.push(new FrostTower({ x:px, y:py, ctx })); break;
+    case "Acid":   gameState.towers.push(new AcidTower({ x:px, y:py, ctx })); break;
+    case "Tank":   gameState.towers.push(new TankTower({ x:px, y:py, ctx })); break;
   }
+
+  gridOccupied[col][row] = true;
+  window.selectedTowerType = null;
+  hud.update();
 });
 
-
-
 /***********************
-* MOUSE HOVER
-***********************/
-/***********************
-* CUSTOM CURSOR (SPINNING CROSSHAIR)
-***********************/
+ * CUSTOM CURSOR FX + GHOST TOWER
+ ***********************/
 const fx = document.getElementById("cursor-fx");
 const fxImg = fx.querySelector("img");
 
-// Add spinning animation in JS (perpetual)
-let angle = 0;
-function updateCursorSpin() {
-  angle += 3; // degrees per frame, adjust speed
-  fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-  requestAnimationFrame(updateCursorSpin);
-}
-updateCursorSpin(); // start spinning
+const CURSOR_DEFAULT = "../assets/select-crosshair.png";
+const CURSOR_ATTACK  = "../assets/crosshair.png";
 
-// Mousemove
+let cursorMode = "default";
+
+function applyCursor() {
+  fxImg.src = cursorMode === "attack" ? CURSOR_ATTACK : CURSOR_DEFAULT;
+
+  if (window.selectedTowerType) {
+    fx.style.display = "none"; // ghost tower hides cursor
+    fx.classList.remove("active");
+  } else {
+    fx.style.display = "block";
+    fx.classList.toggle("active", cursorMode === "attack");
+  }
+}
+
+applyCursor(); // initial
+
+let angle = 0;
+(function spin() {
+  angle += 3;
+  fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+  requestAnimationFrame(spin);
+})();
+
 canvas.addEventListener("mousemove", e => {
   const rect = canvas.getBoundingClientRect();
-  const mouseX = e.clientX - rect.left;
-  const mouseY = e.clientY - rect.top;
+  window.mouseX = e.clientX - rect.left;
+  window.mouseY = e.clientY - rect.top;
 
-  window.mouseX = mouseX;
-  window.mouseY = mouseY;
-
-  // Position the spinning cursor
   fx.style.left = e.clientX + "px";
   fx.style.top  = e.clientY + "px";
 
-  const tower = getTowerAtPosition(mouseX, mouseY);
-  const enemy = gameState.enemies.find(enemy => {
-    const size = enemy.size;
-    return (
-      mouseX >= enemy.x - size/2 &&
-      mouseX <= enemy.x + size/2 &&
-      mouseY >= enemy.y - size/2 &&
-      mouseY <= enemy.y + size/2
-    );
-  });
+  applyCursor();
 
-  const hovering = tower || enemy;
-
-  if (hovering) fx.classList.add("active");
-  else fx.classList.remove("active");
-});
-
-
-/***********************
-* ESC KEY
-***********************/
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') window.selectedTowerType = null;
-});
-
-/***********************
-* START GAME
-***********************/
-function startGame() {
-  if (gameStarted) return;
-  gameStarted = true;
-
-  const startButton = document.getElementById("startButton");
-  const skipButton = document.getElementById("skipButton");
-
-  // Hide the start button
-  startButton.style.display = "none";
-
-  // Begin countdown for next wave
-  waveState.status = "countdown";
-  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
-
-  // Start the main game loop
-  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
-}
-
-/***********************
-* HUD BUTTONS
-***********************/
-const startButton = document.getElementById("startButton");
-const skipButton = document.getElementById("skipButton");
-
-// Start button listener
-startButton.addEventListener("click", startGame);
-
-// Skip button listener
-skipButton.addEventListener("click", () => {
-  if (waveState.countdownInterval) {
-    clearInterval(waveState.countdownInterval); // stop the countdown
-    startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton); // start wave immediately
-    skipButton.disabled = true; // optional: disable after skipping
+  // hover glow only for non-attack mode
+  if (cursorMode !== "attack") {
+    const hoverTower = getTowerAtPosition(window.mouseX, window.mouseY);
+    const hoverEnemy = gameState.enemies.find(en => distance(en, {x: window.mouseX, y: window.mouseY}) < en.size/2);
+    fx.classList.toggle("active", !!(hoverTower || hoverEnemy));
   }
 });
 
 /***********************
-* EXPOSE GLOBALS
-***********************/
+ * ATTACK BUTTON
+ ***********************/
+const attackButton = document.getElementById("towerAttackOption");
+attackButton.addEventListener("click", () => {
+  cursorMode = "attack";
+  applyCursor();
+});
+
+/***********************
+ * ESC KEY
+ ***********************/
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    cursorMode = "default";
+    window.selectedTowerType = null;
+    applyCursor();
+  }
+});
+
+/***********************
+ * START GAME
+ ***********************/
+const startButton = document.getElementById("startButton");
+const skipButton  = document.getElementById("skipButton");
+
+startButton.addEventListener("click", () => {
+  if (gameStarted) return;
+  gameStarted = true;
+
+  startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+
+  gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
+});
+
+skipButton.addEventListener("click", () => {
+  clearInterval(waveState.countdownInterval);
+  startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+  skipButton.disabled = true;
+});
+
+/***********************
+ * GLOBALS
+ ***********************/
 window.gridOccupied = gridOccupied;
 window.pathOccupied = pathOccupied;
-
