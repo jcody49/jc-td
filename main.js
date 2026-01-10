@@ -196,7 +196,7 @@ let angle = 0;
     const hoverEnemy = gameState.enemies.find(en =>
       distance(en, { x: window.mouseX || 0, y: window.mouseY || 0 }) < en.size / 2
     );
-    if (hoverEnemy) scale = 1.5; // scale up when hovering enemy
+    if (hoverEnemy) scale = 1.2; // scale up when hovering enemy
   }
 
   fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(${scale})`;
@@ -218,7 +218,11 @@ canvas.addEventListener("mousemove", e => {
   // hover glow only for non-attack mode
   if (cursorMode !== "attack") {
     const hoverTower = getTowerAtPosition(window.mouseX, window.mouseY);
-    const hoverEnemy = gameState.enemies.find(en => distance(en, {x: window.mouseX, y: window.mouseY}) < en.size/2);
+    const ENEMY_HOVER_RADIUS = 40; // bigger clickable area in pixels
+    const hoverEnemy = gameState.enemies.find(en =>
+    distance(en, { x: window.mouseX, y: window.mouseY }) < ENEMY_HOVER_RADIUS
+);
+
     fx.classList.toggle("active", !!(hoverTower || hoverEnemy));
   }
 });
