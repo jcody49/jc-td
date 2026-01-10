@@ -147,11 +147,22 @@ export class Tower {
             !this.forcedTarget.dead &&
             gameState.enemies.includes(this.forcedTarget)
         ) {
-            target = this.forcedTarget;
+            const dx = this.forcedTarget.x - this.x;
+            const dy = this.forcedTarget.y - this.y;
+            const dist = Math.hypot(dx, dy);
+        
+            if (dist <= this.range) {
+                target = this.forcedTarget;
+            } else {
+                // Out of range, ignore forced target
+                this.forcedTarget = null;
+                target = this.findTarget(gameState.enemies);
+            }
         } else {
             this.forcedTarget = null;
             target = this.findTarget(gameState.enemies);
         }
+        
     
         if (!target) return;
     
