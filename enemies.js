@@ -82,36 +82,83 @@ export class Enemy {
   }
 
   draw() {
-      const ctx = this.ctx;
-
-      // Flash effect
-      if (this.isFlashing) {
-          ctx.strokeStyle = "yellow";
-          ctx.lineWidth = 2;
-          this.flashLines.forEach(line => {
-              const length = line.length * (this.flashTimer / 10);
-              ctx.beginPath();
-              ctx.moveTo(this.x, this.y);
-              ctx.lineTo(
-                  this.x + Math.cos(line.angle) * length,
-                  this.y + Math.sin(line.angle) * length
-              );
-              ctx.stroke();
-          });
-          return;
-      }
-
-      // Enemy body (icy blue if slowed)
-      ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
-      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
-
-      // Health bar
-      const hpBarWidth = this.size;
-      const hpBarHeight = 4;
-      const hpPercent = Math.max(this.hp / this.maxHp, 0);
-      ctx.fillStyle = "green";
-      ctx.fillRect(this.x - hpBarWidth / 2, this.y - this.size / 2 - hpBarHeight - 2, hpBarWidth * hpPercent, hpBarHeight);
-      ctx.strokeStyle = "black";
-      ctx.strokeRect(this.x - hpBarWidth / 2, this.y - this.size / 2 - hpBarHeight - 2, hpBarWidth, hpBarHeight);
+    const ctx = this.ctx;
+  
+    // =========================
+    // HOVER / TARGET HIGHLIGHT
+    // =========================
+    if (window.hoveredEnemy === this) {
+      const pulse = Math.sin(performance.now() * 0.01) * 2;
+  
+      ctx.save();
+      ctx.strokeStyle = "rgba(255, 80, 80, 0.9)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(
+        this.x,
+        this.y,
+        this.size / 2 + 6 + pulse,
+        0,
+        Math.PI * 2
+      );
+      ctx.stroke();
+      ctx.restore();
+    }
+  
+    // =========================
+    // FLASH EFFECT (ON HIT)
+    // =========================
+    if (this.isFlashing) {
+      ctx.strokeStyle = "yellow";
+      ctx.lineWidth = 2;
+  
+      this.flashLines.forEach(line => {
+        const length = line.length * (this.flashTimer / 10);
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(
+          this.x + Math.cos(line.angle) * length,
+          this.y + Math.sin(line.angle) * length
+        );
+        ctx.stroke();
+      });
+  
+      return;
+    }
+  
+    // =========================
+    // ENEMY BODY
+    // =========================
+    ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
+    ctx.fillRect(
+      this.x - this.size / 2,
+      this.y - this.size / 2,
+      this.size,
+      this.size
+    );
+  
+    // =========================
+    // HEALTH BAR
+    // =========================
+    const hpBarWidth = this.size;
+    const hpBarHeight = 4;
+    const hpPercent = Math.max(this.hp / this.maxHp, 0);
+  
+    ctx.fillStyle = "green";
+    ctx.fillRect(
+      this.x - hpBarWidth / 2,
+      this.y - this.size / 2 - hpBarHeight - 2,
+      hpBarWidth * hpPercent,
+      hpBarHeight
+    );
+  
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(
+      this.x - hpBarWidth / 2,
+      this.y - this.size / 2 - hpBarHeight - 2,
+      hpBarWidth,
+      hpBarHeight
+    );
   }
+  
 }

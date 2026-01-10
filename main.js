@@ -10,6 +10,16 @@ import { FrostTower } from './towers/FrostTower.js';
 import { AcidTower } from './towers/AcidTower.js';
 import { TankTower } from './towers/TankTower.js';
 
+
+window.hoveredEnemy = null;
+
+
+/**********************
+ * CONSTANTS
+ **********************/
+const ENEMY_INTERACT_RADIUS = 55;
+const ATTACK_CURSOR_SCALE = 1.23;
+
 /**********************
  * CANVAS SETUP
  **********************/
@@ -45,6 +55,22 @@ const waveText = document.getElementById("waveText");
 function distance(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
+
+function getHoveredEnemy(x, y, radius = 55) {
+  let closest = null;
+  let closestDist = Infinity;
+
+  for (const en of gameState.enemies) {
+    const d = distance(en, { x, y });
+    if (d < radius && d < closestDist) {
+      closest = en;
+      closestDist = d;
+    }
+  }
+
+  return closest;
+}
+
 
 /**********************
  * GRID SETTINGS
@@ -91,10 +117,12 @@ const gridOccupied = Array.from({ length: gridCols }, () =>
 function getTowerAtPosition(x, y) {
   for (let tower of gameState.towers) {
     const size = gridSize * 0.8;
-    if (x >= tower.x - size / 2 &&
-        x <= tower.x + size / 2 &&
-        y >= tower.y - size / 2 &&
-        y <= tower.y + size / 2) {
+    if (
+      x >= tower.x - size / 2 &&
+      x <= tower.x + size / 2 &&
+      y >= tower.y - size / 2 &&
+      y <= tower.y + size / 2
+    ) {
       return tower;
     }
   }
@@ -113,8 +141,8 @@ window.hideTowerModal = () => hud.hideTowerModal();
  ***********************/
 document.querySelectorAll(".towerCard").forEach(card => {
   card.addEventListener("click", () => {
-    const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$",""));
-    const name = card.querySelector(".towerName").textContent.replace(":","").trim();
+    const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$", ""));
+    const name = card.querySelector(".towerName").textContent.replace(":", "").trim();
 
     if (gameState.money >= cost) {
       gameState.money -= cost;
@@ -132,51 +160,54 @@ canvas.addEventListener("click", e => {
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
+  // Tower select
   const tower = getTowerAtPosition(x, y);
   if (tower) {
     hud.showTowerModal(tower);
     return;
   }
 
-  if (!window.selectedTowerType) return;
+  // Tower placement
+  if (window.selectedTowerType) {
+    const col = Math.floor(x / gridSize);
+    const row = Math.floor(y / gridSize);
+    const key = `${col},${row}`;
 
-  const col = Math.floor(x / gridSize);
-  const row = Math.floor(y / gridSize);
-  const key = `${col},${row}`;
+    if (gridOccupied[col][row] || pathOccupied.includes(key)) return;
 
-  if (gridOccupied[col][row] || pathOccupied.includes(key)) return;
+    const px = col * gridSize + gridSize / 2;
+    const py = row * gridSize + gridSize / 2;
 
-  const px = col * gridSize + gridSize / 2;
-  const py = row * gridSize + gridSize / 2;
+    switch (window.selectedTowerType) {
+      case "Cannon": gameState.towers.push(new CannonTower({ x: px, y: py, ctx })); break;
+      case "Frost":  gameState.towers.push(new FrostTower({ x: px, y: py, ctx })); break;
+      case "Acid":   gameState.towers.push(new AcidTower({ x: px, y: py, ctx })); break;
+      case "Tank":   gameState.towers.push(new TankTower({ x: px, y: py, ctx })); break;
+    }
 
-  switch (window.selectedTowerType) {
-    case "Cannon": gameState.towers.push(new CannonTower({ x:px, y:py, ctx })); break;
-    case "Frost":  gameState.towers.push(new FrostTower({ x:px, y:py, ctx })); break;
-    case "Acid":   gameState.towers.push(new AcidTower({ x:px, y:py, ctx })); break;
-    case "Tank":   gameState.towers.push(new TankTower({ x:px, y:py, ctx })); break;
+    gridOccupied[col][row] = true;
+    window.selectedTowerType = null;
+    hud.update();
   }
-
-  gridOccupied[col][row] = true;
-  window.selectedTowerType = null;
-  hud.update();
 });
 
 /***********************
- * CUSTOM CURSOR FX + GHOST TOWER
+ * CURSOR FX
  ***********************/
 const fx = document.getElementById("cursor-fx");
 const fxImg = fx.querySelector("img");
 
 const CURSOR_DEFAULT = "../assets/select-crosshair.png";
-const CURSOR_ATTACK  = "../assets/crosshair.png";
+const CURSOR_ATTACK = "../assets/crosshair.png";
 
 let cursorMode = "default";
+let angle = 0;
 
 function applyCursor() {
   fxImg.src = cursorMode === "attack" ? CURSOR_ATTACK : CURSOR_DEFAULT;
 
   if (window.selectedTowerType) {
-    fx.style.display = "none"; // ghost tower hides cursor
+    fx.style.display = "none";
     fx.classList.remove("active");
   } else {
     fx.style.display = "block";
@@ -184,27 +215,30 @@ function applyCursor() {
   }
 }
 
-applyCursor(); // initial
+applyCursor();
 
-let angle = 0;
-(function spin() {
+/***********************
+ * SPIN + SCALE LOOP
+ ***********************/
+function animateCursor() {
   angle += 3;
 
-  // Determine scale for attack cursor over enemies
   let scale = 1;
   if (cursorMode === "attack") {
     const hoverEnemy = gameState.enemies.find(en =>
-      distance(en, { x: window.mouseX || 0, y: window.mouseY || 0 }) < en.size / 2
+      distance(en, { x: window.mouseX || 0, y: window.mouseY || 0 }) < ENEMY_INTERACT_RADIUS
     );
-    if (hoverEnemy) scale = 1.2; // scale up when hovering enemy
+    if (hoverEnemy) scale = ATTACK_CURSOR_SCALE;
   }
 
   fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(${scale})`;
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
 
-  requestAnimationFrame(spin);
-})();
-
-
+/***********************
+ * MOUSE MOVE
+ ***********************/
 canvas.addEventListener("mousemove", e => {
   const rect = canvas.getBoundingClientRect();
   window.mouseX = e.clientX - rect.left;
@@ -215,23 +249,40 @@ canvas.addEventListener("mousemove", e => {
 
   applyCursor();
 
-  // hover glow only for non-attack mode
-  if (cursorMode !== "attack") {
-    const hoverTower = getTowerAtPosition(window.mouseX, window.mouseY);
-    const ENEMY_HOVER_RADIUS = 40; // bigger clickable area in pixels
-    const hoverEnemy = gameState.enemies.find(en =>
-    distance(en, { x: window.mouseX, y: window.mouseY }) < ENEMY_HOVER_RADIUS
-);
+  // =========================
+  // ENEMY HOVER (STABLE)
+  // =========================
+  window.hoveredEnemy = getHoveredEnemy(
+    window.mouseX,
+    window.mouseY,
+    65 // ← clickable radius (this ACTUALLY works now)
+  );
 
-    fx.classList.toggle("active", !!(hoverTower || hoverEnemy));
+  // =========================
+  // ATTACK MODE
+  // =========================
+  if (cursorMode === "attack") {
+    if (window.hoveredEnemy) {
+      fx.classList.add("active", "locked");
+    } else {
+      fx.classList.remove("locked");
+    }
+    return;
   }
+
+  // =========================
+  // NORMAL HOVER
+  // =========================
+  const hoverTower = getTowerAtPosition(window.mouseX, window.mouseY);
+  fx.classList.toggle("active", !!(hoverTower || window.hoveredEnemy));
 });
+
+
 
 /***********************
  * ATTACK BUTTON
  ***********************/
-const attackButton = document.getElementById("towerAttackOption");
-attackButton.addEventListener("click", () => {
+document.getElementById("towerAttackOption").addEventListener("click", () => {
   cursorMode = "attack";
   applyCursor();
 });
@@ -251,14 +302,13 @@ document.addEventListener("keydown", e => {
  * START GAME
  ***********************/
 const startButton = document.getElementById("startButton");
-const skipButton  = document.getElementById("skipButton");
+const skipButton = document.getElementById("skipButton");
 
 startButton.addEventListener("click", () => {
   if (gameStarted) return;
   gameStarted = true;
 
   startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
-
   gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
 });
 
