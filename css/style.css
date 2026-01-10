@@ -67,7 +67,7 @@ body {
   font-family: monospace;
   text-align: center;
   pointer-events: none; /* so clicks go through to canvas */
-  z-index: 10;         /* ensure it sits above canvas */
+  z-index: 10000;         /* ensure it sits above canvas */
 }
 
 
@@ -123,22 +123,24 @@ canvas {
 
 
 
-
-
-
 #gameWrapper {
   position: relative;
 }
 
-
-
 #waveText {
+  position: absolute;   /* overlay on top of canvas */
+  top: 20px;            /* distance from top of canvas */
+  left: 50%;            /* center horizontally */
+  transform: translateX(-50%);
   color: white;
-  font-size: 20px;
+  font-size: 24px;
   font-family: monospace;
   text-align: center;
+  pointer-events: none; /* allow clicks through */
+  z-index: 1000;        /* above canvas */
+  text-shadow: 0 0 8px black; /* optional glow for readability */
 }
-  
+
 
   
 /* =========================

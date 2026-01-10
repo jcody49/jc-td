@@ -48,6 +48,26 @@ let gameStarted = false;
  * WAVE TEXT
  **********************/
 const waveText = document.getElementById("waveText");
+waveText.style.display = "block";       // make sure it's visible
+waveText.style.zIndex = "1000";         // ensure it’s above canvas
+waveText.innerText = "Wave 1";          // initial placeholder text
+
+// Wave timer updater
+function updateWaveText() {
+  if (waveState.status === "countdown") {
+    waveText.innerText = `Next wave in: ${waveState.countdown}s`;
+  } else if (waveState.status === "spawning") {
+    waveText.innerText = `Wave ${waveState.currentWave} in progress`;
+  } else if (waveState.status === "done") {
+    waveText.innerText = `Wave ${waveState.currentWave} complete`;
+  } else {
+    waveText.innerText = ""; // idle
+  }
+
+  requestAnimationFrame(updateWaveText);
+}
+
+updateWaveText();
 
 /**********************
  * UTILS
