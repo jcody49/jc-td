@@ -8,7 +8,7 @@
     border-radius: 0 0 8px 8px;
     color: white;
     font-family: 'Audiowide', sans-serif;
-    height: 116px;
+    height: 150px;
     box-sizing: border-box;
     margin-top: 0; 
   
@@ -75,7 +75,7 @@
 
 .tower-modal-info {
     padding-top: 0;
-
+    padding-right: 25px;
     text-align: center;
     font-family: 'Audiowide', monospace;
     font-size: 20px;
@@ -102,27 +102,27 @@
     font-weight: bold;
     margin-bottom: 2px;
     text-align: right;
-    font-size: 1.23em;
+    font-size: 1.15em;
     letter-spacing: 3px;
-    color: #fff; /* base color */
+    color: #fff; 
     text-shadow:
-        0 0 1px #792BFB,                  /* crisp inner purple */
-        0 0 2px #FF5DFF,                  /* inner pink/magenta */
-        0 0 4px #FF80FF,                  /* outer magenta pop */
-        0 0 6px rgba(121, 43, 251, 0.7),  /* outer purple glow */
+        0 0 1px #792BFB,                 
+        0 0 2px #FF5DFF,                  
+        0 0 4px #FF80FF,                  
+        0 0 6px rgba(121, 43, 251, 0.7),  
         0 0 10px rgba(121, 43, 251, 0.5);
 }
 
 #modalInfo {
     margin: 0;
-    font-size: .65em;
-    line-height: 1.6em;
+    font-size: .6em;
+    line-height: 1.45em;
     text-align: right;
     letter-spacing: 3px;
 }
 
 .selected-label{
-  font-size: .66em;
+  font-size: .65em;
   text-align: right;
   letter-spacing: 4px;
   color:rgba(0, 255, 255, 0.9);
@@ -299,22 +299,23 @@
 
 #towerInteractionMenu {
   display: flex;
-  align-items: center; /* vertical alignment */
+  align-items: center;
   width: 100%;
 }
   /* Hide everything initially */
   #towerInteractionMenu {
-    display: none; /* hidden by default */
+    display: none; 
+    padding: 30px 0;
   }
 
 .tower-modal-content {
-  display: flex;       /* icons in a row */
-  margin-left: auto;   /* 🔥 pushes it to the far right */
+  display: flex;       
+  margin-left: auto;   
 }
 
 .tower-modal-info{
-  margin-left: 145px;
-  margin-right: 5%;
+  margin-left: 100px;
+
 }
 
 

@@ -31,7 +31,8 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
 
         towerInteractionMenu.style.display = "flex";
         modalTitle.textContent = selectedTower.getDisplayName ? selectedTower.getDisplayName() : selectedTower.type;
-        modalInfo.textContent = getTowerInfoText(selectedTower);
+        modalInfo.innerHTML = getTowerInfoText(selectedTower);
+
 
         updateUpgradeOption(selectedTower);
         updateSellOption(selectedTower);
@@ -40,12 +41,22 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
 
     function getTowerInfoText(tower) {
         return [
+            `<span style="color: white;
+                text-shadow:
+                0 0 1px #792BFB,                 
+                0 0 2px #FF5DFF,                  
+                0 0 4px #FF80FF,                  
+                0 0 6px rgba(121, 43, 251, 0.7),  
+                0 0 10px rgba(121, 43, 251, 0.5);
+            ">Level: ${tower.level}</span>`,
             `Damage: ${tower.damage}`,
             `Range: ${tower.range}`,
-            `Fire Rate: ${tower.fireRate}`,
-            `Level: ${tower.level}`
-        ].join(" | ");
+            `Fire Rate: ${tower.fireRate}`
+        ].join("<br>");
     }
+    
+    
+    
 
     // ------------------------------
     // Upgrade logic
