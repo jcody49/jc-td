@@ -378,6 +378,7 @@ document.addEventListener("keydown", e => {
  ***********************/
 const startButton = document.getElementById("startButton");
 const skipButton = document.getElementById("skipButton");
+const startSound = new Audio('assets/audio/Start game.wav');
 
 startButton.addEventListener("click", () => {
   if (gameStarted) return;
@@ -388,8 +389,17 @@ startButton.addEventListener("click", () => {
 });
 
 skipButton.addEventListener("click", () => {
+  // Only play sound if the button is not already disabled
+  if (!skipButton.disabled) {
+    startSound.currentTime = 0; // reset sound in case it was already playing
+    startSound.play();
+  }
+
+  // Existing logic
   clearInterval(waveState.countdownInterval);
   startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+
+  // Disable button after click
   skipButton.disabled = true;
 });
 
