@@ -88,22 +88,28 @@ export class Enemy {
     // HOVER / TARGET HIGHLIGHT
     // =========================
     if (window.hoveredEnemy === this) {
-      const pulse = Math.sin(performance.now() * 0.01) * 2;
-  
       ctx.save();
-      ctx.strokeStyle = "rgba(255, 80, 80, 0.9)";
-      ctx.lineWidth = 3;
+    
+      // Pulsing effect
+      const pulse = 0.15 * Math.sin(Date.now() / 200) + 1; // oscillates between 0.85 and 1.15
+    
+      ctx.globalAlpha = 0.35;                        // semi-transparent
+      ctx.fillStyle = "rgba(255, 60, 60, 1)";        // bright red
+    
       ctx.beginPath();
       ctx.arc(
         this.x,
         this.y,
-        this.size / 2 + 6 + pulse,
+        this.size * 0.9 * pulse,  // pulsating radius
         0,
         Math.PI * 2
       );
-      ctx.stroke();
+      ctx.fill();
+    
       ctx.restore();
     }
+    
+    
   
     // =========================
     // FLASH EFFECT (ON HIT)
