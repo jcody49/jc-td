@@ -298,6 +298,24 @@ document.addEventListener("keydown", e => {
   }
 });
 
+
+document.addEventListener("keydown", e => {
+  // Escape resets everything
+  if (e.key === "Escape") {
+    cursorMode = "default";
+    window.selectedTowerType = null;
+    applyCursor();
+  }
+
+  // "A" toggles attack mode
+  if (e.key.toLowerCase() === "a") {
+    cursorMode = cursorMode === "attack" ? "default" : "attack";
+    applyCursor();
+  }
+});
+
+
+
 /***********************
  * START GAME
  ***********************/
