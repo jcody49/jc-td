@@ -202,33 +202,32 @@ export class Tower {
     // --- Draw tower ---
     draw() {
         if (!this.ctx) return;
-
-        // Hover highlight
-        if (this.isHovered) {
-            const size = 40;
-            this.ctx.save();
-            this.ctx.fillStyle = "rgba(0,255,255,0.2)";
-            this.ctx.shadowColor = "rgba(0,255,255,0.8)";
+    
+        const size = 40; // tower size in px
+    
+        this.ctx.save();
+    
+        // --- Selected highlight (purple) ---
+        if (this === window.selectedTower) {
+            this.ctx.fillStyle = "rgba(128, 0, 128, 0.5)"; // semi-transparent purple
+            this.ctx.shadowColor = "rgba(128,0,128,0.7)";
+            this.ctx.shadowBlur = 15;
+            this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
+        }
+        // --- Hover highlight (blue) ---
+        else if (this.isHovered) {
+            this.ctx.fillStyle = "rgba(0,0,255,0.3)";
+            this.ctx.shadowColor = "rgba(0,0,255,0.7)";
             this.ctx.shadowBlur = 10;
-            this.ctx.fillRect(
-                this.x - size / 2,
-                this.y - size / 2,
-                size,
-                size
-            );
-            this.ctx.restore();
+            this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
         }
-
-        // Draw sprite
+    
+        // --- Draw tower sprite ---
         if (this.image) {
-            const size = 40;
-            this.ctx.drawImage(
-                this.image,
-                this.x - size / 2,
-                this.y - size / 2,
-                size,
-                size
-            );
+            this.ctx.drawImage(this.image, this.x - size / 2, this.y - size / 2, size, size);
         }
+    
+        this.ctx.restore();
     }
+    
 }

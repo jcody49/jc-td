@@ -87,6 +87,23 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         ctx.stroke();
     }
 
+
+    // =========================
+    // SELECTED TOWER HIGHLIGHT
+    // =========================
+    if (window.selectedTower) {
+        const tower = window.selectedTower;
+        const size = gridSize; // assume tower covers 1x1 cell; adjust if larger
+
+        // get tower grid cell
+        const col = Math.floor(tower.x / gridSize);
+        const row = Math.floor(tower.y / gridSize);
+
+        ctx.fillStyle = 'rgba(128, 0, 128, 0.5)'; // semi-transparent purple
+        ctx.fillRect(col * gridSize, row * gridSize, size, size);
+    }
+
+
     // =========================
     // UPDATE ENEMIES
     // =========================
