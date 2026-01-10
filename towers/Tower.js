@@ -136,23 +136,29 @@ export class Tower {
             this.cooldown--;
             return;
         }
-
+    
         // =========================
         // FORCE ATTACK OVERRIDE
         // =========================
-        let target = this.forcedTarget;
-
-        // If forced target is gone, dead, or invalid → fall back to AI
-        if (!target || target.dead) {
+        let target = null;
+    
+        if (
+            this.forcedTarget &&
+            !this.forcedTarget.dead &&
+            gameState.enemies.includes(this.forcedTarget)
+        ) {
+            target = this.forcedTarget;
+        } else {
             this.forcedTarget = null;
             target = this.findTarget(gameState.enemies);
         }
-
+    
         if (!target) return;
-
+    
         this.fire(target, gameState);
         this.cooldown = this.fireRate;
     }
+    
 
 
     // --- Fire projectile ---

@@ -29,6 +29,11 @@ export class Enemy {
       this.isFlying = isFlying;
   }
 
+  get dead() {
+    return this.remove;
+}
+
+
   update(gameState) {
       // --- Check if reached end of path ---
       if (this.pathIndex >= this.path.length - 1) {
