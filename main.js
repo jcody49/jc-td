@@ -189,9 +189,21 @@ applyCursor(); // initial
 let angle = 0;
 (function spin() {
   angle += 3;
-  fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+
+  // Determine scale for attack cursor over enemies
+  let scale = 1;
+  if (cursorMode === "attack") {
+    const hoverEnemy = gameState.enemies.find(en =>
+      distance(en, { x: window.mouseX || 0, y: window.mouseY || 0 }) < en.size / 2
+    );
+    if (hoverEnemy) scale = 1.5; // scale up when hovering enemy
+  }
+
+  fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(${scale})`;
+
   requestAnimationFrame(spin);
 })();
+
 
 canvas.addEventListener("mousemove", e => {
   const rect = canvas.getBoundingClientRect();
