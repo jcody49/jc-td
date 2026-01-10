@@ -180,14 +180,34 @@ canvas.addEventListener("click", e => {
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
 
-  // Tower select
+  // =========================
+  // SINGLE-TOWER FORCE ATTACK
+  // =========================
+  if (
+    cursorMode === "attack" &&
+    window.selectedTower &&
+    window.hoveredEnemy
+  ) {
+    window.selectedTower.setForcedTarget(window.hoveredEnemy);
+
+    cursorMode = "default";
+    applyCursor();
+    return; // IMPORTANT: stop here
+  }
+
+  // =========================
+  // TOWER SELECT
+  // =========================
   const tower = getTowerAtPosition(x, y);
   if (tower) {
+    window.selectedTower = tower;
     hud.showTowerModal(tower);
     return;
   }
 
-  // Tower placement
+  // =========================
+  // TOWER PLACEMENT
+  // =========================
   if (window.selectedTowerType) {
     const col = Math.floor(x / gridSize);
     const row = Math.floor(y / gridSize);
@@ -199,10 +219,18 @@ canvas.addEventListener("click", e => {
     const py = row * gridSize + gridSize / 2;
 
     switch (window.selectedTowerType) {
-      case "Cannon": gameState.towers.push(new CannonTower({ x: px, y: py, ctx })); break;
-      case "Frost":  gameState.towers.push(new FrostTower({ x: px, y: py, ctx })); break;
-      case "Acid":   gameState.towers.push(new AcidTower({ x: px, y: py, ctx })); break;
-      case "Tank":   gameState.towers.push(new TankTower({ x: px, y: py, ctx })); break;
+      case "Cannon":
+        gameState.towers.push(new CannonTower({ x: px, y: py, ctx }));
+        break;
+      case "Frost":
+        gameState.towers.push(new FrostTower({ x: px, y: py, ctx }));
+        break;
+      case "Acid":
+        gameState.towers.push(new AcidTower({ x: px, y: py, ctx }));
+        break;
+      case "Tank":
+        gameState.towers.push(new TankTower({ x: px, y: py, ctx }));
+        break;
     }
 
     gridOccupied[col][row] = true;
@@ -210,6 +238,7 @@ canvas.addEventListener("click", e => {
     hud.update();
   }
 });
+
 
 /***********************
  * CURSOR FX
@@ -313,9 +342,15 @@ document.getElementById("towerAttackOption").addEventListener("click", () => {
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
     cursorMode = "default";
+  
+    if (window.selectedTower) {
+      window.selectedTower.clearForcedTarget();
+    }
+  
     window.selectedTowerType = null;
     applyCursor();
   }
+  
 });
 
 
@@ -329,9 +364,11 @@ document.addEventListener("keydown", e => {
 
   // "A" toggles attack mode
   if (e.key.toLowerCase() === "a") {
+    if (!window.selectedTower) return;
+  
     cursorMode = cursorMode === "attack" ? "default" : "attack";
     applyCursor();
-  }
+  }  
 });
 
 

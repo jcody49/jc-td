@@ -16,6 +16,9 @@ export class Tower {
         this.ctx = ctx;
         this.type = type;
 
+        this.forcedTarget = null;
+
+
         // --- Upgrade system ---
         this.level = 1;
         this.maxLevel = maxLevel;
@@ -91,6 +94,15 @@ export class Tower {
     }
     
 
+    setForcedTarget(enemy) {
+        this.forcedTarget = enemy;
+      }
+      
+      clearForcedTarget() {
+        this.forcedTarget = null;
+      }
+      
+
     // --- Targeting ---
     findTarget(enemies) {
         const inRange = enemies
@@ -125,12 +137,23 @@ export class Tower {
             return;
         }
 
-        const target = this.findTarget(gameState.enemies);
-        if (target) {
-            this.fire(target, gameState);
-            this.cooldown = this.fireRate;
+        // =========================
+        // FORCE ATTACK OVERRIDE
+        // =========================
+        let target = this.forcedTarget;
+
+        // If forced target is gone, dead, or invalid → fall back to AI
+        if (!target || target.dead) {
+            this.forcedTarget = null;
+            target = this.findTarget(gameState.enemies);
         }
+
+        if (!target) return;
+
+        this.fire(target, gameState);
+        this.cooldown = this.fireRate;
     }
+
 
     // --- Fire projectile ---
     fire(target, gameState) {
