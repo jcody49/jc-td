@@ -5,6 +5,11 @@ import { startWave, startNextWave, waveState } from './waves.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx, mouse } from './canvas.js';
 import { gameState, gridCols, gridRows, gridOccupied } from './gameState.js';
+import {
+  distance,
+  getHoveredEnemy,
+  getTowerAtPosition
+} from './utils.js';
 
 
 
@@ -58,28 +63,6 @@ function updateWaveText() {
 
 updateWaveText();
 
-/**********************
- * UTILS
- **********************/
-function distance(a, b) {
-  return Math.hypot(a.x - b.x, a.y - b.y);
-}
-
-function getHoveredEnemy(x, y, radius = 55) {
-  let closest = null;
-  let closestDist = Infinity;
-
-  for (const en of gameState.enemies) {
-    const d = distance(en, { x, y });
-    if (d < radius && d < closestDist) {
-      closest = en;
-      closestDist = d;
-    }
-  }
-
-  return closest;
-}
-
 
 
 const gridSizeX = canvas.width / gridCols;
@@ -111,24 +94,6 @@ const path = pathCells.map(c => ({
   x: c.col * gridSize + gridSize / 2,
   y: c.row * gridSize + gridSize / 2
 }));
-
-/**********************
- * TOWER LOOKUP
- **********************/
-function getTowerAtPosition(x, y) {
-  for (let tower of gameState.towers) {
-    const size = gridSize * 0.8;
-    if (
-      x >= tower.x - size / 2 &&
-      x <= tower.x + size / 2 &&
-      y >= tower.y - size / 2 &&
-      y <= tower.y + size / 2
-    ) {
-      return tower;
-    }
-  }
-  return null;
-}
 
 /***********************
  * INIT HUD
@@ -179,7 +144,13 @@ canvas.addEventListener("click", e => {
   // =========================
   // TOWER SELECT
   // =========================
-  const tower = getTowerAtPosition(x, y);
+  const tower = getTowerAtPosition(
+    gameState.towers,
+    x,
+    y,
+    gridSize
+  );
+  
   if (tower) {
     window.selectedTower = tower;
     hud.showTowerModal(tower);
@@ -283,10 +254,12 @@ canvas.addEventListener("mousemove", e => {
   // ENEMY HOVER (STABLE)
   // =========================
   window.hoveredEnemy = getHoveredEnemy(
+    gameState.enemies,
     window.mouseX,
     window.mouseY,
-    65 // ← clickable radius (this ACTUALLY works now)
+    65
   );
+  
 
   // =========================
   // ATTACK MODE
@@ -303,8 +276,15 @@ canvas.addEventListener("mousemove", e => {
   // =========================
   // NORMAL HOVER
   // =========================
-  const hoverTower = getTowerAtPosition(window.mouseX, window.mouseY);
+  const hoverTower = getTowerAtPosition(
+    gameState.towers,
+    window.mouseX,
+    window.mouseY,
+    gridSize
+  );
+  
   fx.classList.toggle("active", !!(hoverTower || window.hoveredEnemy));
+  
 });
 
 
