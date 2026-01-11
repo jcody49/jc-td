@@ -4,7 +4,8 @@ import { Tower } from './towers/Tower.js';
 import { startWave, startNextWave, waveState } from './waves.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx, mouse } from './canvas.js';
-import { gameState, gridCols, gridRows, gridOccupied } from './gameState.js';
+import { gameState } from './gameState.js';
+import { initGrid, gridCols, gridRows, gridSize, gridOccupied } from './grid.js';
 import {
   distance,
   getHoveredEnemy,
@@ -70,12 +71,11 @@ function updateWaveText() {
 updateWaveText();
 
 
+initGrid(canvas, 25, 15);
 
-const gridSizeX = canvas.width / gridCols;
-const gridSizeY = canvas.height / gridRows;
-const gridSize = Math.min(gridSizeX, gridSizeY);
 
 const path = buildPath(pathCells, gridSize);
+
 
 
 /***********************
