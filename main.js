@@ -3,6 +3,8 @@ import { Enemy } from './enemies.js';
 import { Tower } from './towers/Tower.js';
 import { startWave, startNextWave, waveState } from './waves.js';
 import { initHUD } from './hud.js';
+import { canvas, ctx, mouse } from './canvas.js';
+
 
 // TOWER IMPORTS
 import { CannonTower } from './towers/CannonTower.js';
@@ -20,11 +22,6 @@ window.hoveredEnemy = null;
 const ENEMY_INTERACT_RADIUS = 55;
 const ATTACK_CURSOR_SCALE = 1.23;
 
-/**********************
- * CANVAS SETUP
- **********************/
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
 
 /**********************
  * GAME STATE
