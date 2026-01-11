@@ -1,5 +1,20 @@
 // game-engine.js
 import { showMoneyPopup } from './ui-effects.js';
+import { pathOccupied } from './pathing.js';
+import { gridCols, gridRows, gridSize } from './grid.js';
+
+// =========================
+// TILE IMAGES
+// =========================
+const grassTile = new Image();
+grassTile.src = 'assets/grass-tile.png';
+
+const roadTile = new Image();
+roadTile.src = 'assets/road-tile.png';
+
+let tilesReady = 0;
+grassTile.onload = () => tilesReady++;
+roadTile.onload  = () => tilesReady++;
 
 // =========================
 // TOWER IMAGE EXPORTS
@@ -17,11 +32,44 @@ export const tankImg = new Image();
 tankImg.src = 'assets/tank-tower.png';
 
 // =========================
+// TILE DRAW FUNCTION
+// =========================
+function drawGridTiles(ctx, gridCols, gridRows, gridSize) {
+    // Skip drawing until both tile images are loaded
+    if (tilesReady < 2) return;
+
+    ctx.imageSmoothingEnabled = false;
+
+    for (let row = 0; row < gridRows; row++) {
+        for (let col = 0; col < gridCols; col++) {
+            const x = col * gridSize;
+            const y = row * gridSize;
+            const key = `${col},${row}`;
+
+            if (pathOccupied.includes(key)) {
+                ctx.drawImage(roadTile, x, y, gridSize, gridSize);
+            } else {
+                ctx.drawImage(grassTile, x, y, gridSize, gridSize);
+            }
+        }
+    }
+}
+
+// =========================
 // GAME LOOP
 // =========================
 export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
     const mouseX = window.mouseX || 0;
     const mouseY = window.mouseY || 0;
+
+    // =========================
+    // CHECK TILE LOAD
+    // =========================
+    if (tilesReady < 2) {
+        // Wait until images are loaded
+        requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud));
+        return;
+    }
 
     // =========================
     // CHECK GAME OVER
@@ -37,21 +85,9 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // =========================
-    // DRAW GRID
+    // DRAW GRID TILES (BACKGROUND)
     // =========================
-    ctx.strokeStyle = "rgba(255,255,255,0.1)";
-    for (let c = 0; c < gridCols; c++) {
-        ctx.beginPath();
-        ctx.moveTo(c * gridSize, 0);
-        ctx.lineTo(c * gridSize, canvas.height);
-        ctx.stroke();
-    }
-    for (let r = 0; r < gridRows; r++) {
-        ctx.beginPath();
-        ctx.moveTo(0, r * gridSize);
-        ctx.lineTo(canvas.width, r * gridSize);
-        ctx.stroke();
-    }
+    drawGridTiles(ctx, gridCols, gridRows, gridSize);
 
     // =========================
     // GHOST TOWER (MOUSE HOVER)
@@ -60,7 +96,6 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         let col = Math.floor(mouseX / gridSize);
         let row = Math.floor(mouseY / gridSize);
 
-        // Clamp to grid
         col = Math.max(0, Math.min(col, gridCols - 1));
         row = Math.max(0, Math.min(row, gridRows - 1));
 
@@ -83,7 +118,6 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
             ctx.translate(centerX, centerY);
             ctx.globalAlpha = 0.35;
 
-            // red overlay if invalid
             if (!validPlacement) {
                 ctx.fillStyle = "red";
                 ctx.fillRect(-gridSize / 2, -gridSize / 2, gridSize, gridSize);
@@ -99,7 +133,7 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
     // =========================
     if (window.selectedTower) {
         const tower = window.selectedTower;
-        const size = gridSize; // assume 1x1 cell for now
+        const size = gridSize;
 
         const col = Math.floor(tower.x / gridSize);
         const row = Math.floor(tower.y / gridSize);
