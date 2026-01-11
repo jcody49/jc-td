@@ -8,8 +8,13 @@ import { canvas, ctx } from './canvas.js';
 import { gameState } from './gameState.js';
 import { initGrid, gridCols, gridRows, gridSize, gridOccupied } from './grid.js';
 import { setupTowerPlacement } from './towerPlacement.js';
-import { getHoveredEnemy, getTowerAtPosition, distance } from './utils.js';
+import { distance, getHoveredEnemy, getTowerAtPosition } from './utils.js';
 import { pathCells, pathOccupied, buildPath } from './pathing.js';
+import { Tower } from './towers/Tower.js';
+import { CannonTower } from './towers/CannonTower.js';
+import { FrostTower } from './towers/FrostTower.js';
+import { AcidTower } from './towers/AcidTower.js';
+import { TankTower } from './towers/TankTower.js';
 
 // ======================
 // GLOBALS
@@ -17,25 +22,42 @@ import { pathCells, pathOccupied, buildPath } from './pathing.js';
 window.hoveredEnemy = null;
 window.selectedTowerType = null;
 window.selectedTower = null;
+let gameStarted = false; // <<< add this line
+
 
 // ======================
-// CONSTANTS
+// CURSOR FX
 // ======================
-const ENEMY_INTERACT_RADIUS = 55;
-const ATTACK_CURSOR_SCALE = 1.23;
+const fx = document.getElementById("cursor-fx");
+const fxImg = fx.querySelector("img");
 
-// ======================
-// GAME CONTROL
-// ======================
-let gameStarted = false;
+const CURSOR_DEFAULT = "../assets/select-crosshair.png";
+const CURSOR_ATTACK  = "../assets/crosshair.png";
 
-// ======================
-// WAVE TEXT
-// ======================
-const waveText = document.getElementById("waveText");
-waveText.style.display = "block";
-waveText.style.zIndex = "1000";
-waveText.innerText = "Wave 1";
+let cursorMode = "default";
+let angle = 0;
+
+function applyCursor() {
+    if (window.selectedTowerType) {
+        fx.style.display = "none"; // hide when tower placement ghost active
+    } else {
+        fx.style.display = "block";
+        fxImg.src = cursorMode === "attack" ? CURSOR_ATTACK : CURSOR_DEFAULT;
+        fx.classList.toggle("active", cursorMode === "attack");
+    }
+}
+
+// Animate cursor rotation & scaling
+function animateCursor() {
+    angle += 3;
+    let scale = 1;
+
+    if (cursorMode === "attack" && window.hoveredEnemy) scale = 1.25;
+
+    fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(${scale})`;
+    requestAnimationFrame(animateCursor);
+}
+animateCursor();
 
 // ======================
 // INIT GRID + PATH
@@ -46,18 +68,15 @@ const path = buildPath(pathCells, gridSize);
 // ======================
 // INIT HUD
 // ======================
-const hud = initHUD({ gameState, path, gridSize, ctx, canvas, waveText, waveState, startWave });
+const hud = initHUD({ gameState, path, gridSize, ctx, canvas, waveText: document.getElementById("waveText"), waveState, startWave });
 window.showTowerModal = tower => hud.showTowerModal(tower);
 window.hideTowerModal = () => hud.hideTowerModal();
 
 // ======================
-// SETUP TOWER PLACEMENT
+// TOWER PLACEMENT
 // ======================
 setupTowerPlacement({ hud, gridSize });
 
-// ======================
-// TOWER CARD SELECTION
-// ======================
 document.querySelectorAll(".towerCard").forEach(card => {
     card.addEventListener("click", () => {
         const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$",""));
@@ -66,83 +85,14 @@ document.querySelectorAll(".towerCard").forEach(card => {
         if (gameState.money >= cost) {
             gameState.money -= cost;
             hud.update();
-            window.selectedTowerType = name; // triggers ghost tower
-            console.log("[main] Tower selected for placement:", name);
-        } else {
-            console.log("[main] Not enough money to select:", name);
+            window.selectedTowerType = name; // triggers ghost tower in gameLoop
+            console.log("[Main] Tower selected for placement:", name);
         }
     });
 });
 
 // ======================
-// WAVE TEXT LOOP
-// ======================
-function updateWaveText() {
-    if (waveState.status === "countdown") {
-        waveText.innerText = `Next wave in: ${waveState.countdown}s`;
-    } else if (waveState.status === "spawning") {
-        waveText.innerText = `Wave ${waveState.currentWave} in progress`;
-    } else if (waveState.status === "done") {
-        waveText.innerText = `Wave ${waveState.currentWave} complete`;
-    } else {
-        waveText.innerText = "";
-    }
-    requestAnimationFrame(updateWaveText);
-}
-updateWaveText();
-
-// ======================
-// CURSOR FX
-// ======================
-const fx = document.getElementById("cursor-fx");
-const fxImg = fx.querySelector("img");
-
-// Cursor image paths
-const CURSOR_DEFAULT = "../assets/cursor-default.png";       // default
-const CURSOR_HOVER   = "../assets/select-crosshair.png";     // hovering tower/enemy
-const CURSOR_ATTACK  = "../assets/crosshair.png";           // red attack
-
-let cursorMode = "default"; // "default" | "hover" | "attack"
-let angle = 0;
-
-// Apply cursor appearance based on mode
-function applyCursor() {
-    if (!fx || !fxImg) return;
-
-    if (cursorMode === "attack") fxImg.src = CURSOR_ATTACK;
-    else if (cursorMode === "hover") fxImg.src = CURSOR_HOVER;
-    else fxImg.src = CURSOR_DEFAULT;
-
-    // Hide cursor if placing a tower
-    if (window.selectedTowerType) {
-        fx.style.display = "none";
-    } else {
-        fx.style.display = "block";
-        fx.classList.toggle("active", cursorMode === "attack" || cursorMode === "hover");
-    }
-
-    console.log("[cursor] applyCursor:", cursorMode, "selectedTowerType:", window.selectedTowerType);
-}
-
-function animateCursor() {
-    angle += 3;
-    let scale = 1;
-
-    if (cursorMode === "attack") {
-        const hoverEnemy = gameState.enemies.find(en =>
-            distance(en, { x: window.mouseX || 0, y: window.mouseY || 0 }) < ENEMY_INTERACT_RADIUS
-        );
-        if (hoverEnemy) scale = ATTACK_CURSOR_SCALE;
-    }
-
-    fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(${scale})`;
-
-    requestAnimationFrame(animateCursor);
-}
-animateCursor();
-
-// ======================
-// MOUSE MOVE (canvas hover logic)
+// CURSOR & MOUSE
 // ======================
 canvas.addEventListener("mousemove", e => {
     const rect = canvas.getBoundingClientRect();
@@ -152,29 +102,29 @@ canvas.addEventListener("mousemove", e => {
     fx.style.left = e.clientX + "px";
     fx.style.top = e.clientY + "px";
 
-    window.hoveredEnemy = getHoveredEnemy(gameState.enemies, window.mouseX, window.mouseY, 65);
-    const hoverTower = getTowerAtPosition(gameState.towers, window.mouseX, window.mouseY, gridSize);
+    applyCursor();
 
-    // Tower placement takes priority: hide cursor
-    if (window.selectedTowerType) {
-        cursorMode = "default";
-        fx.style.display = "none";
-        console.log("[cursor] tower placement active, cursor hidden");
-    } else if (cursorMode === "attack") {
-        // Attack mode: red cursor
-        fx.classList.toggle("locked", !!window.hoveredEnemy);
-        console.log("[cursor] attack mode, hoveredEnemy:", !!window.hoveredEnemy);
-    } else {
-        // Hover over tower/enemy?
-        if (window.hoveredEnemy || hoverTower) {
-            cursorMode = "hover";
-            console.log("[cursor] hovering over:", window.hoveredEnemy ? "enemy" : "tower");
-        } else {
-            cursorMode = "default";
-        }
+    window.hoveredEnemy = getHoveredEnemy(gameState.enemies, window.mouseX, window.mouseY, 65);
+
+    if (cursorMode === "attack") {
+        if (window.hoveredEnemy) fx.classList.add("active", "locked");
+        else fx.classList.remove("locked");
+        return;
     }
 
-    applyCursor();
+    const hoverTower = getTowerAtPosition(gameState.towers, window.mouseX, window.mouseY, gridSize);
+    fx.classList.toggle("active", !!(hoverTower || window.hoveredEnemy));
+});
+
+// Force attack on click
+canvas.addEventListener("click", () => {
+    if (cursorMode !== "attack") return;
+    if (!window.selectedTower) return;
+
+    if (window.hoveredEnemy) {
+        window.selectedTower.setForcedTarget(window.hoveredEnemy);
+        console.log("[Main] Forced attack activated on enemy:", window.hoveredEnemy);
+    }
 });
 
 // ======================
@@ -183,7 +133,7 @@ canvas.addEventListener("mousemove", e => {
 document.getElementById("towerAttackOption").addEventListener("click", () => {
     cursorMode = "attack";
     applyCursor();
-    console.log("[cursor] attack mode triggered via button");
+    console.log("[Main] Attack mode toggled via button");
 });
 
 // ======================
@@ -195,15 +145,34 @@ document.addEventListener("keydown", e => {
         if (window.selectedTower) window.selectedTower.clearForcedTarget();
         window.selectedTowerType = null;
         applyCursor();
-        console.log("[cursor] Escape pressed: reset cursor & cancel tower placement");
+        console.log("[Main] Escape pressed, attack/placement canceled");
     }
 
     if (e.key.toLowerCase() === "a" && window.selectedTower) {
-        cursorMode = cursorMode === "attack" ? "default" : "attack";
+        if (cursorMode === "attack") {
+            cursorMode = "default";
+            window.selectedTower.clearForcedTarget();
+            console.log("[Main] Attack mode canceled via 'A'");
+        } else {
+            cursorMode = "attack";
+            console.log("[Main] Attack mode toggled via 'A'");
+        }
         applyCursor();
-        console.log("[cursor] Attack mode toggled via 'A' key:", cursorMode);
     }
 });
+
+// ======================
+// WAVE TEXT
+// ======================
+function updateWaveText() {
+    if (waveState.status === "countdown") waveText.innerText = `Next wave in: ${waveState.countdown}s`;
+    else if (waveState.status === "spawning") waveText.innerText = `Wave ${waveState.currentWave} in progress`;
+    else if (waveState.status === "done") waveText.innerText = `Wave ${waveState.currentWave} complete`;
+    else waveText.innerText = "";
+
+    requestAnimationFrame(updateWaveText);
+}
+updateWaveText();
 
 // ======================
 // START GAME BUTTONS
@@ -215,9 +184,10 @@ const startSound = new Audio('assets/audio/Start game.wav');
 startButton.addEventListener("click", () => {
     if (gameStarted) return;
     gameStarted = true;
-    console.log("[main] Starting game");
+
     startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
     gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
+    console.log("[Main] Game started");
 });
 
 skipButton.addEventListener("click", () => {
@@ -228,13 +198,11 @@ skipButton.addEventListener("click", () => {
     clearInterval(waveState.countdownInterval);
     startWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
     skipButton.disabled = true;
-    console.log("[main] Wave skipped");
+    console.log("[Main] Wave skipped");
 });
 
 // ======================
-// EXPORTS
+// GLOBAL EXPORTS
 // ======================
 window.gridOccupied = gridOccupied;
 window.pathOccupied = pathOccupied;
-
-console.log("[main] main.js fully loaded");

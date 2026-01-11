@@ -1,3 +1,4 @@
+// towers/Tower.js
 import { Projectile } from '../projectiles.js';
 
 export class Tower {
@@ -16,20 +17,18 @@ export class Tower {
         this.ctx = ctx;
         this.type = type;
 
+        // Force attack target
         this.forcedTarget = null;
 
-
-        // --- Upgrade system ---
+        // Upgrade system
         this.level = 1;
         this.maxLevel = maxLevel;
         this.levelData = levelData;
         this.upgradeCosts = upgradeCosts;
-
         this.hasSpecial = opts.hasSpecial || false;
-
         this.totalSpent = upgradeCosts[0] || 0;
 
-        // --- Stats ---
+        // Stats
         this.damage = 0;
         this.splashRadius = 0;
         this.range = 0;
@@ -43,15 +42,15 @@ export class Tower {
         this.sprite = null;
         this.image = null;
 
+        this.isHovered = false; // hover highlight
         this.applyLevel();
     }
 
-    // --- Apply stats from current level ---
+    // Apply stats from current level
     applyLevel() {
         const data = this.levelData[this.level];
         if (!data) return;
 
-        // Explicit stat assignment
         this.damage = data.damage ?? this.damage;
         this.range = data.range ?? this.range;
         this.fireRate = data.fireRate ?? this.fireRate;
@@ -67,119 +66,89 @@ export class Tower {
             this.image.src = `assets/${data.sprite}`;
         }
 
-        // Reset cooldown for immediate usability after upgrade
-        this.cooldown = 0;
+        this.cooldown = 0; // reset cooldown after upgrade
     }
 
-    // --- Can this tower upgrade? ---
+    // Check if upgrade is possible
     canUpgrade(gameState) {
         if (this.level >= this.maxLevel) return false;
-        const cost = this.upgradeCosts[this.level - 1];
-        return gameState.money >= cost;
+        return gameState.money >= this.upgradeCosts[this.level - 1];
     }
 
-    // --- Upgrade tower ---
+    // Upgrade tower
     upgrade(gameState) {
-        if (this.level >= this.maxLevel) return false;
-    
+        if (!this.canUpgrade(gameState)) return false;
         const cost = this.upgradeCosts[this.level - 1];
-        if (gameState.money < cost) return false;
-    
         gameState.money -= cost;
-        this.totalSpent += cost;  // track upgrades
+        this.totalSpent += cost;
         this.level++;
         this.applyLevel();
-    
         return true;
     }
-    
 
+    // Force attack methods
     setForcedTarget(enemy) {
         this.forcedTarget = enemy;
-      }
-      
-      clearForcedTarget() {
-        this.forcedTarget = null;
-      }
-      
+    }
 
-    // --- Targeting ---
+    clearForcedTarget() {
+        this.forcedTarget = null;
+    }
+
+    // Find target in range (default: closest)
     findTarget(enemies) {
         const inRange = enemies
-            .map(e => ({
-                e,
-                dist: Math.hypot(this.x - e.x, this.y - e.y)
-            }))
-            .filter(obj => obj.dist < this.range);
+            .map(e => ({ e, dist: Math.hypot(this.x - e.x, this.y - e.y) }))
+            .filter(obj => obj.dist <= this.range);
 
         if (inRange.length === 0) return null;
 
-        // Frost logic
-        if (this.targetingMode === "unslowedFirst") {
-            const unslowed = inRange.filter(
-                obj => !obj.e.slowTimer || obj.e.slowTimer <= 0
-            );
-            if (unslowed.length > 0) {
-                unslowed.sort((a, b) => a.dist - b.dist);
-                return unslowed[0].e;
-            }
-        }
-
-        // Default: closest enemy
         inRange.sort((a, b) => a.dist - b.dist);
         return inRange[0].e;
     }
 
-    // --- Main update per frame ---
+    // Main update per frame
     update(gameState) {
         if (this.cooldown > 0) {
             this.cooldown--;
             return;
         }
-    
-        // =========================
-        // FORCE ATTACK OVERRIDE
-        // =========================
+
         let target = null;
-    
-        if (
-            this.forcedTarget &&
-            !this.forcedTarget.dead &&
-            gameState.enemies.includes(this.forcedTarget)
-        ) {
+
+        // --- Force attack logic ---
+        if (this.forcedTarget && !this.forcedTarget.dead && gameState.enemies.includes(this.forcedTarget)) {
             const dx = this.forcedTarget.x - this.x;
             const dy = this.forcedTarget.y - this.y;
             const dist = Math.hypot(dx, dy);
-        
+
             if (dist <= this.range) {
-                target = this.forcedTarget;
+                target = this.forcedTarget; // keep forcing attack
             } else {
-                // Out of range, ignore forced target
+                // Out of range, fallback to auto
                 this.forcedTarget = null;
                 target = this.findTarget(gameState.enemies);
             }
         } else {
+            // Forced target is dead or undefined -> normal targeting
             this.forcedTarget = null;
             target = this.findTarget(gameState.enemies);
         }
-        
-    
+
         if (!target) return;
-    
+
         this.fire(target, gameState);
         this.cooldown = this.fireRate;
-    }
-    
 
-
-    // --- Fire projectile ---
-    fire(target, gameState) {
-        let perFrameDot = 0;
-
-        if (this.dotDuration > 0) {
-            const totalDot = this.dotDamage || this.damage;
-            perFrameDot = totalDot / this.dotDuration;
+        // --- Auto-resume attack if forced target died ---
+        if (this.forcedTarget && this.forcedTarget.dead) {
+            this.forcedTarget = null;
         }
+    }
+
+    // Fire projectile
+    fire(target, gameState) {
+        const perFrameDot = this.dotDuration > 0 ? (this.dotDamage || this.damage) / this.dotDuration : 0;
 
         gameState.projectiles.push(
             new Projectile({
@@ -198,47 +167,43 @@ export class Tower {
         );
     }
 
+    // Sell tower
     sell(gameState) {
         const refund = Math.floor(this.totalSpent * 0.5);
         gameState.money += refund;
-    
-        // Remove the tower from gameState.towers
-        const index = gameState.towers.indexOf(this);
-        if (index > -1) gameState.towers.splice(index, 1);
-    
+        const idx = gameState.towers.indexOf(this);
+        if (idx > -1) gameState.towers.splice(idx, 1);
         return refund;
     }
-    
 
-    // --- Draw tower ---
+    // Draw tower
     draw() {
         if (!this.ctx) return;
-    
-        const size = 40; // tower size in px
-    
+
+        const size = 40;
+
         this.ctx.save();
-    
-        // --- Selected highlight (purple) ---
+
+        // Selected highlight (purple)
         if (this === window.selectedTower) {
-            this.ctx.fillStyle = "rgba(128, 0, 128, 0.5)"; // semi-transparent purple
+            this.ctx.fillStyle = "rgba(128,0,128,0.5)";
             this.ctx.shadowColor = "rgba(128,0,128,0.7)";
             this.ctx.shadowBlur = 15;
             this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
         }
-        // --- Hover highlight (blue) ---
+        // Hover highlight (blue)
         else if (this.isHovered) {
             this.ctx.fillStyle = "rgba(0,0,255,0.3)";
             this.ctx.shadowColor = "rgba(0,0,255,0.7)";
             this.ctx.shadowBlur = 10;
             this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
         }
-    
-        // --- Draw tower sprite ---
+
+        // Draw tower sprite
         if (this.image) {
             this.ctx.drawImage(this.image, this.x - size / 2, this.y - size / 2, size, size);
         }
-    
+
         this.ctx.restore();
     }
-    
 }
