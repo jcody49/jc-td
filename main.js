@@ -186,7 +186,7 @@ document.getElementById("towerAttackOption").addEventListener("click", () => {
 });
 
 // ======================
-// ESC, ATTACK, UPGRADE
+// ESC, ATTACK, UPGRADE, SELL
 // ======================
 document.addEventListener("keydown", e => {
   const key = e.key.toLowerCase();
@@ -215,7 +215,19 @@ document.addEventListener("keydown", e => {
           console.log(`[upgrade] Cannot upgrade tower (level ${tower.level})`);
       }
   }
+
+  // "S" triggers sell if tower is selected
+  else if (key === "s" && window.selectedTower) {
+      // Find the sell button in HUD and call its onclick
+      const sellBtn = document.querySelector(".tower-sell");
+      if (sellBtn && typeof sellBtn.onclick === "function") {
+          sellBtn.onclick(); // runs the existing confirmation & sell logic
+      }
+  }
 });
+
+
+
 
 // ======================
 // START GAME BUTTONS
