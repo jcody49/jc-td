@@ -4,6 +4,8 @@ import { Tower } from './towers/Tower.js';
 import { startWave, startNextWave, waveState } from './waves.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx, mouse } from './canvas.js';
+import { gameState, gridCols, gridRows, gridOccupied } from './gameState.js';
+
 
 
 // TOWER IMPORTS
@@ -23,16 +25,6 @@ const ENEMY_INTERACT_RADIUS = 55;
 const ATTACK_CURSOR_SCALE = 1.23;
 
 
-/**********************
- * GAME STATE
- **********************/
-const gameState = {
-  enemies: [],
-  towers: [],
-  projectiles: [],
-  money: 90,
-  lives: 10
-};
 
 window.selectedTowerType = null;
 
@@ -89,11 +81,7 @@ function getHoveredEnemy(x, y, radius = 55) {
 }
 
 
-/**********************
- * GRID SETTINGS
- **********************/
-const gridCols = 25;
-const gridRows = 15;
+
 const gridSizeX = canvas.width / gridCols;
 const gridSizeY = canvas.height / gridRows;
 const gridSize = Math.min(gridSizeX, gridSizeY);
@@ -123,10 +111,6 @@ const path = pathCells.map(c => ({
   x: c.col * gridSize + gridSize / 2,
   y: c.row * gridSize + gridSize / 2
 }));
-
-const gridOccupied = Array.from({ length: gridCols }, () =>
-  Array(gridRows).fill(false)
-);
 
 /**********************
  * TOWER LOOKUP
