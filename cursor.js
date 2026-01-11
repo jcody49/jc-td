@@ -81,35 +81,34 @@ export function getCursorMode() {
 // APPLY CURSOR IMAGE / STATE
 // =========================
 function applyCursor() {
-  if (!cursorEl || !cursorImg) return;
-
-  cursorEl.style.display = "block";
-  cursorEl.className = "";
-  let scale = 1;
-
-  if (cursorMode === "attack") {
-    cursorImg.src = CURSOR_ATTACK;
-    cursorEl.style.opacity = "1";
-
-    // scale up if hovering enemy
-    if (gameState) {
-      const enemy = gameState.enemies?.find(e => {
-        return Math.hypot((window.mouseX || 0) - e.x, (window.mouseY || 0) - e.y) < 50;
-      });
-      if (enemy) scale = 1.3;
-      console.log("[cursor] attack hover over enemy:", !!enemy);
+    // --------------------------
+    // 1️⃣ Attack mode
+    // --------------------------
+    if (cursorMode === "attack") {
+        fx.style.display = "block";       // always visible
+        fxImg.src = CURSOR_ATTACK;        // red attack cursor
+        fx.classList.add("active");       // optional animation class
+        return;                           // do not hide for tower placement
     }
 
-  } else if (cursorMode === "hover") {
-    cursorImg.src = CURSOR_HOVER;
-    cursorEl.style.opacity = "1";
-  } else {
-    cursorImg.src = CURSOR_DEFAULT;
-    cursorEl.style.opacity = "1";
-  }
+    // --------------------------
+    // 2️⃣ Tower placement
+    // --------------------------
+    if (window.selectedTowerType) {
+        fx.style.display = "none";        // ghost tower drawn in gameLoop
+        fx.classList.remove("active");
+        return;
+    }
 
-  cursorEl.style.transform = `translate(-50%, -50%) scale(${scale})`;
+    // --------------------------
+    // 3️⃣ Default / hover
+    // --------------------------
+    fx.style.display = "block";
+    fxImg.src = CURSOR_DEFAULT;
+    const hoverTower = getTowerAtPosition(gameState.towers, window.mouseX, window.mouseY, gridSize);
+    fx.classList.toggle("active", !!(hoverTower || window.hoveredEnemy));
 }
+
 
 // =========================
 // ANIMATE CURSOR ROTATION

@@ -15,5 +15,8 @@ export class CannonTower extends Tower {
                 5: { damage: 170, range: 140, fireRate: 38, sprite: "cannon5.png" }
             }
         });
+
+        // Add this line so the tower knows about the game state
+        this.gameState = opts.gameState;
     }
 }
