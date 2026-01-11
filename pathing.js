@@ -27,8 +27,20 @@ export const pathCells = [
    * BUILD PIXEL PATH
    **********************/
   export function buildPath(pathCells, gridSize) {
-    return pathCells.map(c => ({
-      x: c.col * gridSize + gridSize / 2,
-      y: c.row * gridSize + gridSize / 2
-    }));
+    const pathOccupied = [];
+    const pixelPath = [];
+  
+    pathCells.forEach(c => {
+      // mark this grid cell as occupied
+      pathOccupied.push(`${c.col},${c.row}`);
+  
+      // store the pixel center for enemies
+      pixelPath.push({
+        x: c.col * gridSize + gridSize / 2,
+        y: c.row * gridSize + gridSize / 2
+      });
+    });
+  
+    return { pathOccupied, pixelPath };
   }
+  

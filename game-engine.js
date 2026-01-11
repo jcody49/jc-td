@@ -32,27 +32,50 @@ export const tankImg = new Image();
 tankImg.src = 'assets/tank-tower.png';
 
 // =========================
-// TILE DRAW FUNCTION
+// DRAW GRID TILES
 // =========================
 function drawGridTiles(ctx, gridCols, gridRows, gridSize) {
-    // Skip drawing until both tile images are loaded
-    if (tilesReady < 2) return;
+    if (tilesReady < 2) return; // wait for tiles
 
     ctx.imageSmoothingEnabled = false;
 
+    // draw tiles
     for (let row = 0; row < gridRows; row++) {
         for (let col = 0; col < gridCols; col++) {
-            const x = col * gridSize;
-            const y = row * gridSize;
+            const x = Math.floor(col * gridSize);
+            const y = Math.floor(row * gridSize);
             const key = `${col},${row}`;
 
             if (pathOccupied.includes(key)) {
-                ctx.drawImage(roadTile, x, y, gridSize, gridSize);
+                ctx.drawImage(roadTile, x, y, gridSize + 1, gridSize + 1);
             } else {
-                ctx.drawImage(grassTile, x, y, gridSize, gridSize);
+                ctx.drawImage(grassTile, x, y, gridSize + 1, gridSize + 1);
             }
         }
     }
+
+    // --- OPTIONAL GRID LINES ---
+    // You can uncomment this if you want visible lines
+    /*
+    ctx.strokeStyle = "rgba(255,255,255,0.1)";
+    ctx.lineWidth = 1;
+
+    for (let c = 0; c <= gridCols; c++) {
+        const x = Math.floor(c * gridSize) + 0.5;
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, gridRows * gridSize);
+        ctx.stroke();
+    }
+
+    for (let r = 0; r <= gridRows; r++) {
+        const y = Math.floor(r * gridSize) + 0.5;
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(gridCols * gridSize, y);
+        ctx.stroke();
+    }
+    */
 }
 
 // =========================
@@ -62,36 +85,25 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
     const mouseX = window.mouseX || 0;
     const mouseY = window.mouseY || 0;
 
-    // =========================
-    // CHECK TILE LOAD
-    // =========================
+    // wait for tile images
     if (tilesReady < 2) {
-        // Wait until images are loaded
         requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud));
         return;
     }
 
-    // =========================
-    // CHECK GAME OVER
-    // =========================
+    // check game over
     if (gameState.lives <= 0) {
         alert("Game Over!");
         return;
     }
 
-    // =========================
-    // CLEAR CANVAS
-    // =========================
+    // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // =========================
-    // DRAW GRID TILES (BACKGROUND)
-    // =========================
+    // draw tiles
     drawGridTiles(ctx, gridCols, gridRows, gridSize);
 
-    // =========================
-    // GHOST TOWER (MOUSE HOVER)
-    // =========================
+    // --- GHOST TOWER ---
     if (window.selectedTowerType) {
         let col = Math.floor(mouseX / gridSize);
         let row = Math.floor(mouseY / gridSize);
@@ -128,9 +140,7 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         }
     }
 
-    // =========================
-    // SELECTED TOWER HIGHLIGHT
-    // =========================
+    // --- SELECTED TOWER HIGHLIGHT ---
     if (window.selectedTower) {
         const tower = window.selectedTower;
         const size = gridSize;
@@ -142,15 +152,12 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         ctx.fillRect(col * gridSize, row * gridSize, size, size);
     }
 
-    // =========================
-    // UPDATE ENEMIES
-    // =========================
+    // --- UPDATE ENEMIES ---
     gameState.enemies.forEach(enemy => {
         enemy.update(gameState);
         enemy.draw();
     });
 
-    // Cleanup enemies & rewards
     gameState.enemies = gameState.enemies.filter(enemy => {
         if (enemy.remove) {
             if (!enemy.escaped) {
@@ -163,9 +170,7 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         return true;
     });
 
-    // =========================
-    // UPDATE TOWERS
-    // =========================
+    // --- UPDATE TOWERS ---
     gameState.towers.forEach(tower => {
         const hoverRadius = 25;
         tower.isHovered = Math.hypot(mouseX - tower.x, mouseY - tower.y) < hoverRadius;
@@ -174,25 +179,19 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         tower.draw();
     });
 
-    // =========================
-    // UPDATE PROJECTILES
-    // =========================
+    // --- UPDATE PROJECTILES ---
     gameState.projectiles.forEach(p => {
         p.update(gameState);
         p.draw();
     });
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
 
-    // =========================
-    // UPDATE HUD
-    // =========================
+    // --- UPDATE HUD ---
     if (hud) {
         if (hud.updateMoneyLives) hud.updateMoneyLives();
         if (hud.update) hud.update();
     }
 
-    // =========================
-    // NEXT FRAME
-    // =========================
+    // next frame
     requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud));
 }

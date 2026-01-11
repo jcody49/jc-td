@@ -33,6 +33,8 @@ window.selectedTowerType = null;
 const ENEMY_INTERACT_RADIUS = 55;
 const ATTACK_CURSOR_SCALE = 1.23;
 
+
+
 // ======================
 // GAME CONTROL
 // ======================
@@ -49,8 +51,11 @@ waveText.innerText = "Wave 1";
 // ======================
 // INIT GRID + PATH
 // ======================
-initGrid(canvas, 25, 15);
-const path = buildPath(pathCells, gridSize);
+initGrid(canvas, 25, 15);                // for enemy movement
+const { pathOccupied: pathCellsOccupied, pixelPath } = buildPath(pathCells, gridSize);
+window.pathOccupied = pathCellsOccupied; // for tile drawing & ghost tower
+const path = pixelPath;                  // for enemy movement
+
 
 // ======================
 // INIT HUD
@@ -259,4 +264,5 @@ skipButton.addEventListener("click", () => {
 // GLOBALS
 // ======================
 window.gridOccupied = gridOccupied;
-window.pathOccupied = pathOccupied;
+
+
