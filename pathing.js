@@ -110,17 +110,14 @@ export const pathCells = [
   // BUILD PIXEL PATH (enemy movement)
   // ======================
   export function buildPath(pathCells, gridSize) {
-    const pixelPath = [];
+    const pixelPath = pathCells.map(c => ({
+      x: c.col * gridSize + gridSize / 2,
+      y: c.row * gridSize + gridSize / 2
+    }));
   
-    pathCells.forEach(c => {
-      pixelPath.push({
-        col: c.col,
-        row: c.row,
-        x: c.col * gridSize + gridSize / 2,
-        y: c.row * gridSize + gridSize / 2
-      });
-    });
+    const pathOccupied = new Set(pathCells.map(c => `${c.col},${c.row}`));
   
-    return pixelPath;
+    return { pixelPath, pathOccupied };
   }
+  
   

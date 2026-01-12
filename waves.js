@@ -10,6 +10,8 @@ export const waveState = {
 let spawnInterval;
 
 export function startWave(gameState, path, gridSize, ctx, canvas) {
+  console.log("pixelPath:", path);
+
   waveState.status = "spawning";
   let enemiesSpawned = 0;
   const maxEnemies = 20; // smaller for testing
