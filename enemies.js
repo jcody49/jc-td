@@ -1,5 +1,9 @@
 export class Enemy {
   constructor({ path, gridSize, ctx, canvas, isFlying = false }) {
+      if (!path || !path.length) {
+          throw new Error("Enemy path is undefined or empty");
+      }
+
       this.path = path;
       this.gridSize = gridSize;
       this.ctx = ctx;

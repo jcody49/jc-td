@@ -219,17 +219,32 @@ canvas {
   }
   
 
-
-
-
-
-   
-   .tower-modal-option * {
-    pointer-events: none;
+  #mainGameArea {
+    display: flex;
+    width: 100%;
+    margin: 0 auto;
+    gap: 0;               /* no extra space between canvas & menu */
+    max-width: 1330px;    /* prevent it from getting too wide */
   }
   
-   
-   .towerCard:hover, .tower-modal-option:hover, .settings:hover{
-    cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
-   }
-
+  #gameWrapper {
+    flex: 1;              /* canvas takes remaining space */
+    min-width: 970px;     /* don't shrink below this */
+    max-width: calc(100% - 330px); /* ensures menu always fits */
+  }
+  
+  canvas {
+    width: 100%;          /* scale with wrapper */
+    height: 550px;        /* fixed height */
+    max-width: 100%;      /* never overflow wrapper */
+    box-sizing: border-box;
+    border: 2px solid #7fff00;
+    display: block;
+  }
+  
+  #towerMenu {
+    flex: none;           /* fixed width menu */
+    width: 330px;         /* exact width of tower menu */
+    box-sizing: border-box;
+  }
+  

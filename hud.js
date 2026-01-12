@@ -1,3 +1,4 @@
+// hud.js / initHUD.js
 import { showMoneyPopup } from './ui-effects.js';
 
 export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, waveState, startWave }) {
@@ -12,6 +13,7 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     const moneyDisplay = document.getElementById("money");
 
     let selectedTower = null;
+    let sellHandler = null; // reference to sell logic for keyboard shortcut
 
     // ------------------------------
     // Show/hide tower modal
@@ -33,7 +35,6 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
         modalTitle.textContent = selectedTower.getDisplayName ? selectedTower.getDisplayName() : selectedTower.type;
         modalInfo.innerHTML = getTowerInfoText(selectedTower);
 
-
         updateUpgradeOption(selectedTower);
         updateSellOption(selectedTower);
         updateAttackOption(selectedTower);
@@ -54,9 +55,6 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
             `Fire Rate: ${tower.fireRate}`
         ].join("<br>");
     }
-    
-    
-    
 
     // ------------------------------
     // Upgrade logic
@@ -80,47 +78,37 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     // Sell logic
     // ------------------------------
     function updateSellOption(tower) {
-        const towerSellOption = document.querySelector(".tower-sell");
-        towerSellOption.onclick = () => {
+        sellHandler = () => {
             if (!tower) return;
-    
-            // Ask for confirmation
+
             const confirmed = window.confirm(
                 `Are you sure you want to sell this ${tower.type}? You'll get 50% of the money spent.`
             );
             if (!confirmed) return;
-    
-            // Calculate total money spent on this tower including upgrades
+
             const totalSpent = tower.upgradeCosts
                 .slice(0, tower.level)
                 .reduce((sum, cost) => sum + cost, 0);
             const refund = Math.floor(totalSpent * 0.5);
-    
-            // Add refund to money
+
             gameState.money += refund;
-    
-            // Show floating "+$X" at the tower's position
+
             const yOffset = 20;
             showMoneyPopup(refund, tower.x, tower.y + yOffset);
-    
-            // Remove the tower from gameState
+
             const towerIndex = gameState.towers.indexOf(tower);
             if (towerIndex !== -1) gameState.towers.splice(towerIndex, 1);
-    
-            // Free the grid cell
+
             const col = Math.floor(tower.x / gridSize);
             const row = Math.floor(tower.y / gridSize);
             window.gridOccupied[col][row] = false;
-    
-            // Hide the modal
+
             hideTowerModal();
-    
-            // Update HUD money & lives
             updateMoneyLives();
         };
+
+        towerSellOption.onclick = sellHandler;
     }
-    
-    
 
     // ------------------------------
     // Attack option
@@ -149,6 +137,7 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
         showTowerModal,
         hideTowerModal,
         update: updateTowerModal,
-        updateMoneyLives
+        updateMoneyLives,
+        sellHandler // expose sellHandler for keyboard shortcut
     };
 }

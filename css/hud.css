@@ -331,3 +331,6 @@
   height: 50px;
   cursor: pointer;
 }
+#hud{
+  min-width:1330px;
+}
