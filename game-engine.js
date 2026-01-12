@@ -1,23 +1,47 @@
 // game-engine.js
 import { showMoneyPopup } from './ui-effects.js';
-import { pathOccupied } from './pathing.js';
+import { pathCells } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
 
 // =========================
-// TILE IMAGES
+// TILE LOAD TRACKING
+// =========================
+let tilesReady = 0;
+
+// =========================
+// ROAD TILE IMAGES
+// =========================
+export const roadImages = {};
+
+function loadRoadTile(key, src) {
+    const img = new Image();
+    img.src = src;
+    img.onload = () => tilesReady++;
+    roadImages[key] = img;
+}
+
+// base
+loadRoadTile('horizontal', 'assets/road-tile-horizontal.png');
+loadRoadTile('vertical',   'assets/road-tile-vertical.png');
+
+// corners (ENTER → EXIT)
+loadRoadTile('cornerRD', 'assets/road-tile-right-down.png');
+loadRoadTile('cornerDR', 'assets/road-tile-down-right.png');
+loadRoadTile('cornerLD', 'assets/road-tile-left-down.png');
+loadRoadTile('cornerDL', 'assets/road-tile-down-left.png');
+loadRoadTile('cornerLU', 'assets/road-tile-left-up.png');
+loadRoadTile('cornerUR', 'assets/road-tile-up-right.png');
+
+
+// =========================
+// GRASS TILE
 // =========================
 const grassTile = new Image();
 grassTile.src = 'assets/grass-tile.png';
-
-const roadTile = new Image();
-roadTile.src = 'assets/road-tile.png';
-
-let tilesReady = 0;
 grassTile.onload = () => tilesReady++;
-roadTile.onload  = () => tilesReady++;
 
 // =========================
-// TOWER IMAGE EXPORTS
+// TOWER IMAGES
 // =========================
 export const cannonImg = new Image();
 cannonImg.src = 'assets/cannon.png';
@@ -34,74 +58,61 @@ tankImg.src = 'assets/tank-tower.png';
 // =========================
 // DRAW GRID TILES
 // =========================
-function drawGridTiles(ctx, gridCols, gridRows, gridSize) {
-    if (tilesReady < 2) return; // wait for tiles
+function drawGridTiles(ctx) {
+    if (tilesReady < 1 + Object.keys(roadImages).length) return;
 
     ctx.imageSmoothingEnabled = false;
 
-    // draw tiles
+    const cellMap = new Map(
+        pathCells.map(c => [`${c.col},${c.row}`, c])
+    );
+
     for (let row = 0; row < gridRows; row++) {
         for (let col = 0; col < gridCols; col++) {
-            const x = Math.floor(col * gridSize);
-            const y = Math.floor(row * gridSize);
+            const x = col * gridSize;
+            const y = row * gridSize;
             const key = `${col},${row}`;
 
-            if (pathOccupied.includes(key)) {
-                ctx.drawImage(roadTile, x, y, gridSize + 1, gridSize + 1);
+            const cell = cellMap.get(key);
+
+            if (cell) {
+                const img = roadImages[cell.roadType];
+
+                if (!img) {
+                    console.error('❌ Missing road image:', cell.roadType);
+                    ctx.drawImage(grassTile, x, y, gridSize, gridSize);
+                    continue;
+                }
+
+                ctx.drawImage(img, x, y, gridSize, gridSize);
             } else {
-                ctx.drawImage(grassTile, x, y, gridSize + 1, gridSize + 1);
+                ctx.drawImage(grassTile, x, y, gridSize, gridSize);
             }
         }
     }
-
-    // --- OPTIONAL GRID LINES ---
-    // You can uncomment this if you want visible lines
-    /*
-    ctx.strokeStyle = "rgba(255,255,255,0.1)";
-    ctx.lineWidth = 1;
-
-    for (let c = 0; c <= gridCols; c++) {
-        const x = Math.floor(c * gridSize) + 0.5;
-        ctx.beginPath();
-        ctx.moveTo(x, 0);
-        ctx.lineTo(x, gridRows * gridSize);
-        ctx.stroke();
-    }
-
-    for (let r = 0; r <= gridRows; r++) {
-        const y = Math.floor(r * gridSize) + 0.5;
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(gridCols * gridSize, y);
-        ctx.stroke();
-    }
-    */
 }
 
 // =========================
 // GAME LOOP
 // =========================
-export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud) {
+export function gameLoop(ctx, canvas, gameState, hud) {
     const mouseX = window.mouseX || 0;
     const mouseY = window.mouseY || 0;
 
-    // wait for tile images
-    if (tilesReady < 2) {
-        requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud));
+    if (tilesReady < 1 + Object.keys(roadImages).length) {
+        requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
         return;
     }
 
-    // check game over
     if (gameState.lives <= 0) {
         alert("Game Over!");
         return;
     }
 
-    // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // draw tiles
-    drawGridTiles(ctx, gridCols, gridRows, gridSize);
+    // tiles
+    drawGridTiles(ctx);
 
     // --- GHOST TOWER ---
     if (window.selectedTowerType) {
@@ -111,87 +122,82 @@ export function gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, h
         col = Math.max(0, Math.min(col, gridCols - 1));
         row = Math.max(0, Math.min(row, gridRows - 1));
 
-        const cellKey = `${col},${row}`;
-        const validPlacement = !window.gridOccupied[col][row] && !window.pathOccupied.includes(cellKey);
+        const validPlacement =
+            !window.gridOccupied[col][row] &&
+            !pathCells.some(c => c.col === col && c.row === row);
 
-        let imgToDraw;
-        switch (window.selectedTowerType) {
-            case "Cannon": imgToDraw = cannonImg; break;
-            case "Frost":  imgToDraw = frostImg;  break;
-            case "Acid":   imgToDraw = acidImg;   break;
-            case "Tank":   imgToDraw = tankImg;   break;
-        }
+        let img;
+        if (window.selectedTowerType === 'Cannon') img = cannonImg;
+        if (window.selectedTowerType === 'Frost')  img = frostImg;
+        if (window.selectedTowerType === 'Acid')   img = acidImg;
+        if (window.selectedTowerType === 'Tank')   img = tankImg;
 
-        if (imgToDraw) {
-            const centerX = col * gridSize + gridSize / 2;
-            const centerY = row * gridSize + gridSize / 2;
-
+        if (img) {
             ctx.save();
-            ctx.translate(centerX, centerY);
             ctx.globalAlpha = 0.35;
 
             if (!validPlacement) {
-                ctx.fillStyle = "red";
-                ctx.fillRect(-gridSize / 2, -gridSize / 2, gridSize, gridSize);
+                ctx.fillStyle = 'red';
+                ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
             }
 
-            ctx.drawImage(imgToDraw, -gridSize / 2, -gridSize / 2, gridSize, gridSize);
+            ctx.drawImage(
+                img,
+                col * gridSize,
+                row * gridSize,
+                gridSize,
+                gridSize
+            );
+
             ctx.restore();
         }
     }
 
     // --- SELECTED TOWER HIGHLIGHT ---
     if (window.selectedTower) {
-        const tower = window.selectedTower;
-        const size = gridSize;
+        const t = window.selectedTower;
+        const col = Math.floor(t.x / gridSize);
+        const row = Math.floor(t.y / gridSize);
 
-        const col = Math.floor(tower.x / gridSize);
-        const row = Math.floor(tower.y / gridSize);
-
-        ctx.fillStyle = 'rgba(128, 0, 128, 0.5)';
-        ctx.fillRect(col * gridSize, row * gridSize, size, size);
+        ctx.fillStyle = 'rgba(128,0,128,0.5)';
+        ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
     }
 
-    // --- UPDATE ENEMIES ---
-    gameState.enemies.forEach(enemy => {
-        enemy.update(gameState);
-        enemy.draw();
+    // --- ENEMIES ---
+    gameState.enemies.forEach(e => {
+        e.update(gameState);
+        e.draw();
     });
 
-    gameState.enemies = gameState.enemies.filter(enemy => {
-        if (enemy.remove) {
-            if (!enemy.escaped) {
-                const reward = enemy.reward || 1;
-                gameState.money += reward;
-                showMoneyPopup(reward, enemy.x, enemy.y);
-            }
-            return false;
+    gameState.enemies = gameState.enemies.filter(e => {
+        if (!e.remove) return true;
+
+        if (!e.escaped) {
+            const reward = e.reward || 1;
+            gameState.money += reward;
+            showMoneyPopup(reward, e.x, e.y);
         }
-        return true;
+
+        return false;
     });
 
-    // --- UPDATE TOWERS ---
-    gameState.towers.forEach(tower => {
-        const hoverRadius = 25;
-        tower.isHovered = Math.hypot(mouseX - tower.x, mouseY - tower.y) < hoverRadius;
-
-        tower.update(gameState);
-        tower.draw();
+    // --- TOWERS ---
+    gameState.towers.forEach(t => {
+        t.isHovered = Math.hypot(mouseX - t.x, mouseY - t.y) < 25;
+        t.update(gameState);
+        t.draw();
     });
 
-    // --- UPDATE PROJECTILES ---
+    // --- PROJECTILES ---
     gameState.projectiles.forEach(p => {
         p.update(gameState);
         p.draw();
     });
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
 
-    // --- UPDATE HUD ---
-    if (hud) {
-        if (hud.updateMoneyLives) hud.updateMoneyLives();
-        if (hud.update) hud.update();
-    }
+    // --- HUD ---
+    if (hud?.updateMoneyLives) hud.updateMoneyLives();
+    if (hud?.update) hud.update();
 
-    // next frame
-    requestAnimationFrame(() => gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud));
+    requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
 }
