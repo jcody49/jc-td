@@ -11,14 +11,21 @@ export function initGrid(canvas, cols, rows) {
     gridCols = cols;
     gridRows = rows;
 
-    const gridSizeX = canvas.width / gridCols;
-    const gridSizeY = canvas.height / gridRows;
-    gridSize = Math.min(gridSizeX, gridSizeY);
+    // Step 1: calculate integer cell size
+    const cellSizeX = Math.floor(canvas.width / gridCols);
+    const cellSizeY = Math.floor(canvas.height / gridRows);
+    gridSize = Math.min(cellSizeX, cellSizeY);
 
+    // Step 2: snap canvas size to exact grid
+    canvas.width = gridCols * gridSize;
+    canvas.height = gridRows * gridSize;
+
+    // Step 3: create occupancy array
     gridOccupied = Array.from({ length: gridCols }, () =>
         Array(gridRows).fill(false)
     );
 }
+
 
 /**
  * Helpers (used by placement, selling, etc.)

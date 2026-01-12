@@ -233,3 +233,26 @@ canvas {
     cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
    }
 
+
+   #mainGameArea {
+    display: flex;
+    width: 100%;    /* allow full container width */
+  }
+  #gameContainer {
+    display: flex;
+    flex-direction: column; /* stack main + HUD */
+    max-width: none;        /* remove any limiting width */
+    width: 100%;            /* take full browser width */
+    margin: 15px auto;
+  }
+  #gameWrapper {
+    flex: 2; /* canvas area */
+  }
+  
+  #towerMenu {
+    flex: 1.5; /* wider menu */
+  }
+  
+  
+  
+
