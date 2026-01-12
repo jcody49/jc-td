@@ -153,8 +153,12 @@ animateCursor();
 // ======================
 canvas.addEventListener("mousemove", e => {
     const rect = canvas.getBoundingClientRect();
-    window.mouseX = e.clientX - rect.left;
-    window.mouseY = e.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    window.mouseX = (e.clientX - rect.left) * scaleX;
+    window.mouseY = (e.clientY - rect.top) * scaleY;
+
 
     // cursor follows mouse
     fx.style.left = e.clientX + "px";

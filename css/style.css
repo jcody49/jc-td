@@ -219,61 +219,32 @@ canvas {
   }
   
 
-
-
-
-
-   
-   .tower-modal-option * {
-    pointer-events: none;
-  }
-  
-   
-   .towerCard:hover, .tower-modal-option:hover, .settings:hover{
-    cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
-   }
-
-
-   #mainGameArea {
-    display: flex;
-    width: 100%;    /* allow full container width */
-  }
-  #gameContainer {
-    display: flex;
-    flex-direction: column; /* stack main + HUD */
-    max-width: none;        /* remove any limiting width */
-    width: 100%;            /* take full browser width */
-    margin: 15px auto;
-  }
-  
-  #gameWrapper {
-    flex: 3; /* canvas area */
-  }
-  
   #mainGameArea {
     display: flex;
-    gap: 0;         /* no extra spacing */
     width: 100%;
-    max-width: 1330px;
     margin: 0 auto;
-}
-
-
-  
-  #towerMenu {
-    flex: 1;           /* tower menu takes 1/3 */
-    border: 2px solid #7fff00;
-    padding: 10px;
-    box-sizing: border-box;
+    gap: 0;               /* no extra space between canvas & menu */
+    max-width: 1330px;    /* prevent it from getting too wide */
   }
   
   #gameWrapper {
-    width: 1200px;
+    flex: 1;              /* canvas takes remaining space */
+    min-width: 970px;     /* don't shrink below this */
+    max-width: calc(100% - 330px); /* ensures menu always fits */
   }
   
   canvas {
-    width: 100%;
-    height: 550px;
+    width: 100%;          /* scale with wrapper */
+    height: 550px;        /* fixed height */
+    max-width: 100%;      /* never overflow wrapper */
+    box-sizing: border-box;
+    border: 2px solid #7fff00;
+    display: block;
   }
   
+  #towerMenu {
+    flex: none;           /* fixed width menu */
+    width: 330px;         /* exact width of tower menu */
+    box-sizing: border-box;
+  }
   

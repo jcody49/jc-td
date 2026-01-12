@@ -11,12 +11,12 @@ export function initGrid(canvas, cols, rows) {
     gridCols = cols;
     gridRows = rows;
 
-    // Step 1: calculate integer cell size
+    // Step 1: calculate integer cell size (floor ensures no fractional pixels)
     const cellSizeX = Math.floor(canvas.width / gridCols);
     const cellSizeY = Math.floor(canvas.height / gridRows);
     gridSize = Math.min(cellSizeX, cellSizeY);
 
-    // Step 2: snap canvas size to exact grid
+    // Step 2: snap canvas size to exact grid dimensions
     canvas.width = gridCols * gridSize;
     canvas.height = gridRows * gridSize;
 
@@ -25,7 +25,6 @@ export function initGrid(canvas, cols, rows) {
         Array(gridRows).fill(false)
     );
 }
-
 
 /**
  * Helpers (used by placement, selling, etc.)
