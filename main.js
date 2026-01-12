@@ -246,7 +246,9 @@ startButton.addEventListener("click", () => {
     gameStarted = true;
 
     startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
-    gameLoop(ctx, canvas, gridCols, gridRows, gridSize, gameState, hud);
+    // Correct
+    gameLoop(ctx, canvas, gameState, hud);
+
 });
 
 skipButton.addEventListener("click", () => {
