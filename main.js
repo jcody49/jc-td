@@ -108,8 +108,8 @@ updateWaveText();
 // ======================
 const fx = document.getElementById("cursor-fx");
 const fxImg = fx.querySelector("img");
-const CURSOR_SELECT = "../assets/select-crosshair.png"; // hover only
-const CURSOR_ATTACK = "../assets/crosshair.png";        // red
+const CURSOR_SELECT = "./assets/select-crosshair.png"; // hover only
+const CURSOR_ATTACK = "./assets/crosshair.png";        // red
 let cursorMode = "default";
 let angle = 0;
 

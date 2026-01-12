@@ -8,9 +8,9 @@ let gameState = null;
 // =========================
 // IMAGE PATHS
 // =========================
-const CURSOR_DEFAULT = "jc-td/assets/cursor-default.png";     // default everywhere
-const CURSOR_HOVER   = "jc-td/assets/select-crosshair.png";  // hover over towers/enemies
-const CURSOR_ATTACK  = "jc-td/assets/crosshair.png";         // red attack
+const CURSOR_DEFAULT = "./assets/cursor-default.png";     // default everywhere
+const CURSOR_HOVER   = "./assets/select-crosshair.png";  // hover over towers/enemies
+const CURSOR_ATTACK  = "./assets/crosshair.png";         // red attack
 
 // =========================
 // INIT CURSOR
