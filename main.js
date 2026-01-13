@@ -88,20 +88,28 @@ document.querySelectorAll(".towerCard").forEach(card => {
 // ======================
 // WAVE TEXT LOOP
 // ======================
+// ======================
+// WAVE TEXT LOOP (main.js or wherever waveText is updated)
 function updateWaveText() {
-    if (waveState.status === "countdown") {
-        waveText.innerText = `Next wave in: ${waveState.countdown}s`;
-    } else if (waveState.status === "spawning") {
-        waveText.innerText = `Wave ${waveState.currentWave} in progress`;
-    } else if (waveState.status === "done") {
-        waveText.innerText = `Wave ${waveState.currentWave} complete`;
-    } else {
-        waveText.innerText = "";
-    }
+  console.log("test");
+  if (waveState.status === "countdown") {
+      waveText.innerText = `hey Next wave in: ${waveState.countdown}s`;
+  } 
+  else if (waveState.status === "spawning") {
+      waveText.innerText = `Wave ${waveState.currentWave} in progress, dude`;
+  } 
+  else if (waveState.status === "done") {
+      waveText.innerText = `Wave ${waveState.currentWave} complete! Prepare for next wave!`;
+  } 
+  else {
+      waveText.innerText = "";
+  }
 
-    requestAnimationFrame(updateWaveText);
+  requestAnimationFrame(updateWaveText);
 }
 updateWaveText();
+
+
 
 // ======================
 // CURSOR FX

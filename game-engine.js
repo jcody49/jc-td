@@ -2,6 +2,8 @@
 import { showMoneyPopup } from './ui-effects.js';
 import { pathCells } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
+import { updateWaveCompletion } from './waves.js';
+
 
 // =========================
 // TILE LOAD TRACKING
@@ -180,6 +182,9 @@ export function gameLoop(ctx, canvas, gameState, hud) {
 
         return false;
     });
+
+    updateWaveCompletion(gameState);
+
 
     // --- TOWERS ---
     gameState.towers.forEach(t => {

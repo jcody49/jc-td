@@ -1,25 +1,39 @@
+// waves.js
 import { Enemy } from './enemies.js';
 
+// =========================
+// WAVE STATE
+// =========================
 export const waveState = {
   currentWave: 0,
-  countdown: 5, // shorter for testing
+  countdown: 5,       // for testing, seconds until next wave
   countdownInterval: null,
-  status: "idle" // idle | countdown | spawning
+  status: "idle"      // idle | countdown | spawning | done
 };
 
-let spawnInterval;
+// =========================
+// INTERNAL FLAGS
+// =========================
+let spawnInterval = null;
+let spawningFinished = false;
 
-export function startWave(gameState, path, gridSize, ctx, canvas) {
-  console.log("pixelPath:", path);
-
+// =========================
+// START WAVE
+// =========================
+export function startWave(gameState, path, gridSize, ctx, canvas, waveTextEl) {
   waveState.status = "spawning";
+  spawningFinished = false;
+
   let enemiesSpawned = 0;
-  const maxEnemies = 20; // smaller for testing
+  const maxEnemies = 20; // adjust per wave
+
+  // Update waveText
+  if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave} in progress`;
 
   spawnInterval = setInterval(() => {
     if (enemiesSpawned >= maxEnemies) {
       clearInterval(spawnInterval);
-      waveState.status = "done";
+      spawningFinished = true; // all enemies spawned
       return;
     }
 
@@ -31,19 +45,49 @@ export function startWave(gameState, path, gridSize, ctx, canvas) {
   }, 1300);
 }
 
-export function startNextWave(gameState, path, gridSize, ctx, canvas) {
+// =========================
+// START NEXT WAVE (COUNTDOWN)
+// =========================
+export function startNextWave(gameState, path, gridSize, ctx, canvas, waveTextEl) {
   waveState.currentWave++;
-  waveState.countdown = 40;
+  waveState.countdown = 10;  // countdown for next wave
   waveState.status = "countdown";
+
+  // Update waveText immediately
+  if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}s`;
 
   if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
 
   waveState.countdownInterval = setInterval(() => {
     waveState.countdown--;
 
+    if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}s`;
+
     if (waveState.countdown <= 0) {
-        clearInterval(waveState.countdownInterval);
-        startWave(gameState, path, gridSize, ctx, canvas);
+      clearInterval(waveState.countdownInterval);
+      startWave(gameState, path, gridSize, ctx, canvas, waveTextEl);
     }
   }, 1000);
+}
+
+// =========================
+// UPDATE WAVE COMPLETION
+// Call this in gameLoop every frame
+// =========================
+export function updateWaveCompletion(gameState, path, gridSize, ctx, canvas, waveTextEl) {
+  // Only mark "done" if all enemies spawned and all are dead
+  if (
+    spawningFinished &&
+    gameState.enemies.length === 0 &&
+    waveState.status === "spawning"
+  ) {
+    waveState.status = "done";
+
+    if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave} complete! Prepare for next wave!`;
+
+    // Short pause, then start countdown to next wave
+    setTimeout(() => {
+      startNextWave(gameState, path, gridSize, ctx, canvas, waveTextEl);
+    }, 2500);
+  }
 }
