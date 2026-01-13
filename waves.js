@@ -50,7 +50,7 @@ export function startWave(gameState, path, gridSize, ctx, canvas, waveTextEl) {
 // =========================
 export function startNextWave(gameState, path, gridSize, ctx, canvas, waveTextEl) {
   waveState.currentWave++;
-  waveState.countdown = 10;  // countdown for next wave
+  waveState.countdown = 40;  // countdown for next wave
   waveState.status = "countdown";
 
   // Update waveText immediately
