@@ -95,7 +95,8 @@ function drawGridTiles(ctx) {
 // =========================
 // GAME LOOP
 // =========================
-export function gameLoop(ctx, canvas, gameState, hud) {
+export function gameLoop(ctx, canvas, gameState, hud, path, skipButton) {
+
     const mouseX = window.mouseX || 0;
     const mouseY = window.mouseY || 0;
 
@@ -183,7 +184,8 @@ export function gameLoop(ctx, canvas, gameState, hud) {
 
     // --- WAVE MANAGEMENT ---
     const waveTextEl = document.getElementById("waveText"); // ensure you have this in DOM
-    updateWaveCompletion(gameState, pathCells, gridSize, ctx, canvas, waveTextEl);
+    updateWaveCompletion(gameState, path, gridSize, ctx, canvas, waveTextEl, skipButton);
+
 
     // --- TOWERS ---
     gameState.towers.forEach(t => {

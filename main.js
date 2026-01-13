@@ -94,20 +94,22 @@ document.querySelectorAll(".towerCard").forEach(card => {
 // WAVE TEXT LOOP (main.js or wherever waveText is updated)
 function updateWaveText() {
   if (waveState.status === "countdown") {
-      waveText.innerText = `hey Next wave in: ${waveState.countdown}s`;
+    waveText.innerText = `Next wave in: ${waveState.countdown}s`;
   } 
   else if (waveState.status === "spawning") {
-      waveText.innerText = `Wave ${waveState.currentWave} in progress, dude`;
+    // +1 because currentWave is a ZERO-BASED INDEX
+    waveText.innerText = `Wave ${waveState.currentWave + 1} in progress`;
   } 
   else if (waveState.status === "done") {
-      waveText.innerText = `Wave ${waveState.currentWave} complete! Prepare for next wave!`;
+    waveText.innerText = `Wave ${waveState.currentWave + 1} complete!`;
   } 
   else {
-      waveText.innerText = "";
+    waveText.innerText = "";
   }
 
   requestAnimationFrame(updateWaveText);
 }
+
 updateWaveText();
 
 
@@ -261,6 +263,8 @@ startButton.addEventListener("click", () => {
     gameStarted = true;
 
     startNextWave(gameState, path, gridSize, ctx, canvas, waveText, skipButton);
+    gameLoop(ctx, canvas, gameState, hud, path, skipButton);
+
     // Correct
     gameLoop(ctx, canvas, gameState, hud);
 
