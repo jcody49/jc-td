@@ -6,7 +6,7 @@ import { Enemy } from './enemies.js';
 // =========================
 export const waveState = {
   currentWave: 0,
-  countdown: 5,       // for testing, seconds until next wave
+  countdown: 40,       // for testing, seconds until next wave
   countdownInterval: null,
   status: "idle"      // idle | countdown | spawning | done
 };
@@ -27,7 +27,7 @@ export function startWave(gameState, path, gridSize, ctx, canvas, waveTextEl) {
   let enemiesSpawned = 0;
   const maxEnemies = 20; // adjust per wave
 
-  // Update waveText
+  // Update waveText immediately
   if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave} in progress`;
 
   spawnInterval = setInterval(() => {
@@ -83,11 +83,12 @@ export function updateWaveCompletion(gameState, path, gridSize, ctx, canvas, wav
   ) {
     waveState.status = "done";
 
-    if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave} complete! Prepare for next wave!`;
+    // Show "Wave X complete!" for a short pause
+    if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave} complete!`;
 
-    // Short pause, then start countdown to next wave
     setTimeout(() => {
+      // After pause, switch to countdown
       startNextWave(gameState, path, gridSize, ctx, canvas, waveTextEl);
-    }, 2500);
+    }, 2500); // 2.5 seconds pause
   }
 }
