@@ -2,9 +2,9 @@
 // IMPORTS
 // ======================
 import { gameLoop } from './game-engine.js';
-import { Enemy } from './enemies.js';
+import { Enemy } from './enemies/enemies.js';
 import { Tower } from './towers/Tower.js';
-import { startWave, startNextWave, waveState } from './waves.js';
+import { startWave, startNextWave, waveState } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
 import { gameState } from './gameState.js';
@@ -12,6 +12,8 @@ import { initGrid, gridCols, gridRows, gridSize, gridOccupied } from './grid.js'
 import { setupTowerPlacement } from './towerPlacement.js';
 import { distance, getHoveredEnemy, getTowerAtPosition } from './utils.js';
 import { pathCells, pathOccupied, buildPath } from './pathing.js';
+import { loadEnemyImages } from './enemies/enemies.js';
+import { enemiesData } from './enemies/enemyData.js';
 
 // TOWER IMPORTS
 import { CannonTower } from './towers/CannonTower.js';
@@ -91,7 +93,6 @@ document.querySelectorAll(".towerCard").forEach(card => {
 // ======================
 // WAVE TEXT LOOP (main.js or wherever waveText is updated)
 function updateWaveText() {
-  console.log("test");
   if (waveState.status === "countdown") {
       waveText.innerText = `hey Next wave in: ${waveState.countdown}s`;
   } 
@@ -252,6 +253,8 @@ document.addEventListener("keydown", e => {
 const startButton = document.getElementById("startButton");
 const skipButton = document.getElementById("skipButton");
 const startSound = new Audio('assets/audio/Start game.wav');
+
+loadEnemyImages(enemiesData);
 
 startButton.addEventListener("click", () => {
     if (gameStarted) return;

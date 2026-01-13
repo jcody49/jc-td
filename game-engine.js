@@ -2,8 +2,7 @@
 import { showMoneyPopup } from './ui-effects.js';
 import { pathCells } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
-import { updateWaveCompletion } from './waves.js';
-
+import { updateWaveCompletion, startWave, startNextWave, waveState } from './waveManager.js';
 
 // =========================
 // TILE LOAD TRACKING
@@ -33,7 +32,6 @@ loadRoadTile('cornerLD', 'assets/road-tile-left-down.png');
 loadRoadTile('cornerDL', 'assets/road-tile-down-left.png');
 loadRoadTile('cornerLU', 'assets/road-tile-left-up.png');
 loadRoadTile('cornerUR', 'assets/road-tile-up-right.png');
-
 
 // =========================
 // GRASS TILE
@@ -183,8 +181,9 @@ export function gameLoop(ctx, canvas, gameState, hud) {
         return false;
     });
 
-    updateWaveCompletion(gameState);
-
+    // --- WAVE MANAGEMENT ---
+    const waveTextEl = document.getElementById("waveText"); // ensure you have this in DOM
+    updateWaveCompletion(gameState, pathCells, gridSize, ctx, canvas, waveTextEl);
 
     // --- TOWERS ---
     gameState.towers.forEach(t => {
@@ -205,4 +204,12 @@ export function gameLoop(ctx, canvas, gameState, hud) {
     if (hud?.update) hud.update();
 
     requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
+}
+
+// =========================
+// START FIRST WAVE
+// =========================
+export function startGameWaves(gameState, ctx, canvas) {
+    const waveTextEl = document.getElementById("waveText");
+    startNextWave(gameState, pathCells, gridSize, ctx, canvas, waveTextEl);
 }
