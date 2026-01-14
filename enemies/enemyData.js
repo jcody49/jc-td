@@ -13,7 +13,7 @@ export const enemiesData = {
       type: "basic",
       maxHp: 105,
       speed: 0.72,
-      reward: 2,
+      reward: 1,
       image: "assets/enemies/enemy2.png",
       isFlying: false,
     },
