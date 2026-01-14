@@ -29,7 +29,7 @@ export const enemiesData = {
     enemy4: {
         name: "enemy4",
         type: "basic",
-        maxHp: 122,
+        maxHp: 135,
         speed: 0.73,
         reward: 1,
         image: "assets/enemies/enemy4.png",
