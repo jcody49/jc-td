@@ -2,9 +2,13 @@
 export function loadEnemyImages(enemiesData) {
   Object.values(enemiesData).forEach(enemy => {
     enemy.img = new Image();
-    enemy.img.src = enemy.image; // relative path from this file
+    enemy.img.src = enemy.image;
+
+    enemy.img.onload = () => console.log(`Loaded ${enemy.name}`);
+    enemy.img.onerror = () => console.error(`Failed to load ${enemy.image}`);
   });
 }
+
 
 export class Enemy {
   constructor({ path, gridSize, ctx, canvas, config }) {

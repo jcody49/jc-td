@@ -5,7 +5,7 @@ export const enemiesData = {
       maxHp: 100,
       speed: 0.7,
       reward: 1,
-      image: "../assets/enemies/enemy1.png", // <-- include subfolder
+      image: "assets/enemies/enemy1.png",
       isFlying: false,
     },
     enemy2: {
@@ -14,7 +14,7 @@ export const enemiesData = {
       maxHp: 105,
       speed: 0.72,
       reward: 2,
-      image: "../assets/enemies/enemy2.png",
+      image: "assets/enemies/enemy2.png",
       isFlying: false,
     },
   };
