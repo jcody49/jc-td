@@ -164,6 +164,7 @@ export function gameLoop(ctx, canvas, gameState, hud) {
         ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
     }
 
+    
     // --- ENEMIES ---
     gameState.enemies.forEach(e => {
         e.update(gameState);

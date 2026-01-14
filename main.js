@@ -14,11 +14,8 @@ import { getHoveredEnemy, getTowerAtPosition } from './utils.js';
 import { loadEnemyImages } from './enemies/enemies.js';
 import { enemiesData } from './enemies/enemyData.js';
 
-// TOWER IMPORTS
-import { CannonTower } from './towers/CannonTower.js';
-import { FrostTower } from './towers/FrostTower.js';
-import { AcidTower } from './towers/AcidTower.js';
-import { TankTower } from './towers/TankTower.js';
+// preload all enemy images
+loadEnemyImages(enemiesData);
 
 // ======================
 // GLOBALS
