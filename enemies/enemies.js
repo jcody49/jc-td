@@ -14,6 +14,9 @@ export class Enemy {
 
     this.path = path;
     this.gridSize = gridSize;
+    if (!ctx || !(ctx instanceof CanvasRenderingContext2D)) {
+      throw new Error("Invalid ctx passed to Enemy");
+    }
     this.ctx = ctx;
     this.canvas = canvas;
 
