@@ -87,7 +87,7 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   waveState.countdown = 40; // or 40 for normal gameplay
   waveState.status = "countdown";
 
-  if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
+  if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
 
   if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
 
