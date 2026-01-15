@@ -125,8 +125,6 @@ export class Tower {
             if (dist <= this.range) {
                 target = this.forcedTarget; // keep forcing attack
             } else {
-                // Out of range, fallback to auto
-                this.forcedTarget = null;
                 target = this.findTarget(gameState.enemies);
             }
         } else {

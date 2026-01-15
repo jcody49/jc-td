@@ -104,21 +104,23 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 // =========================
 // UPDATE WAVE COMPLETION
 // =========================
+let completionLocked = false;
+
 export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl) {
-    if (spawningFinished && gameState.enemies.length === 0 && waveState.status === "spawning") {
-      waveState.status = "done";
-  
-      if (waveTextEl) {
-        waveTextEl.innerText = `Wave ${waveState.currentWave + 1} complete!`;
-      }
-  
-      // increment immediately
-      waveState.currentWave++;
-  
-      setTimeout(() => {
-        // start the countdown for the next wave
-        startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
-      }, 2000);
+    if (waveState.status !== "spawning" || completionLocked) return;
+
+    if (spawningFinished && gameState.enemies.length === 0) {
+        completionLocked = true;
+        waveState.status = "done";
+
+        if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} complete!`;
+
+        setTimeout(() => {
+            waveState.currentWave++;
+            completionLocked = false;
+            startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
+        }, 2000);
     }
-  }
+}
+
   
