@@ -196,6 +196,28 @@ canvas.addEventListener("mousemove", e => {
 });
 
 // ======================
+// FORCE ATTACK CLICK
+// ======================
+canvas.addEventListener("click", () => {
+    if (cursorMode !== "attack") return;           // only in attack mode
+    if (!window.selectedTower || !window.hoveredEnemy) return; // need tower + enemy
+
+    console.log(
+        "[FORCE ATTACK]",
+        "Tower:", window.selectedTower,
+        "Enemy:", window.hoveredEnemy
+    );
+
+    // ✅ assign forced target (don't call attack directly)
+    window.selectedTower.setForcedTarget(window.hoveredEnemy);
+
+    // exit attack mode after click
+    cursorMode = "default";
+    applyCursor(); // this is your existing cursor function, do NOT modify
+});
+
+
+// ======================
 // ATTACK / ESC / UPGRADE / SELL KEYS
 // ======================
 document.addEventListener("keydown", e => {
