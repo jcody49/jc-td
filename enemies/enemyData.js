@@ -20,7 +20,7 @@ export const enemiesData = {
     enemy3: {
         name: "Robot Shpider",
         type: "basic",
-        maxHp: 128,
+        maxHp: 135,
         speed: 0.72,
         reward: 1,
         image: "assets/enemies/enemy3.png",
@@ -29,7 +29,7 @@ export const enemiesData = {
     enemy4: {
         name: "enemy4",
         type: "basic",
-        maxHp: 135,
+        maxHp: 155,
         speed: 0.73,
         reward: 1,
         image: "assets/enemies/enemy4.png",

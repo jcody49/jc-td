@@ -84,12 +84,16 @@ startButton.addEventListener("click", () => {
   if (gameStarted) return;
   gameStarted = true;
 
+  // hide the start button permanently
+  startButton.style.display = "none";
+
   const waveTextEl = document.getElementById("waveText");
   skipButton.disabled = false;
   startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
   gameLoop(ctx, canvas, gameState, hud);
   console.log("START", ctx);
 });
+
 
 
 skipButton.addEventListener("click", () => {
