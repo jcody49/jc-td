@@ -213,8 +213,8 @@ export function gameLoop(ctx, canvas, gameState, hud) {
 // =========================
 // START FIRST WAVE
 // =========================
-export function startGameWaves(gameState, ctx, canvas, path) {
+export function startGameWaves(gameState, ctx, canvas) {
     const waveTextEl = document.getElementById("waveText");
-    startNextWave(gameState, ctx, canvas, waveTextEl);
+    startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
 }
 

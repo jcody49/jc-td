@@ -78,27 +78,43 @@ const startButton = document.getElementById("startButton");
 const skipButton  = document.getElementById("skipButton");
 const startSound  = new Audio('assets/audio/Start game.wav');
 
+skipButton.disabled = false; // ready from the start
+
 startButton.addEventListener("click", () => {
   if (gameStarted) return;
   gameStarted = true;
 
   const waveTextEl = document.getElementById("waveText");
+  skipButton.disabled = false;
   startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
   gameLoop(ctx, canvas, gameState, hud);
   console.log("START", ctx);
 });
 
+
 skipButton.addEventListener("click", () => {
   const waveTextEl = document.getElementById("waveText");
 
-  if (!skipButton.disabled) startSound.play();
+  // only skip if a countdown is active
+  if (!waveState.countdownInterval) return;
 
+  startSound.play();
+
+  // stop countdown
   clearInterval(waveState.countdownInterval);
-  startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+  waveState.countdownInterval = null;
 
   skipButton.disabled = true;
-  console.log("SKIP", ctx);
+
+  // start spawning immediately
+  startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+  console.log("SKIP CLICKED", waveState);
 });
+
+
+
+
+
 
 
 // ======================
