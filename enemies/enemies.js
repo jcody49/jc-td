@@ -22,10 +22,6 @@ export class Enemy {
     this.x = path[0].x;
     this.y = path[0].y;
 
-    // In constructor
-    this.baseY = this.y - this.gridSize * 0.15; // lift the enemy up a little
-
-
     // Stats
     this.baseSpeed = config.speed ?? 0.7;
     this.speed = this.baseSpeed;
@@ -40,10 +36,10 @@ export class Enemy {
 
     // --- Hop animation state ---
     this.yOffset = 0;
-    this.hopProgress = 0;    // progress from 0 → 1 for each hop
-    this.hopSpeed = 0.04;    // controls hop duration (tweak for speed)
-    this.hopPaused = 0;      // frames to pause after landing
-    this.hopAmplitude = gridSize * 0.13; // height of each hop
+    this.hopProgress = 0;    // progress from 0 → 1 per hop
+    this.hopSpeed = 0.04;    // frames per hop
+    this.hopPaused = 0;      // pause frames after landing
+    this.hopAmplitude = gridSize * 0.13; // height of hop
 
     // Effects
     this.slowMultiplier = 1;
@@ -112,23 +108,21 @@ export class Enemy {
       this.hopPaused--;
       this.yOffset = 0;
     } else {
-      // Half-sine arc: 0 → 1 → 0
-      this.yOffset = Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
+      // Half-sine hop
+      this.yOffset = -Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
 
       this.hopProgress += this.hopSpeed;
       if (this.hopProgress >= 1) {
         this.hopProgress = 0;
-        this.hopPaused = 5; // frames to pause after landing (tweak if needed)
+        this.hopPaused = 5; // pause frames after landing
       }
     }
   }
 
   draw() {
     const ctx = this.ctx;
-  
-    // Apply baseline so enemies don't dip below the path
-    const drawY = this.baseY + this.yOffset; // baseY lifts them, yOffset adds hop arc
-  
+    const drawY = this.y + this.yOffset; // apply hop on top of path Y
+
     // Hover highlight
     if (window.hoveredEnemy === this) {
       ctx.save();
@@ -140,7 +134,7 @@ export class Enemy {
       ctx.fill();
       ctx.restore();
     }
-  
+
     // Flash on hit
     if (this.isFlashing) {
       ctx.strokeStyle = "yellow";
@@ -157,7 +151,7 @@ export class Enemy {
       });
       return;
     }
-  
+
     // Enemy body — draw image if available
     if (this.img) {
       ctx.drawImage(
@@ -171,7 +165,7 @@ export class Enemy {
       ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
       ctx.fillRect(this.x - this.size / 2, drawY - this.size / 2, this.size, this.size);
     }
-  
+
     // Health bar
     const hpBarWidth = this.size;
     const hpBarHeight = 4;
@@ -181,5 +175,4 @@ export class Enemy {
     ctx.strokeStyle = "black";
     ctx.strokeRect(this.x - hpBarWidth / 2, drawY - this.size / 2 - hpBarHeight - 2, hpBarWidth, hpBarHeight);
   }
-  
 }
