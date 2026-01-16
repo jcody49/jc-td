@@ -11,15 +11,10 @@ export function loadEnemyImages(enemiesData) {
 
 export class Enemy {
   constructor({ path, gridSize, ctx, canvas, config }) {
-    if (!path || !path.length) {
-      throw new Error("Enemy path is undefined or empty");
-    }
+    if (!path || !path.length) throw new Error("Enemy path is undefined or empty");
 
     this.path = path;
     this.gridSize = gridSize;
-    if (!ctx || !(ctx instanceof CanvasRenderingContext2D)) {
-      throw new Error("Invalid ctx passed to Enemy");
-    }
     this.ctx = ctx;
     this.canvas = canvas;
 
@@ -27,7 +22,11 @@ export class Enemy {
     this.x = path[0].x;
     this.y = path[0].y;
 
+<<<<<<< HEAD
     // Config stats
+=======
+    // Stats
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
     this.baseSpeed = config.speed ?? 0.7;
     this.speed = this.baseSpeed;
     this.maxHp = config.maxHp ?? 100;
@@ -37,8 +36,18 @@ export class Enemy {
     this.name = config.name ?? "Enemy";
 
     this.size = gridSize * 0.5;
-
     this.img = config.img ?? null;
+
+<<<<<<< HEAD
+    this.img = config.img ?? null;
+=======
+    // --- Hop animation state ---
+    this.yOffset = 0;
+    this.hopProgress = 0;    // progress from 0 → 1 per hop
+    this.hopSpeed = 0.04;    // frames per hop
+    this.hopPaused = 0;      // pause frames after landing
+    this.hopAmplitude = gridSize * 0.13; // height of hop
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
 
     // Effects
     this.slowMultiplier = 1;
@@ -71,6 +80,7 @@ export class Enemy {
       return;
     }
 
+    // Slow effect
     if (this.slowTimer > 0) {
       this.slowTimer--;
       this.speed = this.baseSpeed * this.slowMultiplier;
@@ -79,6 +89,7 @@ export class Enemy {
       this.speed = this.baseSpeed;
     }
 
+    // Damage over time
     if (this.activeDoTs.length > 0) {
       this.activeDoTs.forEach(dot => {
         this.hp -= dot.damagePerTick;
@@ -92,6 +103,7 @@ export class Enemy {
       return;
     }
 
+    // Move along path
     const target = this.path[this.pathIndex + 1];
     const dx = target.x - this.x;
     const dy = target.y - this.y;
@@ -105,14 +117,33 @@ export class Enemy {
       this.x += (dx / dist) * this.speed;
       this.y += (dy / dist) * this.speed;
     }
+
+    // --- Hop animation (arc-style) ---
+    if (this.hopPaused > 0) {
+      this.hopPaused--;
+      this.yOffset = 0;
+    } else {
+      // Half-sine hop
+      this.yOffset = -Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
+
+      this.hopProgress += this.hopSpeed;
+      if (this.hopProgress >= 1) {
+        this.hopProgress = 0;
+        this.hopPaused = 5; // pause frames after landing
+      }
+    }
   }
 
   draw() {
     const ctx = this.ctx;
+<<<<<<< HEAD
     const time = Date.now();
     const wobbleY = Math.sin(time * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmplitude;
     const wobbleX = Math.sin(time * this.wobbleSpeed + this.wobbleOffset * 1.5) * this.wobbleXAmplitude;
     console.log(this.name, wobbleX, wobbleY);
+=======
+    const drawY = this.y + this.yOffset; // apply hop on top of path Y
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
 
     // --- Hover highlight ---
     if (window.hoveredEnemy === this) {
@@ -121,7 +152,11 @@ export class Enemy {
       ctx.globalAlpha = 0.35;
       ctx.fillStyle = "rgba(255,60,60,1)";
       ctx.beginPath();
+<<<<<<< HEAD
       ctx.arc(this.x + wobbleX, this.y + wobbleY, this.size * 0.9 * pulse, 0, Math.PI * 2);
+=======
+      ctx.arc(this.x, drawY, this.size * 0.9 * pulse, 0, Math.PI * 2);
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
       ctx.fill();
       ctx.restore();
     }
@@ -133,10 +168,17 @@ export class Enemy {
       this.flashLines.forEach(line => {
         const length = line.length * (this.flashTimer / 10);
         ctx.beginPath();
+<<<<<<< HEAD
         ctx.moveTo(this.x + wobbleX, this.y + wobbleY);
         ctx.lineTo(
           this.x + wobbleX + Math.cos(line.angle) * length,
           this.y + wobbleY + Math.sin(line.angle) * length
+=======
+        ctx.moveTo(this.x, drawY);
+        ctx.lineTo(
+          this.x + Math.cos(line.angle) * length,
+          drawY + Math.sin(line.angle) * length
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
         );
         ctx.stroke();
       });
@@ -147,19 +189,28 @@ export class Enemy {
     if (this.img) {
       ctx.drawImage(
         this.img,
+<<<<<<< HEAD
         this.x - this.size / 2 + wobbleX,
         this.y - this.size / 2 + wobbleY,
+=======
+        this.x - this.size / 2,
+        drawY - this.size / 2,
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
         this.size,
         this.size
       );
     } else {
       ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
+<<<<<<< HEAD
       ctx.fillRect(
         this.x - this.size / 2 + wobbleX,
         this.y - this.size / 2 + wobbleY,
         this.size,
         this.size
       );
+=======
+      ctx.fillRect(this.x - this.size / 2, drawY - this.size / 2, this.size, this.size);
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
     }
 
     // --- Health bar ---
@@ -167,6 +218,7 @@ export class Enemy {
     const hpBarHeight = 4;
     const hpPercent = Math.max(this.hp / this.maxHp, 0);
     ctx.fillStyle = "green";
+<<<<<<< HEAD
     ctx.fillRect(
       this.x - hpBarWidth / 2 + wobbleX,
       this.y - this.size / 2 - hpBarHeight - 2 + wobbleY,
@@ -180,5 +232,10 @@ export class Enemy {
       hpBarWidth,
       hpBarHeight
     );
+=======
+    ctx.fillRect(this.x - hpBarWidth / 2, drawY - this.size / 2 - hpBarHeight - 2, hpBarWidth * hpPercent, hpBarHeight);
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(this.x - hpBarWidth / 2, drawY - this.size / 2 - hpBarHeight - 2, hpBarWidth, hpBarHeight);
+>>>>>>> feature/tower-placement-cancel-needs-cancel-expenditure
   }
 }
