@@ -5,21 +5,24 @@ export function showMoneyPopup(amount, x = null, y = null, text = null) {
     popup.style.position = "fixed";
     popup.style.color = "lime";
     popup.style.fontWeight = "bold";
-    popup.style.fontSize = "24px"; // bigger for wave income
+    popup.style.fontSize = "24px"; 
     popup.style.pointerEvents = "none";
     popup.style.opacity = "1";
     popup.style.zIndex = 9999;
     popup.style.textAlign = "center";
     popup.style.textShadow = "0 0 8px black";
-    popup.style.left = (x ?? window.innerWidth / 2) + "px";
-    popup.style.top = (y ?? window.innerHeight / 2) + "px";
-    popup.style.transform = "translate(-50%, 0)";
+    
+    // center relative to canvas
+    const canvas = document.getElementById("game");
+    const rect = canvas.getBoundingClientRect();
+    popup.style.left = (x ?? (rect.left + rect.width/2)) + "px";
+    popup.style.top = (y ?? (rect.top + rect.height/2)) + "px";
 
-    // Add a unique class for animation
+    popup.style.transform = "translate(-50%, 0)";
     popup.classList.add("wave-income-popup");
 
     document.body.appendChild(popup);
 
-    // Remove after animation
+    // remove after animation finishes
     setTimeout(() => popup.remove(), 1400);
 }

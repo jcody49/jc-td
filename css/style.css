@@ -250,24 +250,25 @@ canvas {
   
 
 
-  /* =========================
+/* =========================
    WAVE INCOME POPUP
    ========================= */
-@keyframes waveIncomeRise {
-  0% {
-      transform: translate(-50%, 0);
-      opacity: 1;
+   @keyframes waveIncomeRise {
+    0% {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+    60% {
+        transform: translate(-50%, -60px);
+        opacity: 1; /* pause at top */
+    }
+    100% {
+        transform: translate(-50%, -80px);
+        opacity: 0;
+    }
   }
-  70% {
-      transform: translate(-50%, -60px);
-      opacity: 1; /* pause at top */
+  
+  .wave-income-popup {
+    animation: waveIncomeRise 1.4s ease-out forwards;
   }
-  100% {
-      transform: translate(-50%, -80px);
-      opacity: 0;
-  }
-}
-
-.wave-income-popup {
-  animation: waveIncomeRise 1.4s ease-out forwards;
-}
+  
