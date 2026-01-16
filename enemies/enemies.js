@@ -9,7 +9,6 @@ export function loadEnemyImages(enemiesData) {
   });
 }
 
-
 export class Enemy {
   constructor({ path, gridSize, ctx, canvas, config }) {
     if (!path || !path.length) {
@@ -28,7 +27,7 @@ export class Enemy {
     this.x = path[0].x;
     this.y = path[0].y;
 
-    // Apply config stats
+    // Config stats
     this.baseSpeed = config.speed ?? 0.7;
     this.speed = this.baseSpeed;
     this.maxHp = config.maxHp ?? 100;
@@ -39,7 +38,7 @@ export class Enemy {
 
     this.size = gridSize * 0.5;
 
-    this.img = config.img ?? null; // <-- store the preloaded image
+    this.img = config.img ?? null;
 
     // Effects
     this.slowMultiplier = 1;
@@ -51,6 +50,13 @@ export class Enemy {
 
     this.escaped = false;
     this.remove = false;
+
+    // Gentle wobble animation
+    this.wobbleOffset = config.wobbleOffset ?? Math.random() * Math.PI * 2;
+    this.wobbleAmplitude = config.wobbleAmplitude ?? this.size * 0.05;
+    this.wobbleXAmplitude = config.wobbleXAmplitude ?? this.size * 0.02;
+    this.wobbleSpeed = config.wobbleSpeed ?? 0.02;
+
   }
 
   get dead() { return this.remove; }
@@ -103,58 +109,76 @@ export class Enemy {
 
   draw() {
     const ctx = this.ctx;
+    const time = Date.now();
+    const wobbleY = Math.sin(time * this.wobbleSpeed + this.wobbleOffset) * this.wobbleAmplitude;
+    const wobbleX = Math.sin(time * this.wobbleSpeed + this.wobbleOffset * 1.5) * this.wobbleXAmplitude;
+    console.log(this.name, wobbleX, wobbleY);
 
-    // Hover highlight
+    // --- Hover highlight ---
     if (window.hoveredEnemy === this) {
       ctx.save();
-      const pulse = 0.15 * Math.sin(Date.now() / 200) + 1;
+      const pulse = 0.15 * Math.sin(time / 200) + 1;
       ctx.globalAlpha = 0.35;
       ctx.fillStyle = "rgba(255,60,60,1)";
       ctx.beginPath();
-      ctx.arc(this.x, this.y, this.size * 0.9 * pulse, 0, Math.PI * 2);
+      ctx.arc(this.x + wobbleX, this.y + wobbleY, this.size * 0.9 * pulse, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
     }
 
-    // Flash on hit
+    // --- Flash on hit ---
     if (this.isFlashing) {
       ctx.strokeStyle = "yellow";
       ctx.lineWidth = 2;
       this.flashLines.forEach(line => {
         const length = line.length * (this.flashTimer / 10);
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
+        ctx.moveTo(this.x + wobbleX, this.y + wobbleY);
         ctx.lineTo(
-          this.x + Math.cos(line.angle) * length,
-          this.y + Math.sin(line.angle) * length
+          this.x + wobbleX + Math.cos(line.angle) * length,
+          this.y + wobbleY + Math.sin(line.angle) * length
         );
         ctx.stroke();
       });
       return;
     }
 
-    // Enemy body — draw image if available
+    // --- Enemy body ---
     if (this.img) {
       ctx.drawImage(
         this.img,
-        this.x - this.size / 2,
-        this.y - this.size / 2,
+        this.x - this.size / 2 + wobbleX,
+        this.y - this.size / 2 + wobbleY,
         this.size,
         this.size
       );
     } else {
-      // fallback rectangle
       ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
-      ctx.fillRect(this.x - this.size / 2, this.y - this.size / 2, this.size, this.size);
+      ctx.fillRect(
+        this.x - this.size / 2 + wobbleX,
+        this.y - this.size / 2 + wobbleY,
+        this.size,
+        this.size
+      );
     }
 
-    // Health bar
+    // --- Health bar ---
     const hpBarWidth = this.size;
     const hpBarHeight = 4;
     const hpPercent = Math.max(this.hp / this.maxHp, 0);
     ctx.fillStyle = "green";
-    ctx.fillRect(this.x - hpBarWidth / 2, this.y - this.size / 2 - hpBarHeight - 2, hpBarWidth * hpPercent, hpBarHeight);
+    ctx.fillRect(
+      this.x - hpBarWidth / 2 + wobbleX,
+      this.y - this.size / 2 - hpBarHeight - 2 + wobbleY,
+      hpBarWidth * hpPercent,
+      hpBarHeight
+    );
     ctx.strokeStyle = "black";
-    ctx.strokeRect(this.x - hpBarWidth / 2, this.y - this.size / 2 - hpBarHeight - 2, hpBarWidth, hpBarHeight);
+    ctx.strokeRect(
+      this.x - hpBarWidth / 2 + wobbleX,
+      this.y - this.size / 2 - hpBarHeight - 2 + wobbleY,
+      hpBarWidth,
+      hpBarHeight
+    );
   }
 }
