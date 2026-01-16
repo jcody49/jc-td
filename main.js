@@ -60,16 +60,21 @@ setupTowerPlacement({ hud, gridSize });
 // ======================
 document.querySelectorAll(".towerCard").forEach(card => {
     card.addEventListener("click", () => {
-        const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$", ""));
-        const name = card.querySelector(".towerName").textContent.replace(":", "").trim();
-
-        if (gameState.money >= cost) {
-            gameState.money -= cost;
-            hud.updateMoneyLives();
-            window.selectedTowerType = name; // triggers ghost tower in gameLoop
-        }
+      const cost = parseInt(
+        card.querySelector(".towerCost").textContent.replace("$", "")
+      );
+      const name = card.querySelector(".towerName").textContent
+        .replace(":", "")
+        .trim();
+  
+      if (gameState.money >= cost) {
+        window.selectedTowerType = name;
+        window.selectedTowerCost = cost;
+      }
     });
-});
+  });
+  
+
 
 // ======================
 // START + SKIP BUTTONS
@@ -128,7 +133,7 @@ function updateWaveText() {
     if (!waveTextEl) return;
 
     if (waveState.status === "countdown") {
-        waveTextEl.innerText = `Next wave in: ${waveState.countdown}s`;
+        waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}s`;
     } else if (waveState.status === "spawning") {
         waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in progress`;
     } else if (waveState.status === "done") {
@@ -224,10 +229,17 @@ document.addEventListener("keydown", e => {
     const key = e.key.toLowerCase();
     if (key === "escape") {
         cursorMode = "default";
-        if (window.selectedTower) window.selectedTower.clearForcedTarget();
+      
+        if (window.selectedTower) {
+          window.selectedTower.clearForcedTarget();
+        }
+      
         window.selectedTowerType = null;
+        window.selectedTowerCost = null; // ✅ REQUIRED
+      
         applyCursor();
-    } else if (key === "a" && window.selectedTower) {
+      }
+       else if (key === "a" && window.selectedTower) {
         cursorMode = cursorMode === "attack" ? "default" : "attack";
         applyCursor();
     } else if (key === "u" && window.selectedTower) {
