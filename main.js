@@ -112,15 +112,20 @@ startButton.addEventListener("click", () => {
     // enable skip button & glow
     skipButton.disabled = false;
     enableGlow(skipButton);
-    skipButton.style.display = "inline-block"; // in case it was hidden
+    skipButton.style.display = "inline-block";
+  
+    // show HUD info
+    livesDisplay.style.display = "block";
+    moneyDisplay.style.display = "block";
   
     // Start the first countdown/wave
     const waveTextEl = document.getElementById("waveText");
-    startGameWaves(gameState, ctx, canvas);  // ✅ call it here, NOT at page load
+    startGameWaves(gameState, ctx, canvas);
   
     // Start the main game loop
     gameLoop(ctx, canvas, gameState, hud);
   });
+  
   
 
 skipButton.addEventListener("click", () => {
