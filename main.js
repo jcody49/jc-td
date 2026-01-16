@@ -83,19 +83,21 @@ const startButton = document.getElementById("startButton");
 const skipButton  = document.getElementById("skipButton");
 const startSound  = new Audio('assets/audio/Start game.wav');
 
-skipButton.disabled = true; // skip disabled until waves start
-skipButton.style.display = "none"; // hide skip initially
+// INITIAL STATE
+skipButton.disabled = true;
+skipButton.style.display = "none";
 
-// Add subtle glow class (CSS should define .glow animation)
+// Add glow class for animation
 function enableGlow(button) {
   button.classList.add("glow");
 }
-
 function disableGlow(button) {
   button.classList.remove("glow");
 }
 
-// START button click
+// Start button should glow from the start
+enableGlow(startButton);
+
 startButton.addEventListener("click", () => {
   if (gameStarted) return;
   gameStarted = true;
@@ -104,7 +106,7 @@ startButton.addEventListener("click", () => {
   startButton.style.display = "none";
   disableGlow(startButton);
 
-  // Show and activate skip button
+  // Show + enable skip button
   skipButton.style.display = "inline-block";
   skipButton.disabled = false;
   enableGlow(skipButton);
@@ -116,7 +118,6 @@ startButton.addEventListener("click", () => {
   console.log("START", ctx);
 });
 
-// SKIP button click
 skipButton.addEventListener("click", () => {
   const waveTextEl = document.getElementById("waveText");
 
@@ -136,6 +137,7 @@ skipButton.addEventListener("click", () => {
   startWave(gameState, gridSize, ctx, canvas, waveTextEl);
   console.log("SKIP CLICKED", waveState);
 });
+
 
 
 
