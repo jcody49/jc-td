@@ -83,28 +83,34 @@ const startButton = document.getElementById("startButton");
 const skipButton  = document.getElementById("skipButton");
 const startSound  = new Audio('assets/audio/Start game.wav');
 
-skipButton.disabled = false; // ready from the start
+// --- INITIAL STATE ---
+skipButton.style.display = "none"; // hidden initially
+skipButton.disabled = true;         // disabled until game starts
 
+// --- START BUTTON CLICK ---
 startButton.addEventListener("click", () => {
   if (gameStarted) return;
   gameStarted = true;
 
-  // hide the start button permanently
+  // hide start button permanently
   startButton.style.display = "none";
 
-  const waveTextEl = document.getElementById("waveText");
+  // show and enable skip button
+  skipButton.style.display = "inline-block";
   skipButton.disabled = false;
+
+  const waveTextEl = document.getElementById("waveText");
   startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
   gameLoop(ctx, canvas, gameState, hud);
-  console.log("START", ctx);
+
+  console.log("GAME STARTED", ctx);
 });
 
-
-
+// --- SKIP BUTTON CLICK ---
 skipButton.addEventListener("click", () => {
   const waveTextEl = document.getElementById("waveText");
 
-  // only skip if a countdown is active
+  // only skip if countdown is active
   if (!waveState.countdownInterval) return;
 
   startSound.play();
@@ -113,15 +119,13 @@ skipButton.addEventListener("click", () => {
   clearInterval(waveState.countdownInterval);
   waveState.countdownInterval = null;
 
-  skipButton.disabled = true;
+  skipButton.disabled = true; // disable after click
 
   // start spawning immediately
   startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+
   console.log("SKIP CLICKED", waveState);
 });
-
-
-
 
 
 

@@ -334,3 +334,7 @@
 #hud{
   min-width:1330px;
 }
+
+#skipButton {
+  display: none; /* hidden initially */
+}

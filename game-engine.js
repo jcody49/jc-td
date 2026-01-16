@@ -215,6 +215,14 @@ export function gameLoop(ctx, canvas, gameState, hud) {
 // =========================
 export function startGameWaves(gameState, ctx, canvas) {
     const waveTextEl = document.getElementById("waveText");
+    
+    const skipButton = document.getElementById("skipButton");
+    if (skipButton) {
+        skipButton.style.display = "block";  // show the button
+        skipButton.disabled = false;          // enable it
+    }
+
     startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
 }
+
 
