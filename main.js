@@ -36,13 +36,6 @@ window.pathOccupied = pathCellsOccupied;
 
 
 // ======================
-// START FIRST WAVE
-// ======================
-startGameWaves(gameState, ctx, canvas);
-console.log(ctx)
-
-
-// ======================
 // INIT HUD
 // ======================
 const waveTextEl = document.getElementById("waveText");
@@ -98,25 +91,31 @@ function disableGlow(button) {
 // Start button should glow from the start
 enableGlow(startButton);
 
+skipButton.disabled = true; // Keep pulsating CSS intact, just disable it until start
+
 startButton.addEventListener("click", () => {
-  if (gameStarted) return;
-  gameStarted = true;
-
-  // hide start button permanently
-  startButton.style.display = "none";
-  disableGlow(startButton);
-
-  // Show + enable skip button
-  skipButton.style.display = "inline-block";
-  skipButton.disabled = false;
-  enableGlow(skipButton);
-
-  const waveTextEl = document.getElementById("waveText");
-  startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
-  gameLoop(ctx, canvas, gameState, hud);
-
-  console.log("START", ctx);
-});
+    if (gameStarted) return;
+    gameStarted = true;
+  
+    startSound.play();
+  
+    // hide start button
+    startButton.style.display = "none";
+    disableGlow(startButton);
+  
+    // enable skip button & glow
+    skipButton.disabled = false;
+    enableGlow(skipButton);
+    skipButton.style.display = "inline-block"; // in case it was hidden
+  
+    // Start the first countdown/wave
+    const waveTextEl = document.getElementById("waveText");
+    startGameWaves(gameState, ctx, canvas);  // ✅ call it here, NOT at page load
+  
+    // Start the main game loop
+    gameLoop(ctx, canvas, gameState, hud);
+  });
+  
 
 skipButton.addEventListener("click", () => {
   const waveTextEl = document.getElementById("waveText");
