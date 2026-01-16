@@ -1,4 +1,5 @@
 // enemies/enemies.js
+
 export function loadEnemyImages(enemiesData) {
   Object.values(enemiesData).forEach(enemy => {
     enemy.img = new Image();
@@ -34,11 +35,11 @@ export class Enemy {
     this.size = gridSize * 0.5;
     this.img = config.img ?? null;
 
-    // --- Hop animation state ---
+    // Hop animation state
     this.yOffset = 0;
-    this.hopProgress = 0;    // progress from 0 → 1 per hop
-    this.hopSpeed = 0.04;    // frames per hop
-    this.hopPaused = 0;      // pause frames after landing
+    this.hopProgress = 0;    // progress 0 → 1 per hop
+    this.hopSpeed = 0.04;    // speed of hop
+    this.hopPaused = 0;      // frames to pause after landing
     this.hopAmplitude = gridSize * 0.13; // height of hop
 
     // Effects
@@ -51,22 +52,29 @@ export class Enemy {
 
     this.escaped = false;
     this.remove = false;
-
-    // Gentle wobble animation
-    this.wobbleOffset = config.wobbleOffset ?? Math.random() * Math.PI * 2;
-    this.wobbleAmplitude = config.wobbleAmplitude ?? this.size * 0.05;
-    this.wobbleXAmplitude = config.wobbleXAmplitude ?? this.size * 0.02;
-    this.wobbleSpeed = config.wobbleSpeed ?? 0.02;
-
   }
 
   get dead() { return this.remove; }
 
   update(gameState) {
+    // --- Path movement ---
     if (this.pathIndex >= this.path.length - 1) {
       if (!this.escaped) {
         this.escaped = true;
         gameState.lives--;
+
+        // Zap effect on exit
+        const ctx = this.ctx;
+        ctx.save();
+        ctx.strokeStyle = "yellow";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(this.x - this.size, this.y - this.size);
+        ctx.lineTo(this.x + this.size, this.y + this.size);
+        ctx.moveTo(this.x + this.size, this.y - this.size);
+        ctx.lineTo(this.x - this.size, this.y + this.size);
+        ctx.stroke();
+        ctx.restore();
       }
       this.remove = true;
       return;
@@ -115,25 +123,26 @@ export class Enemy {
       this.hopPaused--;
       this.yOffset = 0;
     } else {
-      // Half-sine hop
       this.yOffset = -Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
-
       this.hopProgress += this.hopSpeed;
       if (this.hopProgress >= 1) {
         this.hopProgress = 0;
-        this.hopPaused = 5; // pause frames after landing
+        this.hopPaused = 5; // pause after landing
       }
     }
   }
 
   draw() {
     const ctx = this.ctx;
-    const drawY = this.y + this.yOffset; // apply hop on top of path Y
 
-    // --- Hover highlight ---
+    // --- Draw Y with lift + hop ---
+    const lift = this.gridSize * 0.1; // lift enemies above the road
+    const drawY = this.y - lift + this.yOffset;
+
+    // Hover highlight
     if (window.hoveredEnemy === this) {
       ctx.save();
-      const pulse = 0.15 * Math.sin(time / 200) + 1;
+      const pulse = 0.15 * Math.sin(Date.now() / 200) + 1;
       ctx.globalAlpha = 0.35;
       ctx.fillStyle = "rgba(255,60,60,1)";
       ctx.beginPath();
@@ -142,7 +151,7 @@ export class Enemy {
       ctx.restore();
     }
 
-    // --- Flash on hit ---
+    // Flash on hit
     if (this.isFlashing) {
       ctx.strokeStyle = "yellow";
       ctx.lineWidth = 2;
@@ -159,7 +168,7 @@ export class Enemy {
       return;
     }
 
-    // --- Enemy body ---
+    // Enemy body
     if (this.img) {
       ctx.drawImage(
         this.img,
@@ -173,7 +182,7 @@ export class Enemy {
       ctx.fillRect(this.x - this.size / 2, drawY - this.size / 2, this.size, this.size);
     }
 
-    // --- Health bar ---
+    // Health bar
     const hpBarWidth = this.size;
     const hpBarHeight = 4;
     const hpPercent = Math.max(this.hp / this.maxHp, 0);
