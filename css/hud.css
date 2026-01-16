@@ -338,3 +338,21 @@
 #skipButton {
   display: none; /* hidden initially */
 }
+
+/* Start button glow pulse */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 255, 1);
+  }
+  100% {
+    box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+  }
+}
+
+#startButton.glow {
+  animation: glowPulse 1.2s infinite ease-in-out;
+}
+

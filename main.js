@@ -79,7 +79,10 @@ document.querySelectorAll(".towerCard").forEach(card => {
 // ======================
 // START + SKIP BUTTONS
 // ======================
+// make start button pulse right away
 const startButton = document.getElementById("startButton");
+startButton.classList.add("glow"); // button now pulses with glow
+
 const skipButton  = document.getElementById("skipButton");
 const startSound  = new Audio('assets/audio/Start game.wav');
 
@@ -89,22 +92,18 @@ skipButton.disabled = true;         // disabled until game starts
 
 // --- START BUTTON CLICK ---
 startButton.addEventListener("click", () => {
-  if (gameStarted) return;
-  gameStarted = true;
-
-  // hide start button permanently
-  startButton.style.display = "none";
-
-  // show and enable skip button
-  skipButton.style.display = "inline-block";
-  skipButton.disabled = false;
-
-  const waveTextEl = document.getElementById("waveText");
-  startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
-  gameLoop(ctx, canvas, gameState, hud);
-
-  console.log("GAME STARTED", ctx);
-});
+    if (gameStarted) return;
+    gameStarted = true;
+  
+    startButton.style.display = "none";
+    startButton.classList.remove("glow"); // stop glowing
+  
+    const waveTextEl = document.getElementById("waveText");
+    skipButton.disabled = false;
+    startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
+    gameLoop(ctx, canvas, gameState, hud);
+  });
+  
 
 // --- SKIP BUTTON CLICK ---
 skipButton.addEventListener("click", () => {
