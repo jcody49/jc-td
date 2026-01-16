@@ -113,8 +113,7 @@ startButton.style.padding = "20px 40px"; // extra internal space
 
 
 
-skipButton.disabled = true; // Keep pulsating CSS intact, just disable it until start
-// Hide HUD info initially
+skipButton.disabled = true;
 const livesDisplay = document.getElementById("lives");
 const moneyDisplay = document.getElementById("money");
 
