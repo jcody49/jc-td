@@ -365,5 +365,25 @@
 
 
 
+#startButton {
+  font-size: 48px;          /* triple size relative to before */
+  padding: 20px 60px;       /* make it big enough to click easily */
+  border-radius: 12px;      /* optional: rounded corners */
+  cursor: pointer;
+  z-index: 1000;             /* make sure it sits above overlay */
+  position: relative;        /* for z-index to take effect */
+  box-shadow: 0 0 20px rgba(255,255,255,0.8); /* subtle glow */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Optional hover/pulse effect while overlay is active */
+#startButton.glow {
+  animation: pulseStart 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseStart {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 20px rgba(255,255,255,0.8); }
+  50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255,255,255,1); }
+}
 
 

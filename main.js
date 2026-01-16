@@ -68,6 +68,20 @@ document.querySelectorAll(".towerCard").forEach(card => {
   });
   
 
+    // CREATE DARK OVERLAY
+    const overlay = document.createElement("div");
+    overlay.id = "preGameOverlay";
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.backgroundColor = "rgba(0,0,0,0.7)"; // dark semi-transparent
+    overlay.style.zIndex = "999"; // sit below the start button (which should be higher z)
+    overlay.style.pointerEvents = "none"; // allow clicks to pass through if needed
+    document.body.appendChild(overlay);
+
+
 
 // ======================
 // START + SKIP BUTTONS
@@ -90,6 +104,14 @@ function disableGlow(button) {
 
 // Start button should glow from the start
 enableGlow(startButton);
+startButton.style.position = "relative"; // or "fixed" if you want it floating
+startButton.style.zIndex = "1000";       // higher than overlay
+startButton.style.width = "300px";     // make the button wider
+startButton.style.height = "120px";    // make the button taller
+startButton.style.fontSize = "2.5em";  // bigger text
+startButton.style.padding = "20px 40px"; // extra internal space
+
+
 
 skipButton.disabled = true; // Keep pulsating CSS intact, just disable it until start
 // Hide HUD info initially
@@ -105,6 +127,11 @@ startButton.addEventListener("click", () => {
   
     startSound.play();
   
+    // remove overlay
+    overlay.style.transition = "opacity 0.5s ease";
+    overlay.style.opacity = "0";
+    setTimeout(() => overlay.remove(), 500);
+  
     // hide start button
     startButton.style.display = "none";
     disableGlow(startButton);
@@ -118,13 +145,12 @@ startButton.addEventListener("click", () => {
     livesDisplay.style.display = "block";
     moneyDisplay.style.display = "block";
   
-    // Start the first countdown/wave
+    // Start waves and game loop
     const waveTextEl = document.getElementById("waveText");
     startGameWaves(gameState, ctx, canvas);
-  
-    // Start the main game loop
     gameLoop(ctx, canvas, gameState, hud);
   });
+  
   
   
 
