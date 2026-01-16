@@ -106,12 +106,29 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 // =========================
 let completionLocked = false;
 
+import { showMoneyPopup } from './ui-effects.js';
+
 export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl) {
     if (waveState.status !== "spawning" || completionLocked) return;
 
     if (spawningFinished && gameState.enemies.length === 0) {
         completionLocked = true;
         waveState.status = "done";
+
+        const currentWaveData = waves[waveState.currentWave];
+
+        // --- Award income ---
+        if (currentWaveData?.income) {
+            gameState.money = (gameState.money || 0) + currentWaveData.income;
+
+            // Show centered popup for wave income
+            showMoneyPopup(
+                currentWaveData.income,
+                window.innerWidth / 2,        // middle of screen horizontally
+                window.innerHeight / 2,       // middle vertically
+                `Wave income: +${currentWaveData.income}`
+            );
+        }
 
         if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} complete!`;
 
@@ -122,5 +139,7 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
         }, 2000);
     }
 }
+
+
 
   
