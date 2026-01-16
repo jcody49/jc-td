@@ -79,37 +79,48 @@ document.querySelectorAll(".towerCard").forEach(card => {
 // ======================
 // START + SKIP BUTTONS
 // ======================
-// make start button pulse right away
 const startButton = document.getElementById("startButton");
-startButton.classList.add("glow"); // button now pulses with glow
-
 const skipButton  = document.getElementById("skipButton");
 const startSound  = new Audio('assets/audio/Start game.wav');
 
-// --- INITIAL STATE ---
-skipButton.style.display = "none"; // hidden initially
-skipButton.disabled = true;         // disabled until game starts
+skipButton.disabled = true; // skip disabled until waves start
+skipButton.style.display = "none"; // hide skip initially
 
-// --- START BUTTON CLICK ---
+// Add subtle glow class (CSS should define .glow animation)
+function enableGlow(button) {
+  button.classList.add("glow");
+}
+
+function disableGlow(button) {
+  button.classList.remove("glow");
+}
+
+// START button click
 startButton.addEventListener("click", () => {
-    if (gameStarted) return;
-    gameStarted = true;
-  
-    startButton.style.display = "none";
-    startButton.classList.remove("glow"); // stop glowing
-  
-    const waveTextEl = document.getElementById("waveText");
-    skipButton.disabled = false;
-    startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
-    gameLoop(ctx, canvas, gameState, hud);
-  });
-  
+  if (gameStarted) return;
+  gameStarted = true;
 
-// --- SKIP BUTTON CLICK ---
+  // hide start button permanently
+  startButton.style.display = "none";
+  disableGlow(startButton);
+
+  // Show and activate skip button
+  skipButton.style.display = "inline-block";
+  skipButton.disabled = false;
+  enableGlow(skipButton);
+
+  const waveTextEl = document.getElementById("waveText");
+  startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
+  gameLoop(ctx, canvas, gameState, hud);
+
+  console.log("START", ctx);
+});
+
+// SKIP button click
 skipButton.addEventListener("click", () => {
   const waveTextEl = document.getElementById("waveText");
 
-  // only skip if countdown is active
+  // only skip if a countdown is active
   if (!waveState.countdownInterval) return;
 
   startSound.play();
@@ -118,13 +129,14 @@ skipButton.addEventListener("click", () => {
   clearInterval(waveState.countdownInterval);
   waveState.countdownInterval = null;
 
-  skipButton.disabled = true; // disable after click
+  skipButton.disabled = true;
+  disableGlow(skipButton);
 
   // start spawning immediately
   startWave(gameState, gridSize, ctx, canvas, waveTextEl);
-
   console.log("SKIP CLICKED", waveState);
 });
+
 
 
 
