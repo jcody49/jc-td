@@ -374,6 +374,7 @@
   position: relative;        /* for z-index to take effect */
   box-shadow: 0 0 20px rgba(255,255,255,0.8); /* subtle glow */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform: translateX(-300px) translateY(-115%) !important;
 }
 
 /* Optional hover/pulse effect while overlay is active */
