@@ -92,6 +92,12 @@ function disableGlow(button) {
 enableGlow(startButton);
 
 skipButton.disabled = true; // Keep pulsating CSS intact, just disable it until start
+// Hide HUD info initially
+const livesDisplay = document.getElementById("lives");
+const moneyDisplay = document.getElementById("money");
+
+livesDisplay.style.display = "none";
+moneyDisplay.style.display = "none";
 
 startButton.addEventListener("click", () => {
     if (gameStarted) return;
