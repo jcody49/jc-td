@@ -1,9 +1,8 @@
 // ======================
 // IMPORTS
 // ======================
-// main.js
 import { gameLoop, startGameWaves } from './game-engine.js';
-import { startWave, startNextWave, updateWaveCompletion, waveState } from './waveManager.js';
+import { startWave, waveState } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
 import { gameState } from './gameState.js';
@@ -14,7 +13,7 @@ import { getHoveredEnemy, getTowerAtPosition } from './utils.js';
 import { loadEnemyImages } from './enemies/enemies.js';
 import { enemiesData } from './enemies/enemyData.js';
 
-// preload all enemy images
+// preload enemy images
 loadEnemyImages(enemiesData);
 
 // ======================
@@ -26,14 +25,14 @@ window.hoveredTower = null;
 window.selectedTower = null;
 window.selectedTowerType = null;
 
+// ======================
 // INIT GRID + PATH
+// ======================
 initGrid(canvas, 25, 15);
 const { pathOccupied: pathCellsOccupied, pixelPath } = buildPath(pathCells, gridSize);
-waveState.path = pixelPath;        // set path in waveState
+waveState.path = pixelPath;
 window.gridOccupied = gridOccupied;
 window.pathOccupied = pathCellsOccupied;
-
-
 
 // ======================
 // INIT HUD
@@ -44,7 +43,7 @@ window.showTowerModal = tower => hud.showTowerModal(tower);
 window.hideTowerModal = () => hud.hideTowerModal();
 
 // ======================
-// SETUP TOWER PLACEMENT
+// TOWER PLACEMENT
 // ======================
 setupTowerPlacement({ hud, gridSize });
 
@@ -53,130 +52,119 @@ setupTowerPlacement({ hud, gridSize });
 // ======================
 document.querySelectorAll(".towerCard").forEach(card => {
     card.addEventListener("click", () => {
-      const cost = parseInt(
-        card.querySelector(".towerCost").textContent.replace("$", "")
-      );
-      const name = card.querySelector(".towerName").textContent
-        .replace(":", "")
-        .trim();
-  
-      if (gameState.money >= cost) {
-        window.selectedTowerType = name;
-        window.selectedTowerCost = cost;
-      }
+        const cost = parseInt(card.querySelector(".towerCost").textContent.replace("$", ""));
+        const name = card.querySelector(".towerName").textContent.replace(":", "").trim();
+        if (gameState.money >= cost) {
+            window.selectedTowerType = name;
+            window.selectedTowerCost = cost;
+        }
     });
-  });
-  
+});
 
-    // CREATE DARK OVERLAY
-    const overlay = document.createElement("div");
-    overlay.id = "preGameOverlay";
-    overlay.style.position = "fixed";
-    overlay.style.top = "0";
-    overlay.style.left = "0";
-    overlay.style.width = "100%";
-    overlay.style.height = "100%";
-    overlay.style.backgroundColor = "rgba(0,0,0,0.7)"; // dark semi-transparent
-    overlay.style.zIndex = "999"; // sit below the start button (which should be higher z)
-    overlay.style.pointerEvents = "none"; // allow clicks to pass through if needed
-    document.body.appendChild(overlay);
+// ======================
+// PRE-GAME OVERLAY
+// ======================
+const gameContainer = document.getElementById("gameContainer");
+gameContainer.style.position = "relative"; // for absolute children
 
-
+const overlay = document.createElement("div");
+overlay.id = "preGameOverlay";
+overlay.style.position = "absolute";
+overlay.style.top = "0";
+overlay.style.left = "0";
+overlay.style.width = "100%";
+overlay.style.height = "100%";
+overlay.style.backgroundColor = "rgba(0,0,0,0.7)";
+overlay.style.zIndex = "50"; // below start button
+overlay.style.pointerEvents = "none";
+gameContainer.appendChild(overlay);
 
 // ======================
 // START + SKIP BUTTONS
 // ======================
 const startButton = document.getElementById("startButton");
-const skipButton  = document.getElementById("skipButton");
-const startSound  = new Audio('assets/audio/Start game.wav');
-
-// INITIAL STATE
-skipButton.disabled = true;
-skipButton.style.display = "none";
-
-// Add glow class for animation
-function enableGlow(button) {
-  button.classList.add("glow");
-}
-function disableGlow(button) {
-  button.classList.remove("glow");
-}
-
-// Start button should glow from the start
-enableGlow(startButton);
-startButton.style.position = "relative"; // or "fixed" if you want it floating
-startButton.style.zIndex = "1000";       // higher than overlay
-startButton.style.width = "300px";     // make the button wider
-startButton.style.height = "120px";    // make the button taller
-startButton.style.fontSize = "2.5em";  // bigger text
-startButton.style.padding = "20px 40px"; // extra internal space
-
-
-
-skipButton.disabled = true;
+const skipButton = document.getElementById("skipButton");
+const startSound = new Audio('assets/audio/Start game.wav');
 const livesDisplay = document.getElementById("lives");
 const moneyDisplay = document.getElementById("money");
 
+// BUTTON INITIAL STATE
+skipButton.disabled = true;
+skipButton.style.display = "none";
 livesDisplay.style.display = "none";
 moneyDisplay.style.display = "none";
 
+// ======================
+// GLOW HELPERS
+// ======================
+function enableGlow(button) {
+    button.classList.add("glow");
+}
+function disableGlow(button) {
+    button.classList.remove("glow");
+}
+
+// ======================
+// START BUTTON STYLING
+// ======================
+startButton.style.position = "absolute";
+startButton.style.zIndex = "100";  // above overlay
+startButton.style.left = "50%";
+startButton.style.top = "50%";
+startButton.style.transform = "translate(-50%, -50%)";
+startButton.style.width = "300px";
+startButton.style.height = "120px";
+startButton.style.fontSize = "2.5em";
+startButton.style.padding = "20px 40px";
+enableGlow(startButton);
+
+// ======================
+// START BUTTON CLICK
+// ======================
 startButton.addEventListener("click", () => {
     if (gameStarted) return;
     gameStarted = true;
-  
     startSound.play();
-  
-    // remove overlay
+
+    // fade out overlay
     overlay.style.transition = "opacity 0.5s ease";
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 500);
-  
+
     // hide start button
     startButton.style.display = "none";
     disableGlow(startButton);
-  
-    // enable skip button & glow
+
+    // enable skip button
     skipButton.disabled = false;
     enableGlow(skipButton);
     skipButton.style.display = "inline-block";
-  
+
     // show HUD info
     livesDisplay.style.display = "block";
     moneyDisplay.style.display = "block";
-  
-    // Start waves and game loop
-    const waveTextEl = document.getElementById("waveText");
+
+    // start waves + game loop
     startGameWaves(gameState, ctx, canvas);
     gameLoop(ctx, canvas, gameState, hud);
-  });
-  
-  
-  
-
-skipButton.addEventListener("click", () => {
-  const waveTextEl = document.getElementById("waveText");
-
-  // only skip if a countdown is active
-  if (!waveState.countdownInterval) return;
-
-  startSound.play();
-
-  // stop countdown
-  clearInterval(waveState.countdownInterval);
-  waveState.countdownInterval = null;
-
-  skipButton.disabled = true;
-  disableGlow(skipButton);
-
-  // start spawning immediately
-  startWave(gameState, gridSize, ctx, canvas, waveTextEl);
-  console.log("SKIP CLICKED", waveState);
 });
 
+// ======================
+// SKIP BUTTON CLICK
+// ======================
+skipButton.addEventListener("click", () => {
+    if (!waveState.countdownInterval) return;
+    startSound.play();
 
+    clearInterval(waveState.countdownInterval);
+    waveState.countdownInterval = null;
 
+    skipButton.disabled = true;
+    disableGlow(skipButton);
 
-
+    startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+    console.log("SKIP CLICKED", waveState);
+});
 
 // ======================
 // WAVE TEXT LOOP
@@ -199,7 +187,7 @@ function updateWaveText() {
 updateWaveText();
 
 // ======================
-// CURSOR FX + MOUSE
+// CURSOR FX
 // ======================
 const fx = document.getElementById("cursor-fx");
 const fxImg = fx.querySelector("img");
@@ -256,23 +244,15 @@ canvas.addEventListener("mousemove", e => {
 // FORCE ATTACK CLICK
 // ======================
 canvas.addEventListener("click", () => {
-    if (cursorMode !== "attack") return;           // only in attack mode
-    if (!window.selectedTower || !window.hoveredEnemy) return; // need tower + enemy
+    if (cursorMode !== "attack") return;
+    if (!window.selectedTower || !window.hoveredEnemy) return;
 
-    console.log(
-        "[FORCE ATTACK]",
-        "Tower:", window.selectedTower,
-        "Enemy:", window.hoveredEnemy
-    );
-
-    // ✅ assign forced target (don't call attack directly)
+    console.log("[FORCE ATTACK]", "Tower:", window.selectedTower, "Enemy:", window.hoveredEnemy);
     window.selectedTower.setForcedTarget(window.hoveredEnemy);
 
-    // exit attack mode after click
     cursorMode = "default";
-    applyCursor(); // this is your existing cursor function, do NOT modify
+    applyCursor();
 });
-
 
 // ======================
 // ATTACK / ESC / UPGRADE / SELL KEYS
@@ -281,17 +261,11 @@ document.addEventListener("keydown", e => {
     const key = e.key.toLowerCase();
     if (key === "escape") {
         cursorMode = "default";
-      
-        if (window.selectedTower) {
-          window.selectedTower.clearForcedTarget();
-        }
-      
+        if (window.selectedTower) window.selectedTower.clearForcedTarget();
         window.selectedTowerType = null;
-        window.selectedTowerCost = null; // ✅ REQUIRED
-      
+        window.selectedTowerCost = null;
         applyCursor();
-      }
-       else if (key === "a" && window.selectedTower) {
+    } else if (key === "a" && window.selectedTower) {
         cursorMode = cursorMode === "attack" ? "default" : "attack";
         applyCursor();
     } else if (key === "u" && window.selectedTower) {
