@@ -57,6 +57,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
         }
 
         const config = spawnQueue[enemiesSpawned];
+        console.log("🧪 USING Enemy CLASS FROM:", Enemy);
 
         gameState.enemies.push(
             new Enemy({

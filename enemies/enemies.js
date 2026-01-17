@@ -1,48 +1,84 @@
 // enemies/enemies.js
 
+console.error("🔥 REAL enemies/enemies.js LOADED 🔥");
+
+/**
+ * Preload enemy images and attach them directly to enemy config
+ */
 export function loadEnemyImages(enemiesData) {
   Object.values(enemiesData).forEach(enemy => {
     enemy.img = new Image();
     enemy.img.src = enemy.image;
 
-    enemy.img.onload = () => console.log(`Loaded ${enemy.name}`);
-    enemy.img.onerror = () => console.error(`Failed to load ${enemy.image}`);
+    enemy.img.onload = () =>
+      console.log(`🖼️ Loaded enemy image: ${enemy.name}`);
+    enemy.img.onerror = () =>
+      console.error(`❌ Failed to load enemy image: ${enemy.image}`);
   });
 }
 
 export class Enemy {
   constructor({ path, gridSize, ctx, canvas, config }) {
-    if (!path || !path.length) throw new Error("Enemy path is undefined or empty");
+    if (!path || !path.length) {
+      throw new Error("Enemy path is undefined or empty");
+    }
+
+    if (!config) {
+      throw new Error("Enemy spawned with NO CONFIG");
+    }
+
+    console.log(
+      "👾 SPAWNING ENEMY:",
+      config.name,
+      "maxHp:",
+      config.maxHp
+    );
 
     this.path = path;
     this.gridSize = gridSize;
     this.ctx = ctx;
     this.canvas = canvas;
 
+    // Path position
     this.pathIndex = 0;
     this.x = path[0].x;
     this.y = path[0].y;
 
-    // Stats
-    this.baseSpeed = config.speed ?? 0.7;
+    // =====================
+    // STATS (NO SILENT FALLBACKS)
+    // =====================
+    this.baseSpeed = Number(config.speed);
     this.speed = this.baseSpeed;
-    this.maxHp = config.maxHp ?? 100;
+
+    this.maxHp = Number(config.maxHp);
     this.hp = this.maxHp;
-    this.reward = config.reward ?? 1;
-    this.isFlying = config.isFlying ?? false;
+
+    this.reward = Number(config.reward ?? 1);
+    this.isFlying = Boolean(config.isFlying);
     this.name = config.name ?? "Enemy";
 
+    if (!Number.isFinite(this.maxHp)) {
+      console.error("❌ INVALID maxHp:", config);
+      this.maxHp = 100;
+      this.hp = 100;
+    }
+
+    // Size + sprite
     this.size = gridSize * 0.5;
     this.img = config.img ?? null;
 
-    // Hop animation state
+    // =====================
+    // HOP ANIMATION
+    // =====================
     this.yOffset = 0;
-    this.hopProgress = 0;    // progress 0 → 1 per hop
-    this.hopSpeed = 0.04;    // speed of hop
-    this.hopPaused = 0;      // frames to pause after landing
-    this.hopAmplitude = gridSize * 0.13; // height of hop
+    this.hopProgress = 0;
+    this.hopSpeed = 0.04;
+    this.hopPaused = 0;
+    this.hopAmplitude = gridSize * 0.13;
 
-    // Effects
+    // =====================
+    // EFFECTS
+    // =====================
     this.slowMultiplier = 1;
     this.slowTimer = 0;
     this.activeDoTs = [];
@@ -54,16 +90,17 @@ export class Enemy {
     this.remove = false;
   }
 
-  get dead() { return this.remove; }
+  get dead() {
+    return this.remove;
+  }
 
   update(gameState) {
-    // --- Path movement ---
+    // --- Exit path ---
     if (this.pathIndex >= this.path.length - 1) {
       if (!this.escaped) {
         this.escaped = true;
         gameState.lives--;
 
-        // Zap effect on exit
         const ctx = this.ctx;
         ctx.save();
         ctx.strokeStyle = "yellow";
@@ -80,7 +117,7 @@ export class Enemy {
       return;
     }
 
-    // Slow effect
+    // --- Slow ---
     if (this.slowTimer > 0) {
       this.slowTimer--;
       this.speed = this.baseSpeed * this.slowMultiplier;
@@ -89,21 +126,19 @@ export class Enemy {
       this.speed = this.baseSpeed;
     }
 
-    // Damage over time
-    if (this.activeDoTs.length > 0) {
-      this.activeDoTs.forEach(dot => {
-        this.hp -= dot.damagePerTick;
-        dot.remaining--;
-      });
-      this.activeDoTs = this.activeDoTs.filter(dot => dot.remaining > 0);
+    // --- DoT ---
+    for (const dot of this.activeDoTs) {
+      this.hp -= dot.damagePerTick;
+      dot.remaining--;
     }
+    this.activeDoTs = this.activeDoTs.filter(d => d.remaining > 0);
 
     if (this.hp <= 0) {
       this.remove = true;
       return;
     }
 
-    // Move along path
+    // --- Movement ---
     const target = this.path[this.pathIndex + 1];
     const dx = target.x - this.x;
     const dy = target.y - this.y;
@@ -118,54 +153,36 @@ export class Enemy {
       this.y += (dy / dist) * this.speed;
     }
 
-    // --- Hop animation (arc-style) ---
+    // --- Hop ---
     if (this.hopPaused > 0) {
       this.hopPaused--;
       this.yOffset = 0;
     } else {
-      this.yOffset = -Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
+      this.yOffset =
+        -Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
       this.hopProgress += this.hopSpeed;
+
       if (this.hopProgress >= 1) {
         this.hopProgress = 0;
-        this.hopPaused = 5; // pause after landing
+        this.hopPaused = 5;
       }
     }
   }
 
   draw() {
     const ctx = this.ctx;
-
-    // --- Draw Y with lift + hop ---
-    const lift = this.gridSize * 0.1; // lift enemies above the road
+    const lift = this.gridSize * 0.1;
     const drawY = this.y - lift + this.yOffset;
 
     // Hover highlight
     if (window.hoveredEnemy === this) {
       ctx.save();
-      const pulse = 0.15 * Math.sin(Date.now() / 200) + 1;
       ctx.globalAlpha = 0.35;
       ctx.fillStyle = "rgba(255,60,60,1)";
       ctx.beginPath();
-      ctx.arc(this.x, drawY, this.size * 0.9 * pulse, 0, Math.PI * 2);
+      ctx.arc(this.x, drawY, this.size * 0.9, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
-    }
-
-    // Flash on hit
-    if (this.isFlashing) {
-      ctx.strokeStyle = "yellow";
-      ctx.lineWidth = 2;
-      this.flashLines.forEach(line => {
-        const length = line.length * (this.flashTimer / 10);
-        ctx.beginPath();
-        ctx.moveTo(this.x, drawY);
-        ctx.lineTo(
-          this.x + Math.cos(line.angle) * length,
-          drawY + Math.sin(line.angle) * length
-        );
-        ctx.stroke();
-      });
-      return;
     }
 
     // Enemy body
@@ -178,17 +195,30 @@ export class Enemy {
         this.size
       );
     } else {
-      ctx.fillStyle = this.slowMultiplier < 1 ? "#6ecbff" : "red";
-      ctx.fillRect(this.x - this.size / 2, drawY - this.size / 2, this.size, this.size);
+      ctx.fillStyle = "red";
+      ctx.fillRect(
+        this.x - this.size / 2,
+        drawY - this.size / 2,
+        this.size,
+        this.size
+      );
     }
 
-    // Health bar
-    const hpBarWidth = this.size;
-    const hpBarHeight = 4;
-    const hpPercent = Math.max(this.hp / this.maxHp, 0);
+    // HP bar
+    const hpPct = Math.max(this.hp / this.maxHp, 0);
     ctx.fillStyle = "green";
-    ctx.fillRect(this.x - hpBarWidth / 2, drawY - this.size / 2 - hpBarHeight - 2, hpBarWidth * hpPercent, hpBarHeight);
+    ctx.fillRect(
+      this.x - this.size / 2,
+      drawY - this.size / 2 - 6,
+      this.size * hpPct,
+      4
+    );
     ctx.strokeStyle = "black";
-    ctx.strokeRect(this.x - hpBarWidth / 2, drawY - this.size / 2 - hpBarHeight - 2, hpBarWidth, hpBarHeight);
+    ctx.strokeRect(
+      this.x - this.size / 2,
+      drawY - this.size / 2 - 6,
+      this.size,
+      4
+    );
   }
 }
