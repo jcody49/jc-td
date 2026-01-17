@@ -8,11 +8,11 @@ export class CannonTower extends Tower {
             maxLevel: 5,
             upgradeCosts: [50, 50, 400, 500, 4000],
             levelData: {
-                1: { damage: 55, range: 115, fireRate: 64, sprite: "cannon.png" }, //PERFECT
-                2: { damage: 67, range: 115, fireRate: 55, sprite: "cannon2.png" },
+                1: { damage: 55, range: 125, fireRate: 78, sprite: "cannon.png" }, //LOCKED
+                2: { damage: 70, range: 125, fireRate: 50, sprite: "cannon2.png" },
                 3: { damage: 90, range: 125, fireRate: 51, sprite: "cannon3.png" },
-                4: { damage: 120, range: 130, fireRate: 46, sprite: "cannon4.png" },
-                5: { damage: 170, range: 140, fireRate: 40, sprite: "cannon5.png" }
+                4: { damage: 120, range: 125, fireRate: 46, sprite: "cannon4.png" },
+                5: { damage: 170, range: 125, fireRate: 40, sprite: "cannon5.png" }
             }
         });
 
