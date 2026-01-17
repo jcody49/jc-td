@@ -20,8 +20,8 @@ export const enemiesData = {
     enemy3: {
         name: "Robot Shpider",
         type: "basic",
-        maxHp: 166, //LOCKED
-        speed: 0.66, //LOCKED
+        maxHp: 173, //LOCKED
+        speed: 0.68, //LOCKED
         reward: 1,
         image: "assets/enemies/enemy3.png",
         isFlying: false,
@@ -29,8 +29,8 @@ export const enemiesData = {
     enemy4: {
         name: "enemy4",
         type: "basic",
-        maxHp: 170, 
-        speed: 0.75,
+        maxHp: 195, //LOCKED
+        speed: 0.74, //LOCKED
         reward: 1,
         image: "assets/enemies/enemy4.png",
         isFlying: false,
