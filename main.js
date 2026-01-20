@@ -284,3 +284,4 @@ document.addEventListener("keydown", e => {
 // GLOBALS
 // ======================
 window.gridOccupied = gridOccupied;
+
