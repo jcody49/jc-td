@@ -116,43 +116,64 @@ export function gameLoop(ctx, canvas, gameState, hud) {
     drawGridTiles(ctx);
 
     // --- GHOST TOWER ---
-    if (window.selectedTowerType) {
-        let col = Math.floor(mouseX / gridSize);
-        let row = Math.floor(mouseY / gridSize);
+if (window.selectedTowerType) {
+    let col = Math.floor(mouseX / gridSize);
+    let row = Math.floor(mouseY / gridSize);
 
-        col = Math.max(0, Math.min(col, gridCols - 1));
-        row = Math.max(0, Math.min(row, gridRows - 1));
+    col = Math.max(0, Math.min(col, gridCols - 1));
+    row = Math.max(0, Math.min(row, gridRows - 1));
 
-        const validPlacement =
-            !window.gridOccupied[col][row] &&
-            !pathCells.some(c => c.col === col && c.row === row);
+    const validPlacement =
+        !window.gridOccupied[col][row] &&
+        !pathCells.some(c => c.col === col && c.row === row);
 
-        let img;
-        if (window.selectedTowerType === 'Cannon') img = cannonImg;
-        if (window.selectedTowerType === 'Frost')  img = frostImg;
-        if (window.selectedTowerType === 'Acid')   img = acidImg;
-        if (window.selectedTowerType === 'Tank')   img = tankImg;
+    let img;
+    if (window.selectedTowerType === 'Cannon') img = cannonImg;
+    if (window.selectedTowerType === 'Frost')  img = frostImg;
+    if (window.selectedTowerType === 'Acid')   img = acidImg;
+    if (window.selectedTowerType === 'Tank')   img = tankImg;
 
-        if (img) {
-            ctx.save();
-            ctx.globalAlpha = 0.35;
+    if (img) {
+        ctx.save();
+        ctx.globalAlpha = 0.35;
 
-            if (!validPlacement) {
-                ctx.fillStyle = 'red';
-                ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
+        // --- RED/VALID SQUARE ---
+        ctx.fillStyle = validPlacement ? 'rgba(0,255,0,0.3)' : 'rgba(255,0,0,0.3)';
+        ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
+
+        // --- RANGE CIRCLE ---
+        const range = (() => {
+            switch (window.selectedTowerType) {
+                case 'Cannon': return 125;
+                case 'Frost':  return 117;
+                case 'Acid':   return 120;
+                case 'Tank':   return 125;
+                default:       return 0;
             }
+        })();
 
-            ctx.drawImage(
-                img,
-                col * gridSize,
-                row * gridSize,
-                gridSize,
-                gridSize
-            );
+        const centerX = col * gridSize + gridSize / 2;
+        const centerY = row * gridSize + gridSize / 2;
 
-            ctx.restore();
-        }
+        ctx.strokeStyle = 'rgba(0,255,255,0.5)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, range, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // --- TOWER IMAGE ---
+        ctx.drawImage(
+            img,
+            col * gridSize,
+            row * gridSize,
+            gridSize,
+            gridSize
+        );
+
+        ctx.restore();
     }
+}
+
 
     // --- SELECTED TOWER HIGHLIGHT ---
     if (window.selectedTower) {
