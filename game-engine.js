@@ -110,6 +110,13 @@ export function gameLoop(ctx, canvas, gameState, hud) {
         return;
     }
 
+    // --- PAUSE CHECK ---
+    if (window.gamePaused) {
+        // Skip all updates and just schedule the next frame
+        requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
+        return;
+    }
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // tiles
