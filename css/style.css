@@ -300,16 +300,31 @@ canvas {
   }
   
   .closeModal {
+    width: 45px;           /* square width */
+    height: 45px; 
     position: absolute;
     top: 8px;
     right: 12px;
     background: none;
-    border: none;
-    font-size: 2.2em;
+    border: 2px solid #7B2CFF;
+    font-size: 2.4em;
     color: #7B2CFF;
+    border-radius: 5px;
     text-shadow:
-    0 0 4px #53FFFF;
-    cursor: pointer;
+    0 0 4px #53FFFF,
+    0 0 6px #7fff00;
+
+  }
+
+  .closeModal:hover {
+    width: 50px;           /* square width */
+    height: 50px;
+    font-size: 2.6em;
+    text-shadow:
+    0 0 4px #53FFFF,
+    0 0 6px #53FFFF,
+    0 0 8px #53FFFF,
+    0 0 18px #7fff00;
   }
   
 
