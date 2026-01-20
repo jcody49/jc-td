@@ -280,6 +280,18 @@ document.addEventListener("keydown", e => {
     }
 });
 
+// toggle grid checkbox
+const toggleGridCheckbox = document.getElementById("toggleGrid");
+
+// default to false if you want hidden at first
+window.showGrid = false;
+
+// listen for checkbox changes
+toggleGridCheckbox.addEventListener("change", (e) => {
+  window.showGrid = e.target.checked;
+});
+
+
 
 // ======================
 // SETTINGS MODAL LOGIC

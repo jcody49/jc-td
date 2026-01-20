@@ -122,6 +122,27 @@ export function gameLoop(ctx, canvas, gameState, hud) {
     // tiles
     drawGridTiles(ctx);
 
+    // draw grid overlays only if enabled
+if (window.showGrid) {
+    ctx.save();
+    ctx.strokeStyle = "rgba(0,255,255,0.2)";
+    for (let col = 0; col <= gridCols; col++) {
+      ctx.beginPath();
+      ctx.moveTo(col * gridSize, 0);
+      ctx.lineTo(col * gridSize, gridRows * gridSize);
+      ctx.stroke();
+    }
+    for (let row = 0; row <= gridRows; row++) {
+      ctx.beginPath();
+      ctx.moveTo(0, row * gridSize);
+      ctx.lineTo(gridCols * gridSize, row * gridSize);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  
+
+
     // --- GHOST TOWER ---
 if (window.selectedTowerType) {
     let col = Math.floor(mouseX / gridSize);
