@@ -381,3 +381,30 @@ canvas {
   #settingsModal input[type="checkbox"]:hover {
     cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
   }
+
+
+
+  .hidden {
+    display: none !important;
+  }
+  
+
+  #pauseOverlay {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 25000;       /* above modal */
+    pointer-events: none;  /* so clicks go through */
+  }
+  
+  #pauseOverlay span {
+    font-family: 'Audiowide', cursive;
+    font-size: 4rem;
+    color: #fff;
+    text-shadow:
+      0 0 6px #7B2CFF,
+      0 0 12px #7B2CFF,
+      0 0 24px #53FFFF;
+  }
+  

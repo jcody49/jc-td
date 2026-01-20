@@ -284,40 +284,35 @@ document.addEventListener("keydown", e => {
 // ======================
 // SETTINGS MODAL LOGIC
 // ======================
-
 const settingsOption = document.getElementById("settingsOption");
 const settingsModal = document.getElementById("settingsModal");
 const closeSettings = document.getElementById("closeSettings");
-const returnButton = document.getElementById("returnToGame"); // matches your HTML
+const returnButton = document.getElementById("returnToGame");
+const pauseOverlay = document.getElementById("pauseOverlay");
 
-if (settingsOption && settingsModal && closeSettings && returnButton) {
-
-  // Open modal when gear is clicked
-  settingsOption.addEventListener("click", () => {
+if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnButton) {
+  const openModal = () => {
     settingsModal.classList.remove("hidden");
-    window.gamePaused = true; // pause game
-  });
+    pauseOverlay.classList.remove("hidden"); // ⬅ show PAUSED text
+    window.gamePaused = true;
+  };
 
-  // Close modal via X button
-  closeSettings.addEventListener("click", () => {
+  const closeModal = () => {
     settingsModal.classList.add("hidden");
-    window.gamePaused = false; // resume game
-  });
+    pauseOverlay.classList.add("hidden"); // ⬅ hide PAUSED text
+    window.gamePaused = false;
+  };
 
-  // Close modal via "Return to Game" button
-  returnButton.addEventListener("click", () => {
-    settingsModal.classList.add("hidden");
-    window.gamePaused = false; // resume game
-  });
+  settingsOption.addEventListener("click", openModal);
+  closeSettings.addEventListener("click", closeModal);
+  returnButton.addEventListener("click", closeModal);
 
-  // Close modal if clicking outside modal content
   settingsModal.addEventListener("click", (e) => {
-    if (e.target === settingsModal) {
-      settingsModal.classList.add("hidden");
-      window.gamePaused = false;
-    }
+    if (e.target === settingsModal) closeModal();
   });
 }
+
+
 
 
 

@@ -78,37 +78,42 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 // START NEXT WAVE (COUNTDOWN)
 // =========================
 export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
-  waveState.countdown = 40;
-  waveState.status = "countdown";
-
-  // enable skip
-  const skipButton = document.getElementById("skipButton");
-  if (skipButton) {
-    skipButton.disabled = false;
-  }
-
-  if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
-
-  if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
-
-  waveState.countdownInterval = setInterval(() => {
-    if (window.gamePaused) {
-      if (waveTextEl) waveTextEl.innerText = "Paused"; // ⬅ show paused text
-      return;
+    waveState.countdown = 40;
+    waveState.status = "countdown";
+  
+    // enable skip button
+    const skipButton = document.getElementById("skipButton");
+    if (skipButton) {
+      skipButton.disabled = false; // allow skipping
+      skipButton.style.display = "block";
     }
-
-    waveState.countdown--;
-
+  
     if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
-
-    if (waveState.countdown <= 0) {
-      clearInterval(waveState.countdownInterval);
-      waveState.countdownInterval = null;
-
-      startWave(gameState, gridSize, ctx, canvas, waveTextEl);
-    }
-  }, 1000);
-}
+  
+    if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
+  
+    waveState.countdownInterval = setInterval(() => {
+      // --- PAUSE CHECK ---
+      if (window.gamePaused) {
+        if (waveTextEl) waveTextEl.innerText = "Paused"; // show paused text
+        return; // skip decrement
+      }
+  
+      // countdown normally
+      waveState.countdown--;
+  
+      if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
+  
+      // countdown finished → start wave
+      if (waveState.countdown <= 0) {
+        clearInterval(waveState.countdownInterval);
+        waveState.countdownInterval = null;
+  
+        startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+      }
+    }, 1000);
+  }
+  
 
 // =========================
 // UPDATE WAVE COMPLETION
