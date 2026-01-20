@@ -23,7 +23,7 @@
 
     border: 1px solid #555;
     transition: all 0.15s ease;
-    cursor: pointer;
+    
   }
   
   .towerCard p {
@@ -37,7 +37,7 @@
     transform: scale(1.05);
     border: 2px solid #444;
   }
-
+  
   .towerGrid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

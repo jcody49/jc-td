@@ -217,7 +217,21 @@ canvas {
    #cursor-fx.locked {
     filter: brightness(1.4) drop-shadow(0 0 10px rgba(255, 80, 80, 0.9));
   }
+
+
+  #towerMenu .towerCard:hover {
+    cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
+    background: #666;
+    transform: scale(1.05);
+    border: 2px solid #444;
+}
+
   
+
+
+
+
+
 
   #mainGameArea {
     display: flex;
