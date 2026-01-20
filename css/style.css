@@ -260,6 +260,12 @@ canvas {
   
 
 
+
+
+
+
+
+
   .modal {
     position: fixed;
     top: 0;
@@ -271,6 +277,7 @@ canvas {
     justify-content: center;
     align-items: center;
     z-index: 20000;
+    cursor: url("../assets/cursor-default.png") 6 6, auto !important;
   }
   
   .modal.hidden {
@@ -297,6 +304,7 @@ canvas {
     min-width: 300px;
     text-align: center;
     position: relative;
+    cursor: url("../assets/cursor-default.png") 6 6, auto !important;
   }
   
   .closeModal {
@@ -338,3 +346,8 @@ canvas {
     margin-bottom: 1rem; /* optional: spacing between items */
   }
   
+
+  #settingsModal label:hover,
+  #settingsModal input[type="checkbox"]:hover {
+    cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
+  }
