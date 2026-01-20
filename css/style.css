@@ -298,6 +298,7 @@ canvas {
   
   .modal-content {
     background: #111;
+    border: 2px solid #7B2CFF;
     color: #53FFFF;
     padding: 20px;
     border-radius: 12px;
@@ -325,7 +326,7 @@ canvas {
   }
 
   .closeModal:hover {
-    width: 50px;           /* square width */
+    width: 50px;           
     height: 50px;
     font-size: 2.6em;
     text-shadow:
@@ -337,13 +338,28 @@ canvas {
   
 
   #settingsModal ul {
-    list-style: none; /* removes bullets */
-    padding: 0;       /* removes default left padding */
-    margin: 0;        /* optional: remove top/bottom margin */
+    list-style: none; 
+    padding: 0;       
+    margin: 0;        
   }
   
   #settingsModal li {
-    margin-bottom: 1rem; /* optional: spacing between items */
+    margin-bottom: 1rem; 
+  }
+
+  #returnToGame{
+    width: 56%;
+    height: 40px;
+    margin-top:20px;
+    border-radius: 6px;
+    background-color: #7B2CFF;
+    border: 2px solid #7fff00;
+    font-family: 'audiowide';
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 
+      0 0 3px #000,
+      0 0 6px #000;
   }
   
 
