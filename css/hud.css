@@ -1,385 +1,295 @@
+/* =========================
+   HUD CONTAINER
+========================= */
 #hud {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    background: rgba(0,0,0,0.5);
-    border: 2px solid #7fff00;
-    border-radius: 0 0 8px 8px;
-    color: white;
-    font-family: 'Audiowide', sans-serif;
-    height: 150px;
-    box-sizing: border-box;
-    margin-top: 0; 
-  
-    width: 100%; /* full width of container */
-    max-width: none;
-  }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background: rgba(0,0,0,0.5);
+  border: 2px solid #7fff00;
+  border-radius: 0 0 8px 8px;
+  color: white;
+  font-family: 'Audiowide', sans-serif;
+  height: 150px;
+  box-sizing: border-box;
+  margin-top: 0;
 
-
-
-  /* Left side of HUD */
-#hudLeft {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  #hudLeft div {
-    font-size: 18px;
-    color: #fff;
-    padding: 0 10px;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-
-  /* Buttons */
-#hudLeft button {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    font-family: 'Audiowide', sans-serif;
-    background: linear-gradient(145deg, #007f8f, #00b2cc, #0099aa);
-    color: #fff;
-    border: 2px solid #00ffff;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background 0.2s, box-shadow 0.15s, transform 0.15s;
-    padding: 0 12px;
-  }
-  
-  #hudLeft button:hover {
-    background: linear-gradient(145deg, #0099aa, #00ccff, #00b2cc);
-    transform: scale(1.02);
-  }
-  
-  /* Right side of HUD: placeholder menu */
-  #hudRight {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-family: 'Audiowide', sans-serif;
-  }
-
-
-  /* ----------------------------
-   TOWER MODAL
----------------------------- */
-
-.tower-modal-info {
-    padding-top: 0;
-    padding-right: 25px;
-    text-align: center;
-    font-family: 'Audiowide', monospace;
-    font-size: 20px;
-    font-weight: bold;
-    color: #fff;
-
-    text-shadow:
-        /* DARK INNER OUTLINE (contrast) */
-        1px 1px 0 #000,
-       -1px 1px 0 #000,
-        1px -1px 0 #000,
-       -1px -1px 0 #000,
-
-        /* BASE SHADOW */
-        0 0 3px #000,
-
-        /* NEON GLOW */
-        0 0 7px #00D6D6,   /* slightly darker cyan */
-        0 0 14px #6A22E6;
+  width: 100%;           /* fill parent container */
+  min-width: 1330px;      /* allow small shrink */
+  max-width: 1330px;     /* cap full width */
 }
 
-/*TOWER-MODAL-INFO*/
+/* =========================
+ HUD LEFT
+========================= */
+#hudLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#hudLeft div {
+  font-size: 18px;
+  color: #fff;
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#hudLeft button {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-family: 'Audiowide', sans-serif;
+  background: linear-gradient(145deg, #007f8f, #00b2cc, #0099aa);
+  color: #fff;
+  border: 2px solid #00ffff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.15s, transform 0.15s;
+  padding: 0 12px;
+}
+
+#hudLeft button:hover {
+  background: linear-gradient(145deg, #0099aa, #00ccff, #00b2cc);
+  transform: scale(1.02);
+}
+
+/* =========================
+ HUD RIGHT
+========================= */
+#hudRight {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: 'Audiowide', sans-serif;
+}
+
+/* =========================
+ TOWER MODAL
+========================= */
+.tower-modal-info {
+  margin-left: 100px;
+  padding-top: 0;
+  text-align: center;
+  font-family: 'Audiowide', monospace;
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow:
+      1px 1px 0 #000,
+     -1px 1px 0 #000,
+      1px -1px 0 #000,
+     -1px -1px 0 #000,
+      0 0 3px #000,
+      0 0 7px #00D6D6,
+      0 0 14px #6A22E6;
+  margin-left: 150px;
+}
+
 #modalTitle {
-    font-weight: bold;
-    margin-bottom: 2px;
-    text-align: right;
-    font-size: 1.15em;
-    letter-spacing: 3px;
-    color: #fff; 
-    text-shadow:
-        0 0 1px #792BFB,                 
-        0 0 2px #FF5DFF,                  
-        0 0 4px #FF80FF,                  
-        0 0 6px rgba(121, 43, 251, 0.7),  
-        0 0 10px rgba(121, 43, 251, 0.5);
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 2px;
+  text-align: right;
+  font-size: 1.15em;
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow:
+      0 0 1px #792BFB,
+      0 0 2px #FF5DFF,
+      0 0 4px #FF80FF,
+      0 0 6px rgba(121, 43, 251, 0.7),
+      0 0 10px rgba(121, 43, 251, 0.5);
 }
 
 #modalInfo {
-    margin: 0;
-    font-size: .6em;
-    line-height: 1.45em;
-    text-align: right;
-    letter-spacing: 3px;
+  margin: 0;
+  font-size: .6em;
+  line-height: 1.35em;
+  text-align: right;
+  letter-spacing: 3px;
 }
 
-.selected-label{
+.selected-label {
   font-size: .65em;
   text-align: right;
   letter-spacing: 4px;
-  color:rgba(0, 255, 255, 0.9);
+  color: rgba(0, 255, 255, 0.9);
   font-style: italic;
+}
+
+
+
+/* Option squares */
+.tower-modal-option {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 255, 255, 0.9);
+  border: 2px solid #792BFB;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.tower-modal-option:hover {
+  border-color: #792BFB;
+  box-shadow:
+      0 0 8px #792BFB,
+      0 0 16px #792BFB,
+      0 0 24px rgba(121, 43, 251, 0.8),
+      0 0 32px rgba(121, 43, 251, 0.6);
+  transition: all 0.2s ease-in-out;
+}
+
+.tower-modal-option img {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+}
+
+.tower-modal-option .upgradeCost {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 13px;
+  font-family: 'Audiowide';
+  font-weight: bold;
+  color: #fff;
+  text-shadow:
+      1px 1px 0 #000,
+     -1px 1px 0 #000,
+      1px -1px 0 #000,
+     -1px -1px 0 #000,
+      0 0 1px #000,
+      0 0 7px #00D6D6,
+      0 0 14px #6A22E6;
+}
+
+.tower-modal-option .option-icon {
+  pointer-events: none;
+}
+
+/* Keyboard shortcut label */
+.tower-modal-option span.towerKey {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #792BFB;
+  text-shadow: 0 0 2px #000;
+}
+
+#sell-icon.option-icon {
+  font-size: 60px;
+  font-style: italic;
+  color: #E91E36;
+  text-shadow:
+      0 0 3px rgba(233, 30, 54, 0.7),
+      0 0 6px rgba(233, 30, 54, 0.45),
+      1px 1px 0 #fff,
+      2px 2px 0 #fff,
+      -1px -1px 0 #fff,
+      -2px -2px 0 #fff;
+}
+
+/* Wrapper + label */
+.tower-option-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.tower-option-wrapper .tower-modal-option {
+  width: 50px;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 6px;
+}
+
+.tower-option-wrapper .optionLabel {
+  font-family: 'Audiowide', monospace;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  letter-spacing: 40%;
+  text-shadow:
+      1px 1px 0 #000,
+     -1px 1px 0 #000,
+      1px -1px 0 #000,
+     -1px -1px 0 #000;
+}
+
+/* Tower interaction menu */
+#towerInteractionMenu {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  padding: 30px 0;
 }
 
 .tower-modal-content {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 18px;
+  gap: 15px;
+  margin-left: auto;
 }
 
-/* Option squares */
-.tower-modal-option {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 2px solid rgba(255,255,255,0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 255, 255, 0.9);
-    transition: border-color 0.2s, box-shadow 0.2s;
-    border-color: #792BFB;
-}
-
-.tower-modal-option:hover {
-  border-color: #792BFB;
-  box-shadow:
-      0 0 8px #792BFB,       /* subtle inner glow */
-      0 0 16px #792BFB,      /* main glow */
-      0 0 24px rgba(121, 43, 251, 0.8), /* outer glow */
-      0 0 32px rgba(121, 43, 251, 0.6); /* extra spread */
-  transition: all 0.2s ease-in-out;  /* smooth pop */
-}
-
-
-.tower-modal-option img {
-    width: 80%;
-    height: 80%;
-    object-fit: cover;
-}
-
-.tower-modal-option .upgradeCost {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    font-size: 13px;
-    font-family: 'Audiowide';
-    font-weight: bold;
-    color: #ffffff;
-    text-shadow:
-        /* DARK INNER OUTLINE (contrast) */
-        1px 1px 0 #000,
-       -1px 1px 0 #000,
-        1px -1px 0 #000,
-       -1px -1px 0 #000,
-
-        /* BASE SHADOW */
-        0 0 1px #000,
-
-        /* NEON GLOW */
-        0 0 7px #00D6D6,   /* slightly darker cyan */
-        0 0 14px #6A22E6;   /* extended glow for pop */
-}
-
-
-.tower-modal-option .option-icon {
-    pointer-events: none; 
-}
-
-/* KEYBOARD SHORTCUT BOTTOM LEFT */
-.tower-modal-option span.towerKey {
-    position: absolute;
-    bottom: 4px;
-    left: 4px;
-    font-size: 20px;
-    font-weight: bold;
-    color: #792BFB;
-    text-shadow: 0 0 2px #000;
-  }
-  
-
-  #sell-icon.option-icon {
-    font-size: 105px;
-    font-style: italic;
-    color: #E91E36;  /* slightly darker neon red */
-    text-shadow: 
-        0 0 3px rgba(233, 30, 54, 0.7),  /* subtle red glow */
-        0 0 6px rgba(233, 30, 54, 0.45),
-        1px 1px 0 #fff,   /* top-left inner highlight */
-        2px 2px 0 #fff,   /* stronger inner highlight */
-        -1px -1px 0 #fff, /* bottom-right inner highlight */
-        -2px -2px 0 #fff; /* stronger inner highlight */
-}
-
-.tower-modal-content {
-    display: flex;
-    align-items: center;
-    gap: 15px;      /* space between grid and button */
-}
-
-.tower-modal-options {
-    display: flex;
-    grid-template-columns: repeat(2, 1fr);  /* still 2x2 */
-    gap: 23px;   /* gap is % of container width */
-    align-items: center;
-    margin-right: 23px;
-}
-
-.tower-modal-option {
-    position: relative;
-    aspect-ratio: 1 / 1;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 255, 255, 0.902);
-    border: 2px solid #792BFB;  /* purple border */
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-
-/* Wrapper holds the square + label */
-.tower-option-wrapper {
-    display: flex;
-    flex-direction: column;  /* stack icon + label vertically */
-    align-items: center;     /* center horizontally */
-    justify-content: flex-start;
-  }
-  
-  /* Keep squares the same size */
-  .tower-option-wrapper .tower-modal-option {
-    width: 50px;      
-    aspect-ratio: 1 / 1;
-    margin-bottom: 6px; 
-  }
-  
-  /* Label styling */
-  .tower-option-wrapper .optionLabel {
-    font-family: 'Audiowide', monospace;
-    font-size: 12px;
-    font-weight: bold;
-    color: #fff;
-    text-align: center;
-    letter-spacing: 40%;
-  
-    /* subtle dark outline for readability */
-    text-shadow:
-        1px 1px 0 #000,
-       -1px 1px 0 #000,
-        1px -1px 0 #000,
-       -1px -1px 0 #000;
-  }
-  
-  #towerInteractionMenu {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  
-  
-  * {
-    margin: 0;
-    padding: 0;
-  }
-  
-
-
-#towerInteractionMenu {
-  display: flex;
-  align-items: center;
-  width: 100%;
-}
-  /* Hide everything initially */
-  #towerInteractionMenu {
-    display: none; 
-    padding: 30px 0;
-  }
-
-.tower-modal-content {
-  display: flex;       
-  margin-left: auto;   
-}
-
-.tower-modal-info{
-  margin-left: 100px;
-
-}
-
-
+/* Settings button container */
 #settingsContainer {
   display: flex;
-  justify-content: flex-end; /* hug far right */
+  justify-content: flex-end;
   align-items: center;
-  margin-top: 4px; /* optional spacing from HUD row */
+  margin-top: 4px;
 }
 
 #settingsButton {
   width: 50px;
   height: 50px;
-  cursor: pointer;
 }
-#hud{
-  min-width:1330px;
-}
+
 
 #skipButton {
-  display: none; /* hidden initially */
+  display: none;
 }
 
-/* Start button glow pulse */
+/* Glow pulse animation */
 @keyframes subtleGlow {
-  0% {
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* start dim */
-  }
-  30% {
-    box-shadow: 0 0 25px rgba(0, 255, 255, 1);   /* fade up to bright */
-  }
-  40% {
-    box-shadow: 0 0 28px rgba(0, 255, 255, 1);   /* brief peak */
-  }
-  100% {
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* fade back to dim */
-  }
+  0% { box-shadow: 0 0 10px rgba(0,255,255,0.3); }
+  30% { box-shadow: 0 0 25px rgba(0,255,255,1); }
+  40% { box-shadow: 0 0 28px rgba(0,255,255,1); }
+  100% { box-shadow: 0 0 10px rgba(0,255,255,0.3); }
 }
 
-#startButton.glow {
-  animation: subtleGlow 2s infinite ease-in-out;
-}
-
+#startButton.glow,
 #skipButton.glow {
   animation: subtleGlow 2s infinite ease-in-out;
 }
 
-
-
 #startButton {
-  font-size: 48px;          /* triple size relative to before */
-  padding: 20px 60px;       /* make it big enough to click easily */
-  border-radius: 12px;      /* optional: rounded corners */
-  cursor: pointer;
-  z-index: 1000;             /* make sure it sits above overlay */
-  position: relative;        /* for z-index to take effect */
-  box-shadow: 0 0 20px rgba(255,255,255,0.8); /* subtle glow */
+  font-size: 48px;
+  padding: 20px 60px;
+  border-radius: 12px;
+  z-index: 1000;
+  position: relative;
+  box-shadow: 0 0 20px rgba(255,255,255,0.8);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   transform: translateX(-300px) translateY(-115%) !important;
-}
-
-/* Optional hover/pulse effect while overlay is active */
-#startButton.glow {
-  animation: pulseStart 1.2s infinite ease-in-out;
 }
 
 @keyframes pulseStart {
@@ -387,4 +297,24 @@
   50% { transform: scale(1.1); box-shadow: 0 0 40px rgba(255,255,255,1); }
 }
 
+#startButton.glow {
+  animation: pulseStart 1.2s infinite ease-in-out;
+}
 
+
+/* Tower modal container holding the option wrappers */
+.tower-modal-options {
+  display: flex;         /* horizontal layout */
+  flex-direction: row;   /* ensure wrappers stay side by side */
+  align-items: center;
+  gap: 15px;             /* space between each tower option wrapper */
+  margin-right: 15px;        /* remove auto push */
+}
+
+/* Each wrapper holds one square + label vertically */
+.tower-option-wrapper {
+  display: flex;
+  flex-direction: column; /* keep square on top, label below */
+  align-items: center;
+  justify-content: flex-start;
+}

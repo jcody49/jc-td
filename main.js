@@ -71,13 +71,16 @@ const overlay = document.createElement("div");
 overlay.id = "preGameOverlay";
 overlay.style.position = "absolute";
 overlay.style.top = "0";
-overlay.style.left = "0";
-overlay.style.width = "100%";
+overlay.style.left = "50%";               // center horizontally
+overlay.style.transform = "translateX(-50%)";
+overlay.style.width = "1330px";           // match mainGameArea
 overlay.style.height = "100%";
 overlay.style.backgroundColor = "rgba(0,0,0,0.7)";
-overlay.style.zIndex = "50"; // below start button
-overlay.style.pointerEvents = "none";
+overlay.style.zIndex = "50";              // below start button
+overlay.style.pointerEvents = "none";     // allow clicks to pass through except buttons
+
 gameContainer.appendChild(overlay);
+
 
 // ======================
 // START + SKIP BUTTONS
