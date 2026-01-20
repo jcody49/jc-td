@@ -206,6 +206,7 @@ export class Enemy {
 
     // HP bar
     const hpPct = Math.max(this.hp / this.maxHp, 0);
+    ctx.save();                 // <- save current state
     ctx.fillStyle = "green";
     ctx.fillRect(
       this.x - this.size / 2,
@@ -220,5 +221,7 @@ export class Enemy {
       this.size,
       4
     );
+    ctx.restore();              // <- restore state
+
   }
 }

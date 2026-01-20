@@ -281,6 +281,28 @@ document.addEventListener("keydown", e => {
 });
 
 // ======================
+// SETTINGS MODAL LOGIC
+// ======================
+
+// Make sure these elements exist in your HTML
+const settingsOption = document.getElementById("settingsOption");
+const settingsModal = document.getElementById("settingsModal");
+const closeSettings = document.getElementById("closeSettings");
+
+// Open modal when gear is clicked
+settingsOption.addEventListener("click", () => {
+  settingsModal.classList.remove("hidden");
+  window.gamePaused = true; // optional: pause game
+});
+
+// Close modal
+closeSettings.addEventListener("click", () => {
+  settingsModal.classList.add("hidden");
+  window.gamePaused = false;
+});
+
+
+// ======================
 // GLOBALS
 // ======================
 window.gridOccupied = gridOccupied;
