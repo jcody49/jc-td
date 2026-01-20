@@ -104,12 +104,6 @@ canvas {
   align-items: flex-start;
 }
 
-/* Tower menu = 1/3 */
-#towerMenu {
-  border: 2px solid #7fff00; /* optional styling */
-  padding: 10px;
-}
-
 /* Canvas */
 canvas {
   background: #1e1e1e;
@@ -250,6 +244,7 @@ canvas {
     display: block;
   }
   
+
   #towerMenu {
     flex: none;   /* important: prevent shrinking */
     width: 330px; /* exact width */
