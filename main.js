@@ -166,6 +166,7 @@ skipButton.addEventListener("click", () => {
     disableGlow(skipButton);
 
     startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+    updateWavePreview();
     console.log("SKIP CLICKED", waveState);
 });
 

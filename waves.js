@@ -13,11 +13,11 @@ export const waves = [
   {
     enemies: [{ id: "enemy3", count: 20 }],
     spawnInterval: 1300,
-    income: 3
+    income: 4
   },
   {
     enemies: [{ id: "enemy4", count: 20 }],
     spawnInterval: 1300,
-    income: 5
+    income: 7
   }
 ];

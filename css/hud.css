@@ -90,7 +90,8 @@
       0 0 3px #000,
       0 0 7px #00D6D6,
       0 0 14px #6A22E6;
-  margin-left: 150px;
+  margin-left: 5%;
+  margin-right: 5%;
 }
 
 #modalTitle {
@@ -316,4 +317,36 @@
   flex-direction: column; /* keep square on top, label below */
   align-items: center;
   justify-content: flex-start;
+}
+
+
+
+
+
+
+/*WAVE PREVIEW PANEL*/
+#wavePreviewTable {
+  width: auto; /* only as wide as needed */
+  font-family: 'Audiowide', monospace;
+  font-size: 13px;
+  color: #fff;
+  border-collapse: separate;
+  border-spacing: 20px 4px; /* horizontal gap + small vertical gap */
+  margin-top: 10px;
+}
+
+#wavePreviewTable th {
+  text-align: center;
+  padding: 4px 6px;
+  border-bottom: 2px solid #fff; /* underline for each cell */
+}
+
+#wavePreviewTable td{
+  text-align: center;
+  padding: 4px 6px;
+}
+
+#wavePreviewTable th {
+  font-weight: bold;
+  border-bottom: 2px solid #fff;
 }

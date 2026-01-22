@@ -2,7 +2,7 @@
 import { showMoneyPopup } from './ui-effects.js';
 import { pathCells } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
-import { updateWaveCompletion, startWave, startNextWave, waveState } from './waveManager.js';
+import { updateWaveCompletion, startWave, startNextWave, waveState, updateWavePreview } from './waveManager.js';
 
 // =========================
 // TILE LOAD TRACKING
@@ -272,6 +272,7 @@ export function startGameWaves(gameState, ctx, canvas) {
     }
 
     startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
+    updateWavePreview();
 }
 
 

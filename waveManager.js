@@ -23,6 +23,29 @@ export const waveState = {
 // =========================
 let spawnInterval = null;
 let spawningFinished = false;
+let completionLocked = false;
+
+// =========================
+// WAVE PREVIEW (HUD)
+// =========================
+export function updateWavePreview() {
+  const currentEl = document.getElementById("waveCurrent");
+  const nextEl = document.getElementById("waveNext");
+  const soonEl = document.getElementById("waveSoon");
+
+  if (!currentEl || !nextEl || !soonEl) return;
+
+  const getWaveEnemyType = (index) => {
+    const wave = waves[index];
+    if (!wave || !wave.enemies?.length) return "—";
+    const enemyId = wave.enemies[0].id;
+    return enemiesData[enemyId]?.type || enemyId;
+  };
+
+  currentEl.textContent = getWaveEnemyType(waveState.currentWave);
+  nextEl.textContent    = getWaveEnemyType(waveState.currentWave + 1);
+  soonEl.textContent    = getWaveEnemyType(waveState.currentWave + 2);
+}
 
 // =========================
 // START WAVE (SPAWNING)
@@ -39,6 +62,8 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
   if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in progress`;
 
+  updateWavePreview(); // update preview as wave starts
+
   const spawnQueue = [];
   waveData.enemies.forEach(e => {
     for (let i = 0; i < e.count; i++) {
@@ -51,7 +76,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   if (spawnInterval) clearInterval(spawnInterval);
 
   spawnInterval = setInterval(() => {
-    if (window.gamePaused) return; // ⬅ pause spawning if modal open
+    if (window.gamePaused) return; // pause spawning if modal open
 
     if (enemiesSpawned >= spawnQueue.length) {
       clearInterval(spawnInterval);
@@ -78,68 +103,60 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 // START NEXT WAVE (COUNTDOWN)
 // =========================
 export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
-    waveState.countdown = 40;
-    waveState.status = "countdown";
-  
-    // enable skip button
-    const skipButton = document.getElementById("skipButton");
-    if (skipButton) {
-      skipButton.disabled = false; // allow skipping
-      skipButton.style.display = "block";
-    }
-  
-    if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
-  
-    if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
-  
-    waveState.countdownInterval = setInterval(() => {
-      // --- PAUSE CHECK ---
-      if (window.gamePaused) {
-        if (waveTextEl) waveTextEl.innerText = "Paused"; // show paused text
-        return; // skip decrement
-      }
-  
-      // countdown normally
-      waveState.countdown--;
-  
-      if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
-  
-      // countdown finished → start wave
-      if (waveState.countdown <= 0) {
-        clearInterval(waveState.countdownInterval);
-        waveState.countdownInterval = null;
-  
-        startWave(gameState, gridSize, ctx, canvas, waveTextEl);
-      }
-    }, 1000);
+  waveState.countdown = 40;
+  waveState.status = "countdown";
+
+  // show skip button
+  const skipButton = document.getElementById("skipButton");
+  if (skipButton) {
+    skipButton.disabled = false;
+    skipButton.style.display = "block";
   }
-  
+
+  if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
+
+  if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
+
+  waveState.countdownInterval = setInterval(() => {
+    if (window.gamePaused) {
+      if (waveTextEl) waveTextEl.innerText = "Paused";
+      return;
+    }
+
+    waveState.countdown--;
+    if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
+
+    if (waveState.countdown <= 0) {
+      clearInterval(waveState.countdownInterval);
+      waveState.countdownInterval = null;
+      startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+    }
+  }, 1000);
+
+  updateWavePreview(); // ensure preview shows upcoming waves during countdown
+}
 
 // =========================
 // UPDATE WAVE COMPLETION
 // =========================
-let completionLocked = false;
-
 export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl) {
   if (waveState.status !== "spawning" || completionLocked) return;
 
   if (spawningFinished && gameState.enemies.length === 0) {
-    if (window.gamePaused) return; // ⬅ pause wave completion if modal open
+    if (window.gamePaused) return;
 
     completionLocked = true;
     waveState.status = "done";
 
     const currentWaveData = waves[waveState.currentWave];
 
-    // --- Award income ---
+    // award income
     if (currentWaveData?.income) {
       gameState.money = (gameState.money || 0) + currentWaveData.income;
-
-      // Show centered popup for wave income
       showMoneyPopup(
         currentWaveData.income,
-        window.innerWidth / 2,        // middle horizontally
-        window.innerHeight / 2,       // middle vertically
+        window.innerWidth / 2,
+        window.innerHeight / 2,
         `Wave income: +${currentWaveData.income}`
       );
     }
@@ -148,6 +165,7 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
 
     setTimeout(() => {
       waveState.currentWave++;
+      updateWavePreview();
       completionLocked = false;
       startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
     }, 2000);
