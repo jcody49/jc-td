@@ -22,8 +22,8 @@ export const enemiesData = {
     enemy3: {
         name: "Robot Shpider",
         type: "basic",
-        maxHp: 173, //LOCKED
-        speed: 0.68, //LOCKED
+        maxHp: 155, 
+        speed: 0.62, 
         reward: 1,
         image: "assets/enemies/enemy3.png",
         isFlying: false,
@@ -32,8 +32,8 @@ export const enemiesData = {
     enemy4: {
         name: "Krustacean",
         type: "basic",
-        maxHp: 195, //LOCKED
-        speed: 0.74, //LOCKED
+        maxHp: 195, 
+        speed: 0.74, 
         reward: 1,
         image: "assets/enemies/enemy4.png",
         isFlying: false,
@@ -42,8 +42,8 @@ export const enemiesData = {
     enemy5: {
         name: "Vagrant Dead",
         type: "basic",
-        maxHp: 235, 
-        speed: 0.74, 
+        maxHp: 215, 
+        speed: 0.7, 
         reward: 1,
         image: "assets/enemies/enemy5.png",
         isFlying: false,
@@ -52,7 +52,7 @@ export const enemiesData = {
     enemy6: {
       name: "Charles Barkley Dead",
       type: "basic",
-      maxHp: 265, 
+      maxHp: 245, 
       speed: 0.7, 
       reward: 1,
       image: "assets/enemies/enemy6.png",
@@ -73,7 +73,7 @@ export const enemiesData = {
       name: "Mini-Van Falcon",
       type: "speed",
       maxHp: 295, 
-      speed: 1.4, 
+      speed: 1.45, 
       reward: 2,
       image: "assets/enemies/enemy8.png",
       isFlying: false,
@@ -82,8 +82,8 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 800, 
-      speed: 0.74,
+      maxHp: 775, 
+      speed: 0.77,
       reward: 9,
       image: "assets/enemies/enemy9.png",
       isFlying: false,
@@ -92,12 +92,12 @@ export const enemiesData = {
     enemy10: {
       name: "Russell ScareCrowe",
       type: "boss",
-      maxHp: 1250, 
-      speed: 0.76,
+      maxHp: 3000, 
+      speed: 0.78,
       reward: 1,
       image: "assets/enemies/enemy10.png",
       isFlying: false,
-      sizeMultiplier: 1.1,
+      sizeMultiplier: 1.3,
     },
 
   };
