@@ -55,7 +55,13 @@ export class Enemy {
 
     this.reward = Number(config.reward ?? 1);
     this.isFlying = Boolean(config.isFlying);
-    this.name = config.name ?? "Enemy";
+    this.type = config.type ?? "basic";
+
+    // convenience flags
+    this.isBoss  = this.type === "boss";
+    this.isBonus = this.type === "bonus";
+    this.isSpeed = this.type === "speed";
+
 
     if (!Number.isFinite(this.maxHp)) {
       console.error("❌ INVALID maxHp:", config);
@@ -64,8 +70,9 @@ export class Enemy {
     }
 
     // Size + sprite
-    this.size = gridSize * 0.5;
+    this.size = gridSize * (config.sizeMultiplier ?? 0.75);
     this.img = config.img ?? null;
+
 
     // =====================
     // HOP ANIMATION
