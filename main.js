@@ -2,7 +2,7 @@
 // IMPORTS
 // ======================
 import { gameLoop, startGameWaves } from './game-engine.js';
-import { startWave, waveState } from './waveManager.js';
+import { startWave, waveState, updateWavePreview } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
 import { gameState } from './gameState.js';
