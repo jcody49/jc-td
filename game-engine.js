@@ -1,5 +1,5 @@
 // game-engine.js
-import { showMoneyPopup } from './ui-effects.js';
+import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
 import { updateWaveCompletion, startWave, startNextWave, waveState, updateWavePreview } from './waveManager.js';
@@ -222,15 +222,21 @@ if (window.selectedTowerType) {
 
     gameState.enemies = gameState.enemies.filter(e => {
         if (!e.remove) return true;
-
+    
         if (!e.escaped) {
             const reward = e.reward || 1;
             gameState.money += reward;
             showMoneyPopup(reward, e.x, e.y);
+    
+            if (e.lifeReward > 0) {
+                gameState.lives += e.lifeReward;
+                showLifePopup?.(e.lifeReward, e.x, e.y);
+            }
         }
-
+    
         return false;
     });
+    
 
     // --- WAVE MANAGEMENT ---
     const waveTextEl = document.getElementById("waveText"); // ensure you have this in DOM

@@ -53,6 +53,7 @@ export class Enemy {
     this.maxHp = Number(config.maxHp);
     this.hp = this.maxHp;
 
+    this.lifeReward = Number(config.lifeReward ?? 0);
     this.reward = Number(config.reward ?? 1);
     this.isFlying = Boolean(config.isFlying);
     this.type = config.type ?? "basic";
