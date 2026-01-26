@@ -408,3 +408,17 @@ canvas {
       0 0 24px #53FFFF;
   }
   
+
+  .wave-text-neon {
+    color: #ffffff; /* neon cyan for now, could swap to red for enemies */
+    text-shadow:
+      0 0 1px #000000,    /* thin dark outline */
+      0 0 3px #ff0000,    /* soft inner glow */
+      0 0 6px #ff3333,    /* mid glow */
+      0 0 10px #ff6666,   /* extended glow */
+      0 0 15px #ff9999;   /* far outer glow */
+    font-weight: bold;
+    font-family: 'Audiowide', monospace;
+  }
+  
+  

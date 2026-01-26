@@ -62,12 +62,15 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
   // ✅ Update waveTextEl with enemy name
   if (waveTextEl && waveData.enemies.length > 0) {
-    const enemyId = waveData.enemies[0].id;              // first enemy in wave
-    const enemyName = enemiesData[enemyId]?.name || enemyId; // get its display name
-    waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in progress: ${enemyName}`;
+    const enemyId = waveData.enemies[0].id;
+    const enemyName = enemiesData[enemyId]?.name || enemyId;
+  
+    // Wrap enemy name in a span for neon effect
+    waveTextEl.innerHTML = `Wave ${waveState.currentWave + 1} in progress: <span class="wave-text-neon">${enemyName}</span>`;
   } else if (waveTextEl) {
-    waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in progress`;
+    waveTextEl.textContent = `Wave ${waveState.currentWave + 1} in progress`;
   }
+  
 
   updateWavePreview(); // update preview as wave starts
 
