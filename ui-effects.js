@@ -11,10 +11,7 @@ export function showMoneyPopup(amount, x = null, y = null, text = null) {
     popup.style.textAlign = "center";
     popup.style.textShadow = "0 0 8px black";
 
-    // ---------------------------
-    // CENTER RELATIVE TO CANVAS
-    // ---------------------------
-    const container = document.getElementById("gameWrapper"); // parent of canvas
+    const container = document.getElementById("gameWrapper");
     const rect = container.getBoundingClientRect();
 
     let posX = rect.width / 2;
@@ -30,8 +27,6 @@ export function showMoneyPopup(amount, x = null, y = null, text = null) {
     popup.classList.add("wave-income-popup");
 
     container.appendChild(popup);
-
-    // remove after animation
     setTimeout(() => popup.remove(), 1600);
 }
 
@@ -58,7 +53,6 @@ export function showLifePopup(amount, x = null, y = null) {
     if (x !== null) posX = x;
     if (y !== null) posY = y;
 
-    // 👇 offset upward so it doesn't overlap money
     posY -= 28;
 
     popup.style.left = posX + "px";
@@ -69,4 +63,42 @@ export function showLifePopup(amount, x = null, y = null) {
 
     container.appendChild(popup);
     setTimeout(() => popup.remove(), 1600);
+}
+
+// =========================
+// TOWER TOOLTIP
+// =========================
+let towerTooltipEl = null;
+
+export function initTowerTooltip() {
+    towerTooltipEl = document.createElement("div"); // assign to outer variable
+    towerTooltipEl.id = "tower-tooltip";
+    towerTooltipEl.style.position = "fixed";      // fixed so it can escape overflow:hidden
+    towerTooltipEl.style.pointerEvents = "none";
+    towerTooltipEl.style.background = "rgba(0,0,0,0.8)";
+    towerTooltipEl.style.color = "white";
+    towerTooltipEl.style.padding = "8px 12px";
+    towerTooltipEl.style.borderRadius = "6px";
+    towerTooltipEl.style.fontSize = "14px";
+    towerTooltipEl.style.fontFamily = "sans-serif";
+    towerTooltipEl.style.zIndex = 9999;
+    towerTooltipEl.style.opacity = "0";
+    towerTooltipEl.style.transition = "opacity 0.2s";
+
+    document.body.appendChild(towerTooltipEl);
+
+    return towerTooltipEl;  // optional return if you want
+}
+
+export function showTowerTooltip(text, x, y) {
+    if (!towerTooltipEl) return;
+    towerTooltipEl.textContent = text;
+    towerTooltipEl.style.left = x + "px";
+    towerTooltipEl.style.top  = y + "px";
+    towerTooltipEl.style.opacity = "1";
+}
+
+export function hideTowerTooltip() {
+    if (!towerTooltipEl) return;
+    towerTooltipEl.style.opacity = "0";
 }
