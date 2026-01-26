@@ -59,7 +59,16 @@ document.querySelectorAll(".towerCard").forEach(card => {
     card.addEventListener("mouseover", () => {
         const rect = card.getBoundingClientRect();
         const tooltipText = card.querySelector(".towerName")?.textContent || "Tower";
-        showTowerTooltip(tooltipText, rect.right + 10, rect.top);
+
+        // Set tooltip text first so offsetWidth is correct
+        towerTooltipEl.textContent = tooltipText;
+
+        // calculate position to the LEFT of the card
+        const tooltipWidth = towerTooltipEl.offsetWidth || 150; // fallback width
+        const x = rect.left - tooltipWidth - 10; // 10px gap
+        const y = rect.top;
+
+        showTowerTooltip(tooltipText, x, y);
     });
 
     card.addEventListener("mouseout", () => {
@@ -70,12 +79,14 @@ document.querySelectorAll(".towerCard").forEach(card => {
         const costText = card.querySelector(".towerCost")?.textContent || "$0";
         const cost = parseInt(costText.replace("$", ""));
         const name = card.querySelector(".towerName")?.textContent.replace(":", "").trim() || "Tower";
+
         if (gameState.money >= cost) {
             window.selectedTowerType = name;
             window.selectedTowerCost = cost;
         }
     });
 });
+
 
 // ======================
 // PRE-GAME OVERLAY

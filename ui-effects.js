@@ -70,35 +70,57 @@ export function showLifePopup(amount, x = null, y = null) {
 // =========================
 let towerTooltipEl = null;
 
+// ======================
+// TOWER TOOLTIP
+// ======================
 export function initTowerTooltip() {
-    towerTooltipEl = document.createElement("div"); // assign to outer variable
+    towerTooltipEl = document.createElement("div");
     towerTooltipEl.id = "tower-tooltip";
     towerTooltipEl.style.position = "fixed";      // fixed so it can escape overflow:hidden
     towerTooltipEl.style.pointerEvents = "none";
-    towerTooltipEl.style.background = "rgba(0,0,0,0.8)";
+    towerTooltipEl.style.background = "rgba(0,0,0,0.85)";
     towerTooltipEl.style.color = "white";
     towerTooltipEl.style.padding = "8px 12px";
     towerTooltipEl.style.borderRadius = "6px";
     towerTooltipEl.style.fontSize = "14px";
-    towerTooltipEl.style.fontFamily = "sans-serif";
+    towerTooltipEl.style.fontFamily = "'Audiowide', monospace";  // audiowide font
     towerTooltipEl.style.zIndex = 9999;
     towerTooltipEl.style.opacity = "0";
-    towerTooltipEl.style.transition = "opacity 0.2s";
+    towerTooltipEl.style.transition = "opacity 0.2s, transform 0.2s";
+
+    // purple border + glow
+    towerTooltipEl.style.border = "2px solid #9b2cff";
+    towerTooltipEl.style.boxShadow = `
+        0 0 6px rgba(155, 44, 255, 0.6),
+        0 0 12px rgba(155, 44, 255, 0.4),
+        0 0 20px rgba(155, 44, 255, 0.2)
+    `;
 
     document.body.appendChild(towerTooltipEl);
 
-    return towerTooltipEl;  // optional return if you want
+    return towerTooltipEl;
 }
 
+// ======================
+// SHOW TOOLTIP
+// ======================
 export function showTowerTooltip(text, x, y) {
     if (!towerTooltipEl) return;
     towerTooltipEl.textContent = text;
     towerTooltipEl.style.left = x + "px";
-    towerTooltipEl.style.top  = y + "px";
+    towerTooltipEl.style.top = y + "px";
     towerTooltipEl.style.opacity = "1";
+
+    // optional: animate a slight pop
+    towerTooltipEl.style.transform = "translate(-100%, 0) scale(1.05)";
 }
 
+// ======================
+// HIDE TOOLTIP
+// ======================
 export function hideTowerTooltip() {
     if (!towerTooltipEl) return;
     towerTooltipEl.style.opacity = "0";
+    towerTooltipEl.style.transform = "translate(-100%, 0) scale(1)";
 }
+
