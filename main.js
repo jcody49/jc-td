@@ -13,6 +13,7 @@ import { getHoveredEnemy, getTowerAtPosition } from './utils.js';
 import { loadEnemyImages } from './enemies/enemies.js';
 import { enemiesData } from './enemies/enemyData.js';
 import { initTowerTooltip, showTowerTooltip, hideTowerTooltip } from './ui-effects.js';
+import { TOWER_REGISTRY } from "./towers/towerRegistry.js";
 
 // ======================
 // PRELOAD ENEMY IMAGES
@@ -56,32 +57,36 @@ setupTowerPlacement({ hud, gridSize });
 const towerTooltipEl = initTowerTooltip(); // initialize tooltip
 
 document.querySelectorAll(".towerCard").forEach(card => {
+
     card.addEventListener("mouseover", () => {
         const rect = card.getBoundingClientRect();
-        const tooltipText = card.querySelector(".towerName")?.textContent || "Tower";
 
-        // Set tooltip text first so offsetWidth is correct
+        // tower type comes from the card
+        const type = card.dataset.type; // "cannon", "frost", etc
+        const TowerClass = TOWER_REGISTRY[type];
+
+        // 🔑 USE DESCRIPTION, NOT NAME
+        const tooltipText = TowerClass?.description || "Tower";
+
+        // set text first so width is correct
         towerTooltipEl.textContent = tooltipText;
 
-        // calculate position to the LEFT of the card
-        const tooltipWidth = towerTooltipEl.offsetWidth || 150; // fallback width
-        const x = rect.left - tooltipWidth - 10; // 10px gap
+        const tooltipWidth = towerTooltipEl.offsetWidth || 150;
+        const x = rect.left - tooltipWidth - 10;
         const y = rect.top;
 
         showTowerTooltip(tooltipText, x, y);
     });
 
-    card.addEventListener("mouseout", () => {
-        hideTowerTooltip();
-    });
+    card.addEventListener("mouseout", hideTowerTooltip);
 
     card.addEventListener("click", () => {
         const costText = card.querySelector(".towerCost")?.textContent || "$0";
         const cost = parseInt(costText.replace("$", ""));
-        const name = card.querySelector(".towerName")?.textContent.replace(":", "").trim() || "Tower";
+        const type = card.dataset.type;
 
         if (gameState.money >= cost) {
-            window.selectedTowerType = name;
+            window.selectedTowerType = type;   // 🔑 use type, not display name
             window.selectedTowerCost = cost;
         }
     });

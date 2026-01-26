@@ -1,6 +1,8 @@
 import { Tower } from './Tower.js';
 
 export class CannonTower extends Tower {
+    static description = "Deals strong single-target damage to ground enemies.";
+    
     constructor(opts) {
         super({
             ...opts,

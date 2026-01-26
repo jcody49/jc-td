@@ -1,6 +1,8 @@
 import { Tower } from './Tower.js';
 
 export class TankTower extends Tower {
+    static description = "Slow fire rate, lower direct damage, but causes splash damage and destructive to armor.";
+
     constructor(opts) {
         super({
             ...opts,

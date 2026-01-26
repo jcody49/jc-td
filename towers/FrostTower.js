@@ -1,6 +1,8 @@
 import { Tower } from './Tower.js';
 
 export class FrostTower extends Tower {
+    static description = "Slows enemies in range with icy attacks--maximizes splash damage potential.";
+
     constructor(opts) {
         super({
             ...opts,

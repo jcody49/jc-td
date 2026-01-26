@@ -7,6 +7,7 @@ export class Tower {
     y,
     ctx,
     type = "cannon",
+    description = "",
     levelData = {},
     upgradeCosts = [],
     maxLevel = 5,
@@ -16,6 +17,7 @@ export class Tower {
     this.y = y;
     this.ctx = ctx;
     this.type = type;
+    this.description = description;
 
     // ===== FORCE ATTACK =====
     this.forcedTarget = null;

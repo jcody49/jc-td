@@ -2,6 +2,8 @@
 import { Tower } from './Tower.js';
 
 export class AcidTower extends Tower {
+    static description = "Corrodes tough enemies over time. Slow fire rate and weak damage per shot. Most effective against high-health targets.";
+
     constructor(opts = {}) {
         super({
             ...opts,

@@ -112,7 +112,7 @@ export function showTowerTooltip(text, x, y) {
     towerTooltipEl.style.opacity = "1";
 
     // optional: animate a slight pop
-    towerTooltipEl.style.transform = "translate(-100%, 0) scale(1.05)";
+    towerTooltipEl.style.transform = "scale(1.05)";
 }
 
 // ======================
