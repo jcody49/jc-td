@@ -11,11 +11,6 @@ import { AcidTower } from './towers/AcidTower.js';
 import { TankTower } from './towers/TankTower.js';
 
 export function setupTowerPlacement({ hud, gridSize }) {
-  console.log("[towerPlacement] setupTowerPlacement CALLED", {
-    canvas,
-    gridSize,
-    hud
-  });
 
   // ======================
   // HELPER: BASE RANGE
@@ -37,8 +32,6 @@ export function setupTowerPlacement({ hud, gridSize }) {
   window.selectedTowerType = null;
   window.selectedTowerCost = null;
   window.selectedTower = null;
-
-  console.log("[towerPlacement] global selection state initialized");
 
   // ======================
   // DRAWING HELPERS
@@ -98,7 +91,6 @@ export function setupTowerPlacement({ hud, gridSize }) {
   // MOUSE MOVE
   // ======================
   canvas.addEventListener("mousemove", e => {
-    console.log("[towerPlacement] mousemove event fired");
 
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -110,11 +102,6 @@ export function setupTowerPlacement({ hud, gridSize }) {
     window.mouseX = mouseX;
     window.mouseY = mouseY;
 
-    console.log("[towerPlacement] mouse coords", {
-      mouseX,
-      mouseY,
-      selectedTowerType: window.selectedTowerType
-    });
 
     if (window.selectedTowerType) {
       drawGhostTower(mouseX, mouseY, window.selectedTowerType);
