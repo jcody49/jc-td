@@ -5,6 +5,7 @@ export class FrostTower extends Tower {
         super({
             ...opts,
             type: "frost",
+            description: "Slows enemies in range with icy attacks--maximizes splash damage potential.",
             maxLevel: 5,
             upgradeCosts: [50, 50, 300, 600, 3000],
             opts: {

@@ -5,6 +5,7 @@ export class TankTower extends Tower {
         super({
             ...opts,
             type: "tank",
+            description: "Slow fire rate, lower direct damage, but causes splash damage and destructive to armor.",
             maxLevel: 5,
             upgradeCosts: [60, 65, 400, 500, 4000],
             levelData: {

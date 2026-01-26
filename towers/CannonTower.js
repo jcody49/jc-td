@@ -5,6 +5,7 @@ export class CannonTower extends Tower {
         super({
             ...opts,
             type: "cannon",
+            description: "Deals strong single-target damage to ground enemies.",
             maxLevel: 5,
             upgradeCosts: [50, 50, 400, 500, 4000],
             levelData: {
