@@ -11,10 +11,17 @@ import { AcidTower } from './towers/AcidTower.js';
 import { TankTower } from './towers/TankTower.js';
 
 export function setupTowerPlacement({ hud, gridSize }) {
+  console.log("[towerPlacement] setupTowerPlacement CALLED", {
+    canvas,
+    gridSize,
+    hud
+  });
+
   // ======================
   // HELPER: BASE RANGE
   // ======================
   function getBaseRange(towerType) {
+    console.log("[towerPlacement] getBaseRange", towerType);
     switch (towerType) {
       case "Cannon": return 125;
       case "Frost":  return 117;
@@ -31,31 +38,52 @@ export function setupTowerPlacement({ hud, gridSize }) {
   window.selectedTowerCost = null;
   window.selectedTower = null;
 
+  console.log("[towerPlacement] global selection state initialized");
+
   // ======================
   // DRAWING HELPERS
   // ======================
   function drawGhostTower(x, y, towerType) {
+    console.log("[towerPlacement] drawGhostTower ENTER", {
+      x, y, towerType,
+      money: gameState.money,
+      cost: window.selectedTowerCost
+    });
+
     const ctx = canvas.getContext("2d");
     ctx.save();
 
-    // determine square color
     const col = Math.floor(x / gridSize);
     const row = Math.floor(y / gridSize);
     const key = `${col},${row}`;
 
+    console.log("[towerPlacement] ghost grid calc", {
+      col, row, key,
+      gridOccupied: gridOccupied[col]?.[row],
+      pathBlocked: pathOccupied.includes(key)
+    });
+
     let color = "rgba(0,255,0,0.4)";
-    if (gridOccupied[col]?.[row] || pathOccupied.includes(key) || gameState.money < window.selectedTowerCost) {
+    if (
+      gridOccupied[col]?.[row] ||
+      pathOccupied.includes(key) ||
+      gameState.money < window.selectedTowerCost
+    ) {
       color = "rgba(255,0,0,0.4)";
     }
 
-    // draw ghost square
+    console.log("[towerPlacement] ghost color", color);
+
     ctx.fillStyle = color;
     ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
 
-    // draw range circle
     const range = getBaseRange(towerType);
     const centerX = col * gridSize + gridSize / 2;
     const centerY = row * gridSize + gridSize / 2;
+
+    console.log("[towerPlacement] drawing range circle", {
+      range, centerX, centerY
+    });
 
     ctx.strokeStyle = "rgba(0,255,255,0.5)";
     ctx.lineWidth = 2;
@@ -70,6 +98,8 @@ export function setupTowerPlacement({ hud, gridSize }) {
   // MOUSE MOVE
   // ======================
   canvas.addEventListener("mousemove", e => {
+    console.log("[towerPlacement] mousemove event fired");
+
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
@@ -80,10 +110,13 @@ export function setupTowerPlacement({ hud, gridSize }) {
     window.mouseX = mouseX;
     window.mouseY = mouseY;
 
-    // redraw tower placement ghost
+    console.log("[towerPlacement] mouse coords", {
+      mouseX,
+      mouseY,
+      selectedTowerType: window.selectedTowerType
+    });
+
     if (window.selectedTowerType) {
-      // clear canvas or just the overlay layer if you have one
-      // canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
       drawGhostTower(mouseX, mouseY, window.selectedTowerType);
     }
   });
@@ -92,6 +125,8 @@ export function setupTowerPlacement({ hud, gridSize }) {
   // MOUSE CLICK (PLACE TOWER)
   // ======================
   canvas.addEventListener("click", e => {
+    console.log("[towerPlacement] click event fired");
+
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
@@ -99,23 +134,39 @@ export function setupTowerPlacement({ hud, gridSize }) {
     const x = (e.clientX - rect.left) * scaleX;
     const y = (e.clientY - rect.top) * scaleY;
 
-    // SELECT EXISTING TOWER
+    console.log("[towerPlacement] click coords", { x, y });
+
     const existingTower = getTowerAtPosition(gameState.towers, x, y, gridSize);
     if (existingTower) {
+      console.log("[towerPlacement] existing tower selected", existingTower);
       window.selectedTower = existingTower;
       hud.showTowerModal(existingTower);
       return;
     }
 
-    // NO TOWER SELECTED FOR PLACEMENT
-    if (!window.selectedTowerType) return;
+    if (!window.selectedTowerType) {
+      console.log("[towerPlacement] click ignored — no selectedTowerType");
+      return;
+    }
 
-    // SAFETY: cost must exist
-    if (typeof window.selectedTowerCost !== "number") return;
+    if (typeof window.selectedTowerCost !== "number") {
+      console.log("[towerPlacement] click ignored — invalid cost", window.selectedTowerCost);
+      return;
+    }
 
     const col = Math.floor(x / gridSize);
     const row = Math.floor(y / gridSize);
     const key = `${col},${row}`;
+
+    console.log("[towerPlacement] placement attempt", {
+      col,
+      row,
+      key,
+      occupied: gridOccupied[col]?.[row],
+      pathBlocked: pathOccupied.includes(key),
+      money: gameState.money,
+      cost: window.selectedTowerCost
+    });
 
     if (gridOccupied[col]?.[row]) return;
     if (pathOccupied.includes(key)) return;
@@ -123,6 +174,12 @@ export function setupTowerPlacement({ hud, gridSize }) {
 
     const px = col * gridSize + gridSize / 2;
     const py = row * gridSize + gridSize / 2;
+
+    console.log("[towerPlacement] instantiating tower", {
+      type: window.selectedTowerType,
+      px,
+      py
+    });
 
     let newTower = null;
     switch (window.selectedTowerType) {
@@ -140,17 +197,21 @@ export function setupTowerPlacement({ hud, gridSize }) {
         break;
     }
 
+    console.log("[towerPlacement] newTower result", newTower);
+
     if (!newTower) return;
 
-    // deduct money
     gameState.money -= window.selectedTowerCost;
     hud.updateMoneyLives();
 
-    // commit tower
     gameState.towers.push(newTower);
     gridOccupied[col][row] = true;
 
-    // clear selection state
+    console.log("[towerPlacement] tower committed", {
+      remainingMoney: gameState.money,
+      totalTowers: gameState.towers.length
+    });
+
     window.selectedTowerType = null;
     window.selectedTowerCost = null;
 

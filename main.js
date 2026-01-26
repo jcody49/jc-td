@@ -84,12 +84,15 @@ document.querySelectorAll(".towerCard").forEach(card => {
         const costText = card.querySelector(".towerCost")?.textContent || "$0";
         const cost = parseInt(costText.replace("$", ""));
         const type = card.dataset.type;
-
-        if (gameState.money >= cost) {
-            window.selectedTowerType = type;   // 🔑 use type, not display name
-            window.selectedTowerCost = cost;
-        }
+    
+        // Capitalize type and assign together
+        window.selectedTowerType = type.charAt(0).toUpperCase() + type.slice(1);
+        window.selectedTowerCost = cost;
+    
+        console.log("[HUD] after normalization:", window.selectedTowerType, window.selectedTowerCost);
     });
+    
+    
 });
 
 
