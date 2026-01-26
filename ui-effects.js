@@ -1,7 +1,10 @@
+// =========================
+// MONEY POPUP
+// =========================
 export function showMoneyPopup(amount, x = null, y = null, text = null) {
     const popup = document.createElement("div");
     popup.textContent = text ?? `+$${amount}`;
-    popup.style.position = "absolute"; // <-- relative to parent container
+    popup.style.position = "absolute";
     popup.style.color = "lime";
     popup.style.fontWeight = "bold";
     popup.style.fontSize = "24px";
@@ -14,15 +17,11 @@ export function showMoneyPopup(amount, x = null, y = null, text = null) {
     const container = document.getElementById("gameWrapper");
     const rect = container.getBoundingClientRect();
 
-    let posX = rect.width / 2;
-    let posY = rect.height / 2;
-
-    if (x !== null) posX = x;
-    if (y !== null) posY = y;
+    let posX = x ?? rect.width / 2;
+    let posY = y ?? rect.height / 2;
 
     popup.style.left = posX + "px";
     popup.style.top = posY + "px";
-
     popup.style.transform = "translate(-50%, 0)";
     popup.classList.add("wave-income-popup");
 
@@ -30,10 +29,12 @@ export function showMoneyPopup(amount, x = null, y = null, text = null) {
     setTimeout(() => popup.remove(), 1600);
 }
 
+// =========================
+// LIFE POPUP
+// =========================
 export function showLifePopup(amount, x = null, y = null) {
     const popup = document.createElement("div");
     popup.textContent = `+${amount} ❤️`;
-
     popup.style.position = "absolute";
     popup.style.color = "hotpink";
     popup.style.fontWeight = "bold";
@@ -47,17 +48,11 @@ export function showLifePopup(amount, x = null, y = null) {
     const container = document.getElementById("gameWrapper");
     const rect = container.getBoundingClientRect();
 
-    let posX = rect.width / 2;
-    let posY = rect.height / 2;
-
-    if (x !== null) posX = x;
-    if (y !== null) posY = y;
-
-    posY -= 28;
+    let posX = x ?? rect.width / 2;
+    let posY = (y ?? rect.height / 2) - 28;
 
     popup.style.left = posX + "px";
     popup.style.top = posY + "px";
-
     popup.style.transform = "translate(-50%, 0)";
     popup.classList.add("wave-income-popup");
 
@@ -65,62 +60,91 @@ export function showLifePopup(amount, x = null, y = null) {
     setTimeout(() => popup.remove(), 1600);
 }
 
+
 // =========================
 // TOWER TOOLTIP
 // =========================
 let towerTooltipEl = null;
+let towerTooltipTitleEl = null;
+let towerTooltipDescEl = null;
 
-// ======================
-// TOWER TOOLTIP
-// ======================
 export function initTowerTooltip() {
+    // container
     towerTooltipEl = document.createElement("div");
     towerTooltipEl.id = "tower-tooltip";
-    towerTooltipEl.style.position = "fixed";      // fixed so it can escape overflow:hidden
-    towerTooltipEl.style.pointerEvents = "none";
-    towerTooltipEl.style.background = "rgba(0,0,0,0.85)";
-    towerTooltipEl.style.color = "white";
-    towerTooltipEl.style.padding = "8px 12px";
-    towerTooltipEl.style.borderRadius = "6px";
-    towerTooltipEl.style.fontSize = "14px";
-    towerTooltipEl.style.fontFamily = "'Audiowide', monospace";  // audiowide font
-    towerTooltipEl.style.zIndex = 9999;
-    towerTooltipEl.style.opacity = "0";
-    towerTooltipEl.style.transition = "opacity 0.2s, transform 0.2s";
 
-    // purple border + glow
-    towerTooltipEl.style.border = "2px solid #9b2cff";
-    towerTooltipEl.style.boxShadow = `
-        0 0 6px rgba(155, 44, 255, 0.6),
-        0 0 12px rgba(155, 44, 255, 0.4),
-        0 0 20px rgba(155, 44, 255, 0.2)
+    Object.assign(towerTooltipEl.style, {
+        position: "fixed",
+        pointerEvents: "none",
+        minWidth: "160px",
+        maxWidth: "250px",
+        padding: "8px 12px",
+        fontFamily: "'Audiowide', monospace",
+        background: "rgba(0,0,0,0.85)",
+        color: "white",
+        borderRadius: "6px",
+        border: "2px solid #9b2cff",
+        boxShadow: `
+            0 0 6px rgba(155, 44, 255, 0.6),
+            0 0 12px rgba(155, 44, 255, 0.4),
+            0 0 20px rgba(155, 44, 255, 0.2)
+        `,
+        zIndex: 9999,
+        opacity: "0",
+        lineHeight: "1.2",
+        wordWrap: "break-word",
+        whiteSpace: "normal",
+        transition: "opacity 0.2s, transform 0.2s",
+        transform: "translate(calc(-100% - 10px), -50%)" // left offset +10px gap
+    });
+
+    // title element
+    towerTooltipTitleEl = document.createElement("div");
+    towerTooltipTitleEl.style.fontWeight = "bold";
+    towerTooltipTitleEl.style.textDecoration = "underline";
+    towerTooltipTitleEl.style.marginBottom = "6px"; // more space below title
+    towerTooltipTitleEl.style.color = "#FFFFFF";    // neon cyan
+    towerTooltipTitleEl.style.textShadow = `
+        0 0 2px #00FFFF,
+        0 0 4px #00FFFF,
+        0 0 6px rgba(0, 255, 255, 0.25)
     `;
+    towerTooltipEl.appendChild(towerTooltipTitleEl);
+
+    // description element
+    towerTooltipDescEl = document.createElement("div");
+    towerTooltipDescEl.style.fontSize = "13px"; // slightly smaller
+    towerTooltipEl.appendChild(towerTooltipDescEl);
 
     document.body.appendChild(towerTooltipEl);
-
     return towerTooltipEl;
 }
 
-// ======================
+
+// -------------------------
 // SHOW TOOLTIP
-// ======================
-export function showTowerTooltip(text, x, y) {
+// -------------------------
+export function showTowerTooltip(title, description, x, y) {
     if (!towerTooltipEl) return;
-    towerTooltipEl.textContent = text;
+    towerTooltipTitleEl.textContent = title;
+    towerTooltipDescEl.textContent = description;
+
     towerTooltipEl.style.left = x + "px";
     towerTooltipEl.style.top = y + "px";
     towerTooltipEl.style.opacity = "1";
 
-    // optional: animate a slight pop
-    towerTooltipEl.style.transform = "scale(1.05)";
+    // move fully left of the card minus 10px gap, vertically center
+    towerTooltipEl.style.transform = "translate(calc(-100% - 10px), -50%)";
 }
 
-// ======================
+
+
+
+// -------------------------
 // HIDE TOOLTIP
-// ======================
+// -------------------------
 export function hideTowerTooltip() {
     if (!towerTooltipEl) return;
     towerTooltipEl.style.opacity = "0";
-    towerTooltipEl.style.transform = "translate(-100%, 0) scale(1)";
+    towerTooltipEl.style.transform = "translate(-45%, 0)";
 }
-

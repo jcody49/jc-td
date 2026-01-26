@@ -60,23 +60,23 @@ document.querySelectorAll(".towerCard").forEach(card => {
 
     card.addEventListener("mouseover", () => {
         const rect = card.getBoundingClientRect();
-
-        // tower type comes from the card
-        const type = card.dataset.type; // "cannon", "frost", etc
+    
+        const type = card.dataset.type;
         const TowerClass = TOWER_REGISTRY[type];
-
-        // 🔑 USE DESCRIPTION, NOT NAME
-        const tooltipText = TowerClass?.description || "Tower";
-
-        // set text first so width is correct
-        towerTooltipEl.textContent = tooltipText;
-
-        const tooltipWidth = towerTooltipEl.offsetWidth || 150;
-        const x = rect.left - tooltipWidth - 10;
-        const y = rect.top;
-
-        showTowerTooltip(tooltipText, x, y);
+    
+        const title = TowerClass?.name || "Tower";        
+        const description = TowerClass?.description || "No description";
+    
+        // x = right edge of tooltip aligns to left edge of card
+        const x = rect.left;                
+        const y = rect.top + rect.height / 2;  // vertically center
+    
+        showTowerTooltip(title, description, x, y);
     });
+    
+    
+    
+    
 
     card.addEventListener("mouseout", hideTowerTooltip);
 
@@ -88,8 +88,6 @@ document.querySelectorAll(".towerCard").forEach(card => {
         // Capitalize type and assign together
         window.selectedTowerType = type.charAt(0).toUpperCase() + type.slice(1);
         window.selectedTowerCost = cost;
-    
-        console.log("[HUD] after normalization:", window.selectedTowerType, window.selectedTowerCost);
     });
     
     
