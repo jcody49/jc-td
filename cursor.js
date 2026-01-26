@@ -1,4 +1,5 @@
 // cursor.js
+import { getTowerAtPosition, getHoveredEnemy } from './utils.js';
 
 let cursorMode = "default"; // "default" | "hover" | "attack"
 let cursorEl = null;
@@ -43,22 +44,21 @@ export function initCursor({ canvas, gameState: gs }) {
   // mouse move updates cursor position
   canvas.addEventListener("mousemove", e => {
     const rect = canvas.getBoundingClientRect();
-    window.mouseX = e.clientX - rect.left;
-    window.mouseY = e.clientY - rect.top;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    window.mouseX = mouseX;
+    window.mouseY = mouseY;
 
     // hover detection over enemies or towers
-    const hoveredEnemy = getHoveredEnemy(gameState.enemies, window.mouseX, window.mouseY, 65);
-    const hoveredTower = getTowerAtPosition(gameState.towers, window.mouseX, window.mouseY, gameState.gridSize);
+    const hoveredEnemy = getHoveredEnemy(gameState.enemies, mouseX, mouseY, 65);
+    const hoveredTower = getTowerAtPosition(gameState.towers, mouseX, mouseY, gameState.gridSize);
 
+    // update cursor mode
     if (cursorMode !== "attack" && !window.selectedTowerType) {
-      if (hoveredEnemy || hoveredTower) {
-        cursorMode = "hover";
-      } else {
-        cursorMode = "default";
-      }
+      cursorMode = hoveredEnemy || hoveredTower ? "hover" : "default";
     }
 
-    applyCursor();
+    applyCursor(hoveredTower, hoveredEnemy);
   });
 
   animate();
@@ -68,7 +68,6 @@ export function initCursor({ canvas, gameState: gs }) {
 // SET / GET MODE
 // =========================
 export function setCursorMode(mode) {
-  console.log("[cursor] setCursorMode:", mode);
   cursorMode = mode;
   applyCursor();
 }
@@ -80,35 +79,29 @@ export function getCursorMode() {
 // =========================
 // APPLY CURSOR IMAGE / STATE
 // =========================
-function applyCursor() {
-    // --------------------------
-    // 1️⃣ Attack mode
-    // --------------------------
-    if (cursorMode === "attack") {
-        fx.style.display = "block";       // always visible
-        fxImg.src = CURSOR_ATTACK;        // red attack cursor
-        fx.classList.add("active");       // optional animation class
-        return;                           // do not hide for tower placement
-    }
+function applyCursor(hoverTower = null, hoveredEnemy = null) {
+  if (!cursorEl || !cursorImg) return;
 
-    // --------------------------
-    // 2️⃣ Tower placement
-    // --------------------------
-    if (window.selectedTowerType) {
-        fx.style.display = "none";        // ghost tower drawn in gameLoop
-        fx.classList.remove("active");
-        return;
-    }
+  // 1️⃣ Attack mode
+  if (cursorMode === "attack") {
+    cursorEl.style.display = "block";
+    cursorImg.src = CURSOR_ATTACK;
+    cursorEl.classList.add("active");
+    return;
+  }
 
-    // --------------------------
-    // 3️⃣ Default / hover
-    // --------------------------
-    fx.style.display = "block";
-    fxImg.src = CURSOR_DEFAULT;
-    const hoverTower = getTowerAtPosition(gameState.towers, window.mouseX, window.mouseY, gridSize);
-    fx.classList.toggle("active", !!(hoverTower || window.hoveredEnemy));
+  // 2️⃣ Tower placement mode
+  if (window.selectedTowerType) {
+    cursorEl.style.display = "none"; // ghost tower drawn in gameLoop
+    cursorEl.classList.remove("active");
+    return;
+  }
+
+  // 3️⃣ Default / hover
+  cursorEl.style.display = "block";
+  cursorImg.src = CURSOR_DEFAULT;
+  cursorEl.classList.toggle("active", !!(hoverTower || hoveredEnemy));
 }
-
 
 // =========================
 // ANIMATE CURSOR ROTATION
@@ -117,19 +110,7 @@ let angle = 0;
 function animate() {
   if (cursorEl) {
     angle += 2;
-    const scale = 1; // scale handled in applyCursor
-    cursorEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(${scale})`;
+    cursorEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(1)`;
   }
   requestAnimationFrame(animate);
-}
-
-// =========================
-// UTILITY: Check Hover Functions
-// =========================
-function getHoveredEnemy(enemies, x, y, radius) {
-  return enemies.find(e => Math.hypot(e.x - x, e.y - y) < radius);
-}
-
-function getTowerAtPosition(towers, x, y, size) {
-  return towers.find(t => Math.hypot(t.x - x, t.y - y) < size/2);
 }
