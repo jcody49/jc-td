@@ -60,7 +60,14 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   waveState.status = "spawning";
   spawningFinished = false;
 
-  if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in progress`;
+  // ✅ Update waveTextEl with enemy name
+  if (waveTextEl && waveData.enemies.length > 0) {
+    const enemyId = waveData.enemies[0].id;              // first enemy in wave
+    const enemyName = enemiesData[enemyId]?.name || enemyId; // get its display name
+    waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in progress: ${enemyName}`;
+  } else if (waveTextEl) {
+    waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in progress`;
+  }
 
   updateWavePreview(); // update preview as wave starts
 
@@ -76,7 +83,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   if (spawnInterval) clearInterval(spawnInterval);
 
   spawnInterval = setInterval(() => {
-    if (window.gamePaused) return; // pause spawning if modal open
+    if (window.gamePaused) return;
 
     if (enemiesSpawned >= spawnQueue.length) {
       clearInterval(spawnInterval);
@@ -98,6 +105,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     enemiesSpawned++;
   }, waveData.spawnInterval);
 }
+
 
 // =========================
 // START NEXT WAVE (COUNTDOWN)
