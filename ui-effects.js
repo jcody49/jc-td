@@ -77,7 +77,7 @@ export function initTowerTooltip() {
         position: "fixed",
         pointerEvents: "none",
         minWidth: "160px",
-        maxWidth: "250px",
+        maxWidth: "225px",
         padding: "8px 12px",
         fontFamily: "'Audiowide', monospace",
         background: "rgba(0,0,0,0.85)",
@@ -105,9 +105,10 @@ export function initTowerTooltip() {
     towerTooltipTitleEl.style.marginBottom = "6px"; // more space below title
     towerTooltipTitleEl.style.color = "#FFFFFF";    // neon cyan
     towerTooltipTitleEl.style.textShadow = `
-        0 0 2px #00FFFF,
-        0 0 4px #00FFFF,
-        0 0 6px rgba(0, 255, 255, 0.25)
+        0 0 1px #000000,      /* thin dark outline */
+        0 0 2px #00FFFF,      /* inner neon glow */
+        0 0 4px #00FFFF,      /* outer neon glow */
+        0 0 6px rgba(0, 255, 255, 0.25) /* soft spread */
     `;
     towerTooltipEl.appendChild(towerTooltipTitleEl);
 
