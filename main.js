@@ -268,6 +268,32 @@ canvas.addEventListener("click", () => {
     cursorMode = "default";
     applyCursor();
 });
+// ======================
+// FORCE ATTACK - RIGHT CLICK
+// ======================
+canvas.addEventListener("contextmenu", e => {
+    e.preventDefault(); // prevent browser menu
+
+    if (!window.selectedTower) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+
+    const mouseX = (e.clientX - rect.left) * scaleX;
+    const mouseY = (e.clientY - rect.top) * scaleY;
+
+    const target = gameState.enemies.find(
+        enemy => Math.hypot(enemy.x - mouseX, enemy.y - mouseY) <= (enemy.radius ?? 20)
+    );
+
+    if (target) {
+        window.selectedTower.setForcedTarget(target);
+        cursorMode = "default"; // optional: exit attack mode
+        applyCursor();
+    }
+});
+
 
 // ======================
 // ATTACK / ESC / UPGRADE / SELL KEYS
