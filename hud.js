@@ -52,7 +52,8 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
             ">Level: ${tower.level}</span>`,
             `Damage: ${tower.damage}`,
             `Range: ${tower.range}`,
-            `Fire Rate: ${tower.fireRate}`
+            `Fire Rate: ${tower.displayFireRate}
+            `
         ].join("<br>");
     }
 

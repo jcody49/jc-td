@@ -32,10 +32,10 @@ export class Tower {
 
     // ===== STATS =====
     this.damage = 0;
-    this.splashRadius = 0;
     this.range = 0;
-    this.fireRate = 0;
+    this.fireRate = 0;      // internal stat used for cooldown
     this.cooldown = 0;
+    this.splashRadius = 0;
     this.slowMultiplier = 1;
     this.slowDuration = 0;
     this.dotDuration = 0;
@@ -154,9 +154,10 @@ export class Tower {
     if (!target) return;
 
     this.fire(target, gameState);
-    this.cooldown = this.fireRate;
 
-    // auto-clear if forced target died
+    // set cooldown based on internal fireRate
+    this.cooldown = this.fireRate;
+    
     if (this.forcedTarget && this.forcedTarget.dead) {
       this.forcedTarget = null;
     }
@@ -231,5 +232,14 @@ export class Tower {
     }
 
     this.ctx.restore();
+  }
+
+  // ======================
+  // PLAYER-FACING FIRE RATE
+  // ======================
+  get displayFireRate() {
+    // convert internal fireRate to intuitive "higher = faster"
+    const BASE = 2000; // tweak to taste
+    return Math.round(BASE / this.fireRate);
   }
 }
