@@ -65,12 +65,10 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     const enemyId = waveData.enemies[0].id;
     const enemyName = enemiesData[enemyId]?.name || enemyId;
   
-    // Wrap enemy name in a span for neon effect
     waveTextEl.innerHTML = `Wave ${waveState.currentWave + 1} in progress: <br><span class="wave-text-neon">${enemyName}</span>`;
   } else if (waveTextEl) {
     waveTextEl.textContent = `Wave ${waveState.currentWave + 1} in progress`;
   }
-  
 
   updateWavePreview(); // update preview as wave starts
 
@@ -94,7 +92,28 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
       return;
     }
 
-    const config = spawnQueue[enemiesSpawned];
+    // clone config to avoid mutating original
+    let config = { ...spawnQueue[enemiesSpawned] };
+
+    // =========================
+    // APPLY DIFFICULTY ADJUSTMENTS
+    // =========================
+    switch (gameState.difficulty) {
+      case "easy":
+        config.maxHp *= 0.8;
+        config.speed *= 0.9;
+        config.reward *= 1.2;
+        break;
+      case "normal":
+        // default stats
+        break;
+      case "hard":
+        config.maxHp *= 1.5;
+        config.speed *= 1.2;
+        config.reward *= 0.8;
+        break;
+    }
+
     gameState.enemies.push(
       new Enemy({
         path: waveState.path,
@@ -108,7 +127,6 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     enemiesSpawned++;
   }, waveData.spawnInterval);
 }
-
 
 // =========================
 // START NEXT WAVE (COUNTDOWN)

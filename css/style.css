@@ -437,3 +437,48 @@ canvas {
     pointer-events: none;
     z-index: 10;
 }
+
+/* Difficulty Menu overlay */
+#difficultyMenu {
+  position: absolute;       /* sit over the canvas */
+  top: 50%;                /* vertical center */
+  left: 50%;               /* horizontal center */
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.85); /* semi-transparent black */
+  padding: 2rem 3rem;
+  border: 3px solid #FF5DFF; /* neon-style border */
+  border-radius: 12px;
+  display: none;           /* hidden by default */
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'Audiowide', cursive;
+  color: #FFFFFF;
+  z-index: 1000;           /* above everything else */
+  text-align: center;
+}
+
+
+/* Buttons inside difficulty menu */
+#difficultyMenu button {
+  padding: 0.6rem 1.5rem;
+  font-family: 'Audiowide', cursive;
+  font-size: 1.1rem;
+  color: #FFFFFF;
+  background: transparent;
+  border: 2px solid #FF5DFF;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+#difficultyMenu button:hover {
+  background: #FF5DFF;
+  color: #000;
+}
+
+/* Highlight the selected difficulty */
+#difficultyMenu button.selected {
+  background: #FF5DFF;
+  color: #000;
+}

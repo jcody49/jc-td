@@ -143,30 +143,69 @@ startButton.style.padding = "20px 40px";
 enableGlow(startButton);
 
 // ======================
-// START BUTTON CLICK
+// DIFFICULTY MENU LOGIC
+// ======================
+const difficultyMenu = document.getElementById("difficultyMenu"); // your HTML div
+const difficultyButtons = difficultyMenu?.querySelectorAll(".difficultyButton");
+
+// Hide difficulty menu by default
+if (difficultyMenu) difficultyMenu.style.display = "none";
+
+// Hook into START BUTTON CLICK — only show menu for now
+// ======================
+// START BUTTON CLICK — SHOW DIFFICULTY
 // ======================
 startButton.addEventListener("click", () => {
     if (gameStarted) return;
     gameStarted = true;
     startSound.play();
 
+    // Hide pre-game overlay
     overlay.style.transition = "opacity 0.5s ease";
     overlay.style.opacity = "0";
     setTimeout(() => overlay.remove(), 500);
 
+    // Hide start button
     startButton.style.display = "none";
     disableGlow(startButton);
 
-    skipButton.disabled = false;
-    enableGlow(skipButton);
-    skipButton.style.display = "inline-block";
-
-    livesDisplay.style.display = "block";
-    moneyDisplay.style.display = "block";
-
-    startGameWaves(gameState, ctx, canvas);
-    gameLoop(ctx, canvas, gameState, hud);
+    // Show difficulty menu
+    if (difficultyMenu) {
+        difficultyMenu.style.display = "flex";
+    }
 });
+
+// ======================
+// DIFFICULTY BUTTON LISTENERS
+// Attach after DOM content is loaded
+// ======================
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll("#difficultyMenu .difficultyButton");
+    buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const selected = btn.dataset.difficulty;
+            if (!selected) return;
+
+            // Apply difficulty
+            gameState.difficulty = selected;
+
+            // Hide difficulty menu
+            if (difficultyMenu) difficultyMenu.style.display = "none";
+
+            // Show skip button + HUD
+            skipButton.disabled = false;
+            enableGlow(skipButton);
+            skipButton.style.display = "inline-block";
+
+            livesDisplay.style.display = "block";
+            moneyDisplay.style.display = "block";
+
+            startGameWaves(gameState, ctx, canvas);
+            gameLoop(ctx, canvas, gameState, hud);
+        });
+    });
+});
+
 
 // ======================
 // SKIP BUTTON CLICK

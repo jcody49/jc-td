@@ -13,7 +13,8 @@ export const gameState = {
   projectiles: [],
   money: 90,
   lives: 10,
-  score: 0
+  score: 0,
+  difficulty: "normal"
 };
 
 /**********************
