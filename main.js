@@ -223,15 +223,17 @@ function applyCursor() {
     if (cursorMode === "attack") {
         fxImg.src = CURSOR_ATTACK;
         fx.style.opacity = "1";
+    } else if (window.hoveredTower) {
+        fxImg.src = CURSOR_SELECT;
+        fx.style.opacity = "1";
+    } else if (window.hoveredEnemy) {
+        fxImg.src = CURSOR_ATTACK;
+        fx.style.opacity = "1";
     } else {
-        if (window.hoveredEnemy || window.hoveredTower) {
-            fxImg.src = CURSOR_SELECT;
-            fx.style.opacity = "1";
-        } else {
-            fx.style.opacity = "0";
-        }
+        fx.style.opacity = "0";
     }
 }
+
 
 function animateCursor() {
     angle += 3;
