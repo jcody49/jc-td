@@ -13,7 +13,7 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     const moneyDisplay = document.getElementById("money");
 
     let selectedTower = null;
-    let sellHandler = null; // reference to sell logic for keyboard shortcut
+    let sellHandler = null;
 
     // ------------------------------
     // Show/hide tower modal
