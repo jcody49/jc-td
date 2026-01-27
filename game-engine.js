@@ -220,22 +220,34 @@ if (window.selectedTowerType) {
         e.draw();
     });
 
+    // Remove dead enemies and reward player
     gameState.enemies = gameState.enemies.filter(e => {
         if (!e.remove) return true;
-    
+
         if (!e.escaped) {
+            // --- MONEY ---
             const reward = e.reward || 1;
             gameState.money += reward;
             showMoneyPopup(reward, e.x, e.y);
-    
+
+            // --- LIVES ---
             if (e.lifeReward > 0) {
                 gameState.lives += e.lifeReward;
                 showLifePopup?.(e.lifeReward, e.x, e.y);
             }
+
+            // --- SCORE ---
+            const scoreReward = e.score || 5;
+            gameState.score += scoreReward;
         }
-    
-        return false;
+
+        return false; // remove enemy from array
     });
+
+    // --- HUD UPDATE ---
+    if (hud?.updateMoneyLives) hud.updateMoneyLives(); // updates money, lives, AND score
+
+    
     
 
     // --- WAVE MANAGEMENT ---

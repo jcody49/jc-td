@@ -12,7 +12,8 @@ export const gameState = {
   towers: [],
   projectiles: [],
   money: 90,
-  lives: 10
+  lives: 10,
+  score: 0
 };
 
 /**********************

@@ -53,11 +53,9 @@ body {
 
 #waveText {
   position: absolute;  /* overlay on top of canvas */
-  top: 25px;           /* distance from top of canvas */
   left: 50%;           /* center horizontally */
   transform: translateX(-50%);
   color: white;
-  font-size: 20px;
   font-family: monospace;
   text-align: center;
   pointer-events: none; /* so clicks go through to canvas */
@@ -101,13 +99,13 @@ canvas {
 }
 
 #waveText {
-  position: absolute;   /* overlay on top of canvas */
-  top: 20px;            /* distance from top of canvas */
-  left: 50%;            /* center horizontally */
+  position: absolute;   
+  top: 10px;            
+  left: 50%;            
   transform: translateX(-50%);
   color: white;
-  font-size: 24px;
-  font-family: monospace;
+  font-size: 22px;
+  font-family: 'audiowide';
   text-align: center;
   pointer-events: none; /* allow clicks through */
   z-index: 1000;        /* above canvas */
@@ -422,3 +420,20 @@ canvas {
   }
   
   
+
+  #gameWrapper {
+    position: relative;
+}
+
+#scoreText {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-family: 'Audiowide', cursive;
+    font-size: 14px;
+    font-weight: normal; /* Audiowide is already bold-style */
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
+    pointer-events: none;
+    z-index: 10;
+}

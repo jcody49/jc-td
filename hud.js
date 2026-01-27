@@ -9,8 +9,10 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     const towerAttackOption = document.getElementById("towerAttackOption");
     const towerSellOption = document.querySelector(".tower-sell");
     const settingsOption = document.getElementById("settingsOption");
+
     const livesDisplay = document.getElementById("lives");
     const moneyDisplay = document.getElementById("money");
+    const scoreDisplay = document.getElementById("scoreText"); // NEW
 
     let selectedTower = null;
     let sellHandler = null;
@@ -52,8 +54,7 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
             ">Level: ${tower.level}</span>`,
             `Damage: ${tower.damage}`,
             `Range: ${tower.range}`,
-            `Fire Rate: ${tower.displayFireRate}
-            `
+            `Fire Rate: ${tower.displayFireRate}`
         ].join("<br>");
     }
 
@@ -124,11 +125,12 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     }
 
     // ------------------------------
-    // HUD money/lives update
+    // HUD money/lives/score update
     // ------------------------------
     function updateMoneyLives() {
         if (livesDisplay) livesDisplay.textContent = `Lives: ${gameState.lives}`;
         if (moneyDisplay) moneyDisplay.textContent = `Money: ${gameState.money}`;
+        if (scoreDisplay) scoreDisplay.textContent = `Score: ${gameState.score}`; // NEW
     }
 
     // ------------------------------
