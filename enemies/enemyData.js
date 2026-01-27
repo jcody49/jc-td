@@ -13,7 +13,7 @@ export const enemiesData = {
       name: "Shpider",
       type: "basic",
       maxHp: 120, //LOCKED
-      speed: 0.37, //LOCKED
+      speed: 0.39, //LOCKED
       reward: 1,
       image: "assets/enemies/enemy2.png",
       isFlying: false,
@@ -47,7 +47,7 @@ export const enemiesData = {
         reward: 1,
         image: "assets/enemies/enemy5.png",
         isFlying: false,
-        sizeMultiplier: 0.7,
+        sizeMultiplier: 0.71,
     },
     enemy6: {
       name: "Charles Barkley Dead",
@@ -57,7 +57,7 @@ export const enemiesData = {
       reward: 1,
       image: "assets/enemies/enemy6.png",
       isFlying: false,
-      sizeMultiplier: 0.65,
+      sizeMultiplier: 0.71,
     },
     enemy7: {
       name: "El Diablin",
@@ -67,7 +67,7 @@ export const enemiesData = {
       reward: 2,
       image: "assets/enemies/enemy7.png",
       isFlying: false,
-      sizeMultiplier: 0.65,
+      sizeMultiplier: 0.71,
     },
     enemy8: {
       name: "Mini-Van Falcon",
@@ -77,7 +77,7 @@ export const enemiesData = {
       reward: 2,
       image: "assets/enemies/enemy8.png",
       isFlying: false,
-      sizeMultiplier: 0.7,
+      sizeMultiplier: 0.73,
     },
     enemy9: {
       name: "Lil Chickn-Hed",
@@ -93,12 +93,13 @@ export const enemiesData = {
       name: "Russell ScareCrowe",
       type: "boss",
       maxHp: 3000, 
-      speed: 0.78,
+      speed: 0.8,
       reward: 1,
       lifeReward: 1,
+      score: 10,
       image: "assets/enemies/enemy10.png",
       isFlying: false,
-      sizeMultiplier: 1.3,
+      sizeMultiplier: 1.34,
     },
 
   };

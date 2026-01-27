@@ -66,7 +66,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     const enemyName = enemiesData[enemyId]?.name || enemyId;
   
     // Wrap enemy name in a span for neon effect
-    waveTextEl.innerHTML = `Wave ${waveState.currentWave + 1} in progress: <span class="wave-text-neon">${enemyName}</span>`;
+    waveTextEl.innerHTML = `Wave ${waveState.currentWave + 1} in progress: <br><span class="wave-text-neon">${enemyName}</span>`;
   } else if (waveTextEl) {
     waveTextEl.textContent = `Wave ${waveState.currentWave + 1} in progress`;
   }
