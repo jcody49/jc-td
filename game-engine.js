@@ -41,6 +41,33 @@ grassTile.src = 'assets/grass-tile.png';
 grassTile.onload = () => tilesReady++;
 
 // =========================
+// DRAW START / END LABELS
+// =========================
+function drawStartEnd(ctx, path, gridSize) {
+    if (!path || path.length === 0) return;
+
+    const start = path[0];
+    const end = path[path.length - 1];
+
+    const drawLabel = (x, y, text, color, marginX = 0) => {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.font = "bold 15px 'Audiowide', sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(text, x + marginX, y + gridSize + 4); // 4px below tile
+        ctx.restore();
+    };
+
+    // Start label stays centered
+    drawLabel(start.x, start.y, "START", "lime", 15);
+
+    // Finish label gets margin-right 5px
+    drawLabel(end.x, end.y, "FINISH", "red", -15);
+}
+
+
+// =========================
 // TOWER IMAGES
 // =========================
 export const cannonImg = new Image();
@@ -77,13 +104,11 @@ function drawGridTiles(ctx) {
 
             if (cell) {
                 const img = roadImages[cell.roadType];
-
                 if (!img) {
                     console.error('❌ Missing road image:', cell.roadType);
                     ctx.drawImage(grassTile, x, y, gridSize, gridSize);
                     continue;
                 }
-
                 ctx.drawImage(img, x, y, gridSize, gridSize);
             } else {
                 ctx.drawImage(grassTile, x, y, gridSize, gridSize);
@@ -96,7 +121,6 @@ function drawGridTiles(ctx) {
 // GAME LOOP
 // =========================
 export function gameLoop(ctx, canvas, gameState, hud) {
-
     const mouseX = window.mouseX || 0;
     const mouseY = window.mouseY || 0;
 
@@ -110,151 +134,123 @@ export function gameLoop(ctx, canvas, gameState, hud) {
         return;
     }
 
-    // --- PAUSE CHECK ---
     if (window.gamePaused) {
-        // Skip all updates and just schedule the next frame
         requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
         return;
     }
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // tiles
+    // --- GRID & START/END ---
     drawGridTiles(ctx);
+    drawStartEnd(ctx, waveState.path, gridSize);
 
-    // draw grid overlays only if enabled
-if (window.showGrid) {
-    ctx.save();
-    ctx.strokeStyle = "rgba(0,255,255,0.2)";
-    for (let col = 0; col <= gridCols; col++) {
-      ctx.beginPath();
-      ctx.moveTo(col * gridSize, 0);
-      ctx.lineTo(col * gridSize, gridRows * gridSize);
-      ctx.stroke();
-    }
-    for (let row = 0; row <= gridRows; row++) {
-      ctx.beginPath();
-      ctx.moveTo(0, row * gridSize);
-      ctx.lineTo(gridCols * gridSize, row * gridSize);
-      ctx.stroke();
-    }
-    ctx.restore();
-  }
-  
-
-
-    // --- GHOST TOWER ---
-if (window.selectedTowerType) {
-    let col = Math.floor(mouseX / gridSize);
-    let row = Math.floor(mouseY / gridSize);
-
-    col = Math.max(0, Math.min(col, gridCols - 1));
-    row = Math.max(0, Math.min(row, gridRows - 1));
-
-    const validPlacement =
-        !window.gridOccupied[col][row] &&
-        !pathCells.some(c => c.col === col && c.row === row);
-
-    let img;
-    if (window.selectedTowerType === 'Cannon') img = cannonImg;
-    if (window.selectedTowerType === 'Frost')  img = frostImg;
-    if (window.selectedTowerType === 'Acid')   img = acidImg;
-    if (window.selectedTowerType === 'Tank')   img = tankImg;
-
-    if (img) {
+    // --- GRID OVERLAY (optional) ---
+    if (window.showGrid) {
         ctx.save();
-        ctx.globalAlpha = 0.35;
-
-        // --- RED/VALID SQUARE ---
-        ctx.fillStyle = validPlacement ? 'rgba(0,255,0,0.3)' : 'rgba(255,0,0,0.3)';
-        ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
-
-        // --- RANGE CIRCLE ---
-        const range = (() => {
-            switch (window.selectedTowerType) {
-                case 'Cannon': return 125;
-                case 'Frost':  return 117;
-                case 'Acid':   return 120;
-                case 'Tank':   return 125;
-                default:       return 0;
-            }
-        })();
-
-        const centerX = col * gridSize + gridSize / 2;
-        const centerY = row * gridSize + gridSize / 2;
-
-        ctx.strokeStyle = 'rgba(0,255,255,0.5)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, range, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // --- TOWER IMAGE ---
-        ctx.drawImage(
-            img,
-            col * gridSize,
-            row * gridSize,
-            gridSize,
-            gridSize
-        );
-
+        ctx.strokeStyle = "rgba(0,255,255,0.2)";
+        for (let col = 0; col <= gridCols; col++) {
+            ctx.beginPath();
+            ctx.moveTo(col * gridSize, 0);
+            ctx.lineTo(col * gridSize, gridRows * gridSize);
+            ctx.stroke();
+        }
+        for (let row = 0; row <= gridRows; row++) {
+            ctx.beginPath();
+            ctx.moveTo(0, row * gridSize);
+            ctx.lineTo(gridCols * gridSize, row * gridSize);
+            ctx.stroke();
+        }
         ctx.restore();
     }
-}
 
+    // --- GHOST TOWER ---
+    if (window.selectedTowerType) {
+        let col = Math.floor(mouseX / gridSize);
+        let row = Math.floor(mouseY / gridSize);
+        col = Math.max(0, Math.min(col, gridCols - 1));
+        row = Math.max(0, Math.min(row, gridRows - 1));
+
+        const validPlacement = !window.gridOccupied[col][row] &&
+                               !pathCells.some(c => c.col === col && c.row === row);
+
+        let img;
+        switch (window.selectedTowerType) {
+            case 'Cannon': img = cannonImg; break;
+            case 'Frost':  img = frostImg; break;
+            case 'Acid':   img = acidImg; break;
+            case 'Tank':   img = tankImg; break;
+        }
+
+        if (img) {
+            ctx.save();
+            ctx.globalAlpha = 0.35;
+            ctx.fillStyle = validPlacement ? 'rgba(0,255,0,0.3)' : 'rgba(255,0,0,0.3)';
+            ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
+
+            const range = {
+                'Cannon': 125,
+                'Frost': 117,
+                'Acid': 120,
+                'Tank': 125
+            }[window.selectedTowerType] || 0;
+
+            const centerX = col * gridSize + gridSize / 2;
+            const centerY = row * gridSize + gridSize / 2;
+
+            ctx.strokeStyle = 'rgba(0,255,255,0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, range, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.drawImage(img, col * gridSize, row * gridSize, gridSize, gridSize);
+            ctx.restore();
+        }
+    }
 
     // --- SELECTED TOWER HIGHLIGHT ---
     if (window.selectedTower) {
         const t = window.selectedTower;
         const col = Math.floor(t.x / gridSize);
         const row = Math.floor(t.y / gridSize);
-
         ctx.fillStyle = 'rgba(128,0,128,0.5)';
         ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
     }
 
-    
     // --- ENEMIES ---
     gameState.enemies.forEach(e => {
         e.update(gameState);
         e.draw();
     });
 
-    // Remove dead enemies and reward player
     gameState.enemies = gameState.enemies.filter(e => {
         if (!e.remove) return true;
 
         if (!e.escaped) {
-            // --- MONEY ---
             const reward = e.reward || 1;
             gameState.money += reward;
             showMoneyPopup(reward, e.x, e.y);
 
-            // --- LIVES ---
             if (e.lifeReward > 0) {
                 gameState.lives += e.lifeReward;
                 showLifePopup?.(e.lifeReward, e.x, e.y);
             }
 
-            // --- SCORE ---
             const scoreReward = e.score || 5;
             gameState.score += scoreReward;
         }
 
-        return false; // remove enemy from array
+        return false;
     });
 
     // --- HUD UPDATE ---
-    if (hud?.updateMoneyLives) hud.updateMoneyLives(); // updates money, lives, AND score
-
-    
-    
+    if (hud?.updateMoneyLives) hud.updateMoneyLives();
+    if (hud?.update) hud.update();
 
     // --- WAVE MANAGEMENT ---
-    const waveTextEl = document.getElementById("waveText"); // ensure you have this in DOM
+    const waveTextEl = document.getElementById("waveText");
     updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl);
-
-
 
     // --- TOWERS ---
     gameState.towers.forEach(t => {
@@ -270,10 +266,6 @@ if (window.selectedTowerType) {
     });
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
 
-    // --- HUD ---
-    if (hud?.updateMoneyLives) hud.updateMoneyLives();
-    if (hud?.update) hud.update();
-
     requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
 }
 
@@ -285,12 +277,10 @@ export function startGameWaves(gameState, ctx, canvas) {
     
     const skipButton = document.getElementById("skipButton");
     if (skipButton) {
-        skipButton.style.display = "block";  // show the button
-        skipButton.disabled = false;          // enable it
+        skipButton.style.display = "block";
+        skipButton.disabled = false;
     }
 
     startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
     updateWavePreview();
 }
-
-
