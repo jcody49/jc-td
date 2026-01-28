@@ -103,7 +103,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     // =========================
     switch (gameState.difficulty) {
       case "easy":
-        config.maxHp *= 0.8;
+        config.maxHp *= 0.77;
         config.score = Math.round(config.score * 0.8);
         break;
 

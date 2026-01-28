@@ -108,8 +108,13 @@ export class Enemy {
     if (this.pathIndex >= this.path.length - 1) {
       if (!this.escaped) {
         this.escaped = true;
-        gameState.lives--;
-
+    
+        // Only subtract lives if NOT a bonus enemy
+        if (!this.isBonus) {
+          gameState.lives--;
+        }
+    
+        // Draw X as before
         const ctx = this.ctx;
         ctx.save();
         ctx.strokeStyle = "yellow";
@@ -125,6 +130,7 @@ export class Enemy {
       this.remove = true;
       return;
     }
+    
 
     // --- Slow ---
     if (this.slowTimer > 0) {
