@@ -143,6 +143,12 @@ canvas {
    #hud * {
      cursor: url("../assets/cursor-default.png") 6 6, auto;
    }
+   /* FORCE hover cursor on tower options and all inner elements */
+    #hud .tower-modal-option,
+    #hud .tower-modal-option * {
+      cursor: url("../assets/cursor-default-hover.png") 6 6, pointer !important;
+    }
+
    
    /* =========================
       CLICKABLE HUD ELEMENTS

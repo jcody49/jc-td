@@ -55,6 +55,7 @@ export class Enemy {
 
     this.lifeReward = Number(config.lifeReward ?? 0);
     this.reward = Number(config.reward ?? 1);
+    this.score = config.score ?? 5;
     this.isFlying = Boolean(config.isFlying);
     this.type = config.type ?? "basic";
 

@@ -95,24 +95,30 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     // clone config to avoid mutating original
     let config = { ...spawnQueue[enemiesSpawned] };
 
+    // set a default score if none exists
+    config.score = config.score ?? 5;
+
     // =========================
     // APPLY DIFFICULTY ADJUSTMENTS
     // =========================
     switch (gameState.difficulty) {
       case "easy":
         config.maxHp *= 0.8;
-        config.speed *= 0.9;
-        config.reward *= 1.2;
+        config.score = Math.round(config.score * 0.8);
         break;
-      case "normal":
-        // default stats
-        break;
+
       case "hard":
-        config.maxHp *= 1.5;
-        config.speed *= 1.2;
-        config.reward *= 0.8;
+        config.maxHp *= 1.09;
+        config.score = Math.round(config.score * 1.2);
+        break;
+
+      case "normal":
+        // no changes
         break;
     }
+
+
+
 
     gameState.enemies.push(
       new Enemy({

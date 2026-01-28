@@ -311,6 +311,18 @@
   margin-right: 15px;        /* remove auto push */
 }
 
+
+.tower-modal-options, .towerKey, .upgradeCost, #upgradePreview, .towerUpgradeOption {
+  cursor: url("assets/cursor-default-hover.png") 0 0;
+}
+
+
+
+
+
+
+
+
 /* Each wrapper holds one square + label vertically */
 .tower-option-wrapper {
   display: flex;
