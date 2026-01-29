@@ -452,7 +452,7 @@ canvas {
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.85); /* semi-transparent black */
   padding: 2rem 3rem;
-  border: 3px solid #FF5DFF; /* neon-style border */
+  border: 3px solid #7fff00; /* neon-style border */
   border-radius: 12px;
   display: none;           /* hidden by default */
   flex-direction: column;
@@ -472,19 +472,20 @@ canvas {
   font-size: 1.1rem;
   color: #FFFFFF;
   background: transparent;
-  border: 2px solid #FF5DFF;
+  border: 2px solid #7fff00;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
+  width: 100%;
 }
 
 #difficultyMenu button:hover {
-  background: #FF5DFF;
+  background: #7fff00;
   color: #000;
 }
 
 /* Highlight the selected difficulty */
 #difficultyMenu button.selected {
-  background: #FF5DFF;
+  background: #7fff00;
   color: #000;
 }
