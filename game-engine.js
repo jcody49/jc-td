@@ -1,6 +1,6 @@
 // game-engine.js
 import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
-import { pathCells } from './pathing.js';
+import { pathCells, buildPath } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
 import { updateWaveCompletion, startWave, startNextWave, waveState, updateWavePreview } from './waveManager.js';
 
@@ -115,63 +115,98 @@ function drawStartEnd(ctx, path, gridSize) {
 // =========================
 // GAME OVER HANDLING
 // =========================
+
 export function showGameOver(gameState, ctx, canvas) {
     window.gamePaused = true;
-  
+
+    // Clear enemies/projectiles
+    gameState.enemies = [];
+    gameState.projectiles = [];
+
+    // Redraw the map so it doesn't disappear
+    drawGridTiles(ctx);
+    drawStartEnd(ctx, waveState.path, gridSize);
+
+    // Show overlay
     const overlay = document.getElementById("gameOverOverlay");
     overlay.classList.remove("hidden");
-  
+
     // Hide HUD wave text and countdown
     const waveTextEl = document.getElementById("waveText");
     if (waveTextEl) waveTextEl.style.display = "none";
-  
+
     const skipButton = document.getElementById("skipButton");
     if (skipButton) skipButton.style.display = "none";
-  
-    // Clear all enemies immediately
-    gameState.enemies = [];
-    gameState.projectiles = [];
-  
+
+    // Retry button logic
     const retryBtn = document.getElementById("retryButton");
     retryBtn.onclick = () => {
-      overlay.classList.add("hidden");
-  
-      if (waveTextEl) waveTextEl.style.display = "block";
-      if (skipButton) skipButton.style.display = "block";
-  
-      resetGame(gameState, ctx, canvas);
+        overlay.classList.add("hidden");
+
+        if (waveTextEl) waveTextEl.style.display = "block";
+        if (skipButton) skipButton.style.display = "block";
+
+        // Reset game state and redraw map
+        resetGame(gameState, ctx, canvas);
+        drawGridTiles(ctx);
+        drawStartEnd(ctx, waveState.path, gridSize);
     };
-  }
+}
+
+
   
 
 export function resetGame(gameState, ctx, canvas) {
+    console.log("🌀 resetGame() called");
+  
+    // === CLEAR EVERYTHING ===
+    console.log("Clearing enemies, projectiles, towers, and resetting stats");
     gameState.enemies = [];
-    gameState.towers = [];
     gameState.projectiles = [];
+    gameState.towers = [];
     gameState.money = 90;
     gameState.lives = 10;
     gameState.score = 0;
     gameState.difficulty = "normal";
-
+  
     // Reset grid
+    console.log("Resetting gridOccupied array");
     for (let col = 0; col < gridCols; col++) {
-        for (let row = 0; row < gridRows; row++) {
-            window.gridOccupied[col][row] = false;
-        }
+      for (let row = 0; row < gridRows; row++) {
+        window.gridOccupied[col][row] = false;
+      }
     }
-
-    // Reset waves
+  
+    // Reset wave manager
+    console.log("Resetting waveState");
     if (waveState.countdownInterval) {
-        clearInterval(waveState.countdownInterval);
-        waveState.countdownInterval = null;
+      clearInterval(waveState.countdownInterval);
+      waveState.countdownInterval = null;
     }
     waveState.currentWave = 0;
     waveState.status = "countdown";
-    waveState.path = [];
-
-    startGameWaves(gameState, ctx, canvas);
+    waveState.path = []; // clear old path
+  
+    // Rebuild path
+    console.log("Rebuilding path for enemies");
+    const { pathOccupied: newPathOccupied, pixelPath } = buildPath(pathCells, gridSize);
+    waveState.path = pixelPath;         // ✅ assign to waveState.path so enemies know where to go
+    window.pathOccupied = newPathOccupied;
+  
+    console.log("waveState.path length:", waveState.path.length);
+  
+    // Unpause game loop
+    console.log("Unpausing game loop");
     window.gamePaused = false;
-}
+  
+    // Restart first wave safely
+    console.log("Starting first wave");
+    startGameWaves(gameState, ctx, canvas);
+  
+    console.log("resetGame() completed ✅");
+  }
+  
+
 
 // =========================
 // GAME LOOP

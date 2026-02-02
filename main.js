@@ -1,7 +1,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { gameLoop, startGameWaves } from './game-engine.js';
+import { gameLoop, startGameWaves, resetGame } from './game-engine.js';
 import { startWave, waveState, updateWavePreview } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
@@ -405,6 +405,32 @@ if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnBu
         if (e.target === settingsModal) closeModal();
     });
 }
+
+// ======================
+// RETRY BUTTON
+// ======================
+const retryButton = document.getElementById("retryButton");
+retryButton.addEventListener("click", () => {
+    console.log("🔄 Retry button clicked");
+    
+    // Hide overlay
+    document.getElementById("gameOverOverlay").classList.add("hidden");
+
+    // Reset the game state
+    resetGame(gameState, ctx, canvas);
+
+    // Restart the game loop
+    console.log("▶️ Restarting game loop");
+    gameLoop(ctx, canvas, gameState, hud);
+
+    // Re-show HUD
+    document.getElementById("scoreText").textContent = "Score: 0";
+    document.getElementById("lives").textContent = gameState.lives;
+    document.getElementById("money").textContent = gameState.money;
+});
+
+
+
 
 // ======================
 // GLOBALS
