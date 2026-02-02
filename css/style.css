@@ -528,17 +528,54 @@ canvas {
 
 
 #gameOverOverlay h1 {
-  font-size: 4em;
-  margin-bottom: 20px;
+  font-family: 'Audiowide', cursive;
+    font-size: 4rem;
+    color: #fff;
+    text-shadow:
+      0 0 6px #7B2CFF,
+      0 0 12px #7B2CFF,
+      0 0 24px #53FFFF;
+  font-size: 7em;
+  margin-bottom: 25px;
 }
 
+
 #gameOverOverlay button {
+  font-family: 'Audiowide';
   font-size: 2em;
   padding: 15px 40px;
   color: #FFFFFF;
   background: transparent;
-  border: 2px solid #7fff00;
+  border: 2px solid #7B2CFF;
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
+  animation: pulseRetry 2.2s infinite alternate;
+}
+
+/* Pulsing animation */
+@keyframes pulseRetry {
+  0% {
+    color: #FFFFFF;
+    border-color: #7B2CFF;
+    box-shadow: 0 0 5px #7B2CFF;
+  }
+  50% {
+    color: #7B2CFF;
+    border-color: #53FFFF;
+    box-shadow: 0 0 20px #53FFFF;
+  }
+  100% {
+    color: #FFFFFF;
+    border-color: #7B2CFF;
+    box-shadow: 0 0 5px #7B2CFF;
+  }
+}
+
+/* Hover effect: stronger glow + slight scale */
+#gameOverOverlay button:hover {
+  color: #53FFFF;
+  border-color: #53FFFF;
+  box-shadow: 0 0 30px #53FFFF, 0 0 40px #7B2CFF;
+  transform: scale(1.05);
 }
