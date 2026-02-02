@@ -20,6 +20,17 @@ import { TOWER_REGISTRY } from "./towers/towerRegistry.js";
 // ======================
 loadEnemyImages(enemiesData);
 
+
+// ======================
+// AUTO PAUSE ON TAB SWITCH
+// ======================
+window.gamePaused = false;
+
+document.addEventListener("visibilitychange", () => {
+    window.gamePaused = document.hidden;
+});
+
+
 // ======================
 // GLOBALS
 // ======================
