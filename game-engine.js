@@ -21,11 +21,11 @@ function loadRoadTile(key, src) {
     roadImages[key] = img;
 }
 
-// base
+// Base
 loadRoadTile('horizontal', 'assets/road-tile-horizontal.png');
 loadRoadTile('vertical',   'assets/road-tile-vertical.png');
 
-// corners (ENTER → EXIT)
+// Corners (ENTER → EXIT)
 loadRoadTile('cornerRD', 'assets/road-tile-right-down.png');
 loadRoadTile('cornerDR', 'assets/road-tile-down-right.png');
 loadRoadTile('cornerLD', 'assets/road-tile-left-down.png');
@@ -39,33 +39,6 @@ loadRoadTile('cornerUR', 'assets/road-tile-up-right.png');
 const grassTile = new Image();
 grassTile.src = 'assets/grass-tile.png';
 grassTile.onload = () => tilesReady++;
-
-// =========================
-// DRAW START / END LABELS
-// =========================
-function drawStartEnd(ctx, path, gridSize) {
-    if (!path || path.length === 0) return;
-
-    const start = path[0];
-    const end = path[path.length - 1];
-
-    const drawLabel = (x, y, text, color, marginX = 0) => {
-        ctx.save();
-        ctx.fillStyle = color;
-        ctx.font = "bold 15px 'Audiowide', sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "top";
-        ctx.fillText(text, x + marginX, y + gridSize + 4); // 4px below tile
-        ctx.restore();
-    };
-
-    // Start label stays centered
-    drawLabel(start.x, start.y, "START", "lime", 15);
-
-    // Finish label gets margin-right 5px
-    drawLabel(end.x, end.y, "FINISH", "red", -15);
-}
-
 
 // =========================
 // TOWER IMAGES
@@ -99,7 +72,6 @@ function drawGridTiles(ctx) {
             const x = col * gridSize;
             const y = row * gridSize;
             const key = `${col},${row}`;
-
             const cell = cellMap.get(key);
 
             if (cell) {
@@ -118,24 +90,112 @@ function drawGridTiles(ctx) {
 }
 
 // =========================
+// DRAW START / END LABELS
+// =========================
+function drawStartEnd(ctx, path, gridSize) {
+    if (!path || path.length === 0) return;
+
+    const start = path[0];
+    const end = path[path.length - 1];
+
+    const drawLabel = (x, y, text, color, marginX = 0) => {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.font = "bold 15px 'Audiowide', sans-serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "top";
+        ctx.fillText(text, x + marginX, y + gridSize + 4);
+        ctx.restore();
+    };
+
+    drawLabel(start.x, start.y, "START", "lime", 15);
+    drawLabel(end.x, end.y, "FINISH", "red", -15);
+}
+
+// =========================
+// GAME OVER HANDLING
+// =========================
+export function showGameOver(gameState, ctx, canvas) {
+    window.gamePaused = true;
+  
+    const overlay = document.getElementById("gameOverOverlay");
+    overlay.classList.remove("hidden");
+  
+    // Hide HUD wave text and countdown
+    const waveTextEl = document.getElementById("waveText");
+    if (waveTextEl) waveTextEl.style.display = "none";
+  
+    const skipButton = document.getElementById("skipButton");
+    if (skipButton) skipButton.style.display = "none";
+  
+    // Clear all enemies immediately
+    gameState.enemies = [];
+    gameState.projectiles = [];
+  
+    const retryBtn = document.getElementById("retryButton");
+    retryBtn.onclick = () => {
+      overlay.classList.add("hidden");
+  
+      if (waveTextEl) waveTextEl.style.display = "block";
+      if (skipButton) skipButton.style.display = "block";
+  
+      resetGame(gameState, ctx, canvas);
+    };
+  }
+  
+
+export function resetGame(gameState, ctx, canvas) {
+    gameState.enemies = [];
+    gameState.towers = [];
+    gameState.projectiles = [];
+    gameState.money = 90;
+    gameState.lives = 10;
+    gameState.score = 0;
+    gameState.difficulty = "normal";
+
+    // Reset grid
+    for (let col = 0; col < gridCols; col++) {
+        for (let row = 0; row < gridRows; row++) {
+            window.gridOccupied[col][row] = false;
+        }
+    }
+
+    // Reset waves
+    if (waveState.countdownInterval) {
+        clearInterval(waveState.countdownInterval);
+        waveState.countdownInterval = null;
+    }
+    waveState.currentWave = 0;
+    waveState.status = "countdown";
+    waveState.path = [];
+
+    startGameWaves(gameState, ctx, canvas);
+    window.gamePaused = false;
+}
+
+// =========================
 // GAME LOOP
 // =========================
-export function gameLoop(ctx, canvas, gameState, hud) {
+let lastTimestamp = 0;
+export function gameLoop(ctx, canvas, gameState, hud, timestamp = 0) {
+    const deltaTime = timestamp - lastTimestamp;
+    lastTimestamp = timestamp;
+
     const mouseX = window.mouseX || 0;
     const mouseY = window.mouseY || 0;
 
     if (tilesReady < 1 + Object.keys(roadImages).length) {
-        requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
+        requestAnimationFrame((ts) => gameLoop(ctx, canvas, gameState, hud, ts));
         return;
     }
 
     if (gameState.lives <= 0) {
-        alert("Game Over!");
+        showGameOver(gameState, ctx, canvas);
         return;
     }
 
     if (window.gamePaused) {
-        requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
+        requestAnimationFrame((ts) => gameLoop(ctx, canvas, gameState, hud, ts));
         return;
     }
 
@@ -145,7 +205,7 @@ export function gameLoop(ctx, canvas, gameState, hud) {
     drawGridTiles(ctx);
     drawStartEnd(ctx, waveState.path, gridSize);
 
-    // --- GRID OVERLAY (optional) ---
+    // --- GRID OVERLAY ---
     if (window.showGrid) {
         ctx.save();
         ctx.strokeStyle = "rgba(0,255,255,0.2)";
@@ -219,10 +279,8 @@ export function gameLoop(ctx, canvas, gameState, hud) {
     }
 
     // --- ENEMIES ---
-    gameState.enemies.forEach(e => {
-        e.update(gameState);
-        e.draw();
-    });
+    gameState.enemies.forEach(e => e.update(gameState));
+    gameState.enemies.forEach(e => e.draw());
 
     gameState.enemies = gameState.enemies.filter(e => {
         if (!e.remove) return true;
@@ -232,23 +290,18 @@ export function gameLoop(ctx, canvas, gameState, hud) {
             gameState.money += reward;
             showMoneyPopup(reward, e.x, e.y);
 
-            if (e.lifeReward > 0) {
-                gameState.lives += e.lifeReward;
-                showLifePopup?.(e.lifeReward, e.x, e.y);
-            }
-
-            const scoreReward = e.score || 5;
-            gameState.score += scoreReward;
+            if (e.lifeReward > 0) gameState.lives += e.lifeReward;
+            if (e.score) gameState.score += e.score;
         }
 
         return false;
     });
 
-    // --- HUD UPDATE ---
+    // --- HUD ---
     if (hud?.updateMoneyLives) hud.updateMoneyLives();
     if (hud?.update) hud.update();
 
-    // --- WAVE MANAGEMENT ---
+    // --- WAVES ---
     const waveTextEl = document.getElementById("waveText");
     updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl);
 
@@ -260,13 +313,10 @@ export function gameLoop(ctx, canvas, gameState, hud) {
     });
 
     // --- PROJECTILES ---
-    gameState.projectiles.forEach(p => {
-        p.update(gameState);
-        p.draw();
-    });
+    gameState.projectiles.forEach(p => { p.update(gameState); p.draw(); });
     gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
 
-    requestAnimationFrame(() => gameLoop(ctx, canvas, gameState, hud));
+    requestAnimationFrame((ts) => gameLoop(ctx, canvas, gameState, hud, ts));
 }
 
 // =========================
@@ -274,7 +324,7 @@ export function gameLoop(ctx, canvas, gameState, hud) {
 // =========================
 export function startGameWaves(gameState, ctx, canvas) {
     const waveTextEl = document.getElementById("waveText");
-    
+
     const skipButton = document.getElementById("skipButton");
     if (skipButton) {
         skipButton.style.display = "block";

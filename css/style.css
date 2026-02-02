@@ -489,3 +489,56 @@ canvas {
   background: #7fff00;
   color: #000;
 }
+
+
+/* Make pause overlay fully cover gameContainer */
+#pauseOverlay {
+  position: fixed;          /* already fixed, but ensure top/left/width/height */
+  top: 0;
+  left: 0;
+  width: 100vw;             /* full viewport width */
+  height: 100vh;            /* full viewport height */
+  z-index: 25000;           /* above everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.5); /* optional semi-transparent background */
+  pointer-events: all;      /* allow clicks if needed */
+}
+
+/* Make game over overlay fully cover gameContainer */
+#gameOverOverlay {
+  position: fixed;          /* changed from absolute to fixed */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.85);
+  flex-direction: column;
+}
+
+
+#gameOverOverlay.hidden {
+  display: none;
+}
+
+
+#gameOverOverlay h1 {
+  font-size: 4em;
+  margin-bottom: 20px;
+}
+
+#gameOverOverlay button {
+  font-size: 2em;
+  padding: 15px 40px;
+  color: #FFFFFF;
+  background: transparent;
+  border: 2px solid #7fff00;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
