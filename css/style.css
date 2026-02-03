@@ -393,14 +393,6 @@ canvas {
   }
   
 
-  #pauseOverlay {
-    position: fixed;
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 25000;       /* above modal */
-    pointer-events: none;  /* so clicks go through */
-  }
   
   #pauseOverlay span {
     font-family: 'Audiowide', cursive;
@@ -491,20 +483,6 @@ canvas {
 }
 
 
-/* Make pause overlay fully cover gameContainer */
-#pauseOverlay {
-  position: fixed;          /* already fixed, but ensure top/left/width/height */
-  top: 0;
-  left: 0;
-  width: 100vw;             /* full viewport width */
-  height: 100vh;            /* full viewport height */
-  z-index: 25000;           /* above everything */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0,0,0,0.5); /* optional semi-transparent background */
-  pointer-events: all;      /* allow clicks if needed */
-}
 
 /* Make game over overlay fully cover gameContainer */
 #gameOverOverlay {
@@ -579,3 +557,34 @@ canvas {
   box-shadow: 0 0 30px #53FFFF, 0 0 40px #7B2CFF;
   transform: scale(1.05);
 }
+
+
+
+button.danger {
+  width: 56%;
+  height: 40px;
+  margin-top: 20px;
+  border-radius: 6px;
+
+  background-color: #b33;          /* deep red for caution */
+  border: 2px solid #ff5555;       /* bright red border for emphasis */
+  color: #fff;
+  font-family: 'Audiowide', sans-serif;
+  font-size: 14px;
+  text-shadow:
+      0 0 3px #000,
+      0 0 6px #000;               /* same text shadow style as returnToGame */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+button.danger:hover {
+  background-color: #d44;           /* slightly brighter red */
+  border-color: #ff8888;            /* glow on hover */
+  box-shadow:
+      0 0 5px #ff5555,
+      0 0 12px #ff8888,
+      0 0 20px #ff5555;             /* subtle pulsing neon glow */
+  transform: translateY(-1px);      /* subtle lift on hover */
+}
+

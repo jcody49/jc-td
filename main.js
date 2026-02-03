@@ -429,6 +429,36 @@ retryButton.addEventListener("click", () => {
     document.getElementById("money").textContent = gameState.money;
 });
 
+const restartGameBtn = document.getElementById("restartGameBtn");
+
+if (restartGameBtn) {
+    restartGameBtn.addEventListener("click", () => {
+        console.log("🔄 Restart button clicked (settings)");
+
+        // Optional confirmation (recommended)
+        const confirmed = confirm("Restart the game? Progress will be lost.");
+        if (!confirmed) {
+            console.log("❎ Restart cancelled");
+            return;
+        }
+
+        // Pause first to avoid race conditions
+        window.gamePaused = true;
+
+        console.log("🧹 Calling resetGame() from settings");
+        resetGame(gameState, ctx, canvas);
+
+        // Close settings modal
+        settingsModal.classList.add("hidden");
+        pauseOverlay.classList.add("hidden");
+
+        // Resume
+        window.gamePaused = false;
+
+        console.log("✅ Game restarted via settings menu");
+    });
+}
+
 
 
 
