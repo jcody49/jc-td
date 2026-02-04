@@ -410,41 +410,56 @@ if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnBu
 // RETRY BUTTON
 // ======================
 const retryButton = document.getElementById("retryButton");
-retryButton.addEventListener("click", () => {
-    console.log("🔄 Retry button clicked");
+if (retryButton) {
+    retryButton.addEventListener("click", () => {
+        console.log("🔄 Retry button clicked");
 
-    document.getElementById("gameOverOverlay").classList.add("hidden");
+        // ✅ Hide overlays first
+        document.getElementById("gameOverOverlay")?.classList.add("hidden");
+        settingsModal?.classList.add("hidden");
+        pauseOverlay?.classList.add("hidden");
 
-    resetGame(gameState, ctx, canvas);
+        // Reset game state
+        resetGame(gameState, ctx, canvas);
 
-    console.log("▶️ Restarting game loop");
-    requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
+        // Restart game loop
+        console.log("▶️ Restarting game loop");
+        requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
 
-    document.getElementById("scoreText").textContent = "Score: 0";
-    document.getElementById("lives").textContent = gameState.lives;
-    document.getElementById("money").textContent = gameState.money;
-});
+        // Reset HUD elements
+        document.getElementById("scoreText").textContent = "Score: 0";
+        document.getElementById("lives").textContent = gameState.lives;
+        document.getElementById("money").textContent = gameState.money;
+    });
+}
 
 
+// ======================
+// RESTART GAME BUTTON (PAUSE / SETTINGS)
+// ======================
 const restartGameBtn = document.getElementById("restartGameBtn");
-
 if (restartGameBtn) {
     restartGameBtn.addEventListener("click", () => {
         const confirmed = confirm("Restart the game? Progress will be lost.");
         if (!confirmed) return;
-    
+
+        // ✅ Hide overlays first
+        settingsModal?.classList.add("hidden");
+        pauseOverlay?.classList.add("hidden");
+        document.getElementById("gameOverOverlay")?.classList.add("hidden");
+
+        // Pause the game just in case
         window.gamePaused = true;
-    
+
+        // Reset game state
         resetGame(gameState, ctx, canvas);
-    
-        settingsModal.classList.add("hidden");
-        pauseOverlay.classList.add("hidden");
-    
-        // ✅ restart game loop via requestAnimationFrame
+
+        // Restart game loop
         requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
     });
-    
 }
+
+
 
 
 
