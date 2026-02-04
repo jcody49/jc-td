@@ -3,6 +3,8 @@ import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells, buildPath } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
 import { updateWaveCompletion, startWave, startNextWave, waveState, updateWavePreview } from './waveManager.js';
+import { applyCursor } from './cursor.js';
+
 
 // =========================
 // TILE LOAD TRACKING

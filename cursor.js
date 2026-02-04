@@ -79,7 +79,7 @@ export function getCursorMode() {
 // =========================
 // APPLY CURSOR IMAGE / STATE
 // =========================
-function applyCursor(hoverTower = null, hoveredEnemy = null) {
+export function applyCursor(hoverTower = null, hoveredEnemy = null) {
   if (!cursorEl || !cursorImg) return;
 
   // 1️⃣ Attack mode
