@@ -412,51 +412,38 @@ if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnBu
 const retryButton = document.getElementById("retryButton");
 retryButton.addEventListener("click", () => {
     console.log("🔄 Retry button clicked");
-    
-    // Hide overlay
+
     document.getElementById("gameOverOverlay").classList.add("hidden");
 
-    // Reset the game state
     resetGame(gameState, ctx, canvas);
 
-    // Restart the game loop
     console.log("▶️ Restarting game loop");
-    gameLoop(ctx, canvas, gameState, hud);
+    requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
 
-    // Re-show HUD
     document.getElementById("scoreText").textContent = "Score: 0";
     document.getElementById("lives").textContent = gameState.lives;
     document.getElementById("money").textContent = gameState.money;
 });
 
+
 const restartGameBtn = document.getElementById("restartGameBtn");
 
 if (restartGameBtn) {
     restartGameBtn.addEventListener("click", () => {
-        console.log("🔄 Restart button clicked (settings)");
-
-        // Optional confirmation (recommended)
         const confirmed = confirm("Restart the game? Progress will be lost.");
-        if (!confirmed) {
-            console.log("❎ Restart cancelled");
-            return;
-        }
-
-        // Pause first to avoid race conditions
+        if (!confirmed) return;
+    
         window.gamePaused = true;
-
-        console.log("🧹 Calling resetGame() from settings");
+    
         resetGame(gameState, ctx, canvas);
-
-        // Close settings modal
+    
         settingsModal.classList.add("hidden");
         pauseOverlay.classList.add("hidden");
-
-        // Resume
-        window.gamePaused = false;
-
-        console.log("✅ Game restarted via settings menu");
+    
+        // ✅ restart game loop via requestAnimationFrame
+        requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
     });
+    
 }
 
 

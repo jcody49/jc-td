@@ -154,13 +154,39 @@ export function showGameOver(gameState, ctx, canvas) {
 }
 
 
-  
+// ======================
+// HELPER: DRAW ENTIRE GRID
+// ======================
+export function drawEntireGrid(ctx, gridSize, gridOccupied, pathOccupied) {
+    for (let col = 0; col < gridCols; col++) {
+        for (let row = 0; row < gridRows; row++) {
+            const x = col * gridSize;
+            const y = row * gridSize;
+            const key = `${col},${row}`;
+
+            // Draw grass first
+            if (grassTile.complete) { 
+                ctx.drawImage(grassTile, x, y, gridSize, gridSize);
+            } else {
+                ctx.fillStyle = "#6b8e23"; // fallback
+                ctx.fillRect(x, y, gridSize, gridSize);
+            }
+
+            // Optionally, draw path overlay
+            if (pathOccupied.includes(key)) {
+                ctx.fillStyle = "rgba(170,170,170,0.5)"; // light overlay for path
+                ctx.fillRect(x, y, gridSize, gridSize);
+            }
+        }
+    }
+}
+
+
 
 export function resetGame(gameState, ctx, canvas) {
     console.log("🌀 resetGame() called");
-  
+
     // === CLEAR EVERYTHING ===
-    console.log("Clearing enemies, projectiles, towers, and resetting stats");
     gameState.enemies = [];
     gameState.projectiles = [];
     gameState.towers = [];
@@ -168,43 +194,48 @@ export function resetGame(gameState, ctx, canvas) {
     gameState.lives = 10;
     gameState.score = 0;
     gameState.difficulty = "normal";
-  
+
     // Reset grid
-    console.log("Resetting gridOccupied array");
     for (let col = 0; col < gridCols; col++) {
-      for (let row = 0; row < gridRows; row++) {
-        window.gridOccupied[col][row] = false;
-      }
+        for (let row = 0; row < gridRows; row++) {
+            window.gridOccupied[col][row] = false;
+        }
     }
-  
+
     // Reset wave manager
-    console.log("Resetting waveState");
     if (waveState.countdownInterval) {
-      clearInterval(waveState.countdownInterval);
-      waveState.countdownInterval = null;
+        clearInterval(waveState.countdownInterval);
+        waveState.countdownInterval = null;
     }
     waveState.currentWave = 0;
     waveState.status = "countdown";
-    waveState.path = []; // clear old path
-  
+    waveState.path = [];
+
+    // ✅ Clear selection state to prevent ghost tower
+    window.selectedTower = null;
+    window.selectedTowerType = null;
+    window.selectedTowerCost = null;
+
     // Rebuild path
-    console.log("Rebuilding path for enemies");
     const { pathOccupied: newPathOccupied, pixelPath } = buildPath(pathCells, gridSize);
-    waveState.path = pixelPath;         // ✅ assign to waveState.path so enemies know where to go
+    waveState.path = pixelPath;
     window.pathOccupied = newPathOccupied;
-  
-    console.log("waveState.path length:", waveState.path.length);
-  
-    // Unpause game loop
-    console.log("Unpausing game loop");
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGridTiles(ctx);
+    drawStartEnd(ctx, waveState.path, gridSize);
+
+
     window.gamePaused = false;
-  
+
     // Restart first wave safely
-    console.log("Starting first wave");
     startGameWaves(gameState, ctx, canvas);
-  
+    // UPDATE CURSOR
+    applyCursor();
     console.log("resetGame() completed ✅");
-  }
+}
+
+
   
 
 
@@ -213,6 +244,8 @@ export function resetGame(gameState, ctx, canvas) {
 // =========================
 let lastTimestamp = 0;
 export function gameLoop(ctx, canvas, gameState, hud, timestamp = 0) {
+    console.log("selectedTowerType:", window.selectedTowerType);
+
     const deltaTime = timestamp - lastTimestamp;
     lastTimestamp = timestamp;
 
@@ -305,13 +338,14 @@ export function gameLoop(ctx, canvas, gameState, hud, timestamp = 0) {
     }
 
     // --- SELECTED TOWER HIGHLIGHT ---
-    if (window.selectedTower) {
+    if (window.selectedTower && gameState.towers.includes(window.selectedTower)) {
         const t = window.selectedTower;
         const col = Math.floor(t.x / gridSize);
         const row = Math.floor(t.y / gridSize);
         ctx.fillStyle = 'rgba(128,0,128,0.5)';
         ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
     }
+
 
     // --- ENEMIES ---
     gameState.enemies.forEach(e => e.update(gameState));
