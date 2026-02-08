@@ -4,6 +4,7 @@ import { pathCells, buildPath } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
 import { updateWaveCompletion, startWave, startNextWave, waveState, updateWavePreview } from './waveManager.js';
 import { applyCursor } from './cursor.js';
+import { showDifficultyMenu } from "./difficulty.js";
 
 
 // =========================
@@ -189,13 +190,16 @@ export function resetGame(gameState, ctx, canvas) {
     console.log("🌀 resetGame() called");
 
     // === CLEAR EVERYTHING ===
+    window.gamePaused = false; // unpause the game immediately
+
+    // Reset main game state
     gameState.enemies = [];
     gameState.projectiles = [];
     gameState.towers = [];
     gameState.money = 90;
     gameState.lives = 10;
     gameState.score = 0;
-    gameState.difficulty = "normal";
+    gameState.difficulty = null; // force user to select difficulty
 
     // Reset grid
     for (let col = 0; col < gridCols; col++) {
@@ -204,21 +208,25 @@ export function resetGame(gameState, ctx, canvas) {
         }
     }
 
-    // Reset wave manager
+    // ===== Reset wave manager state =====
     if (waveState.countdownInterval) {
         clearInterval(waveState.countdownInterval);
         waveState.countdownInterval = null;
     }
     waveState.currentWave = 0;
-    waveState.status = "countdown";
+    waveState.status = "idle";      // prevents "Paused" text from showing
+    waveState.countdown = 0;
     waveState.path = [];
 
-    // ✅ Clear selection state to prevent ghost tower
+    // Show difficulty menu so user can select
+    showDifficultyMenu();
+    console.log("Difficulty after reset:", gameState.difficulty); // should be null
+
+    // ===== Clear selection state / rebuild path / redraw grid =====
     window.selectedTower = null;
     window.selectedTowerType = null;
     window.selectedTowerCost = null;
 
-    // Rebuild path
     const { pathOccupied: newPathOccupied, pixelPath } = buildPath(pathCells, gridSize);
     waveState.path = pixelPath;
     window.pathOccupied = newPathOccupied;
@@ -227,18 +235,13 @@ export function resetGame(gameState, ctx, canvas) {
     drawGridTiles(ctx);
     drawStartEnd(ctx, waveState.path, gridSize);
 
-
-    window.gamePaused = false;
-
-    // Restart first wave safely
-    startGameWaves(gameState, ctx, canvas);
-    // UPDATE CURSOR
+    // Update cursor visuals
     applyCursor();
+
     console.log("resetGame() completed ✅");
 }
 
 
-  
 
 
 // =========================
@@ -246,7 +249,6 @@ export function resetGame(gameState, ctx, canvas) {
 // =========================
 let lastTimestamp = 0;
 export function gameLoop(ctx, canvas, gameState, hud, timestamp = 0) {
-    console.log("selectedTowerType:", window.selectedTowerType);
 
     const deltaTime = timestamp - lastTimestamp;
     lastTimestamp = timestamp;

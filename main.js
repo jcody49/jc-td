@@ -14,6 +14,7 @@ import { loadEnemyImages } from './enemies/enemies.js';
 import { enemiesData } from './enemies/enemyData.js';
 import { initTowerTooltip, showTowerTooltip, hideTowerTooltip } from './ui-effects.js';
 import { TOWER_REGISTRY } from "./towers/towerRegistry.js";
+import { showDifficultyMenu } from "./difficulty.js";
 
 // ======================
 // PRELOAD ENEMY IMAGES
@@ -153,14 +154,6 @@ startButton.style.fontSize = "2.5em";
 startButton.style.padding = "20px 40px";
 enableGlow(startButton);
 
-// ======================
-// DIFFICULTY MENU LOGIC
-// ======================
-const difficultyMenu = document.getElementById("difficultyMenu"); // your HTML div
-const difficultyButtons = difficultyMenu?.querySelectorAll(".difficultyButton");
-
-// Hide difficulty menu by default
-if (difficultyMenu) difficultyMenu.style.display = "none";
 
 // Hook into START BUTTON CLICK — only show menu for now
 // ======================
@@ -180,10 +173,7 @@ startButton.addEventListener("click", () => {
     startButton.style.display = "none";
     disableGlow(startButton);
 
-    // Show difficulty menu
-    if (difficultyMenu) {
-        difficultyMenu.style.display = "flex";
-    }
+    showDifficultyMenu();
 });
 
 // ======================
@@ -199,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Apply difficulty
             gameState.difficulty = selected;
-
+            console.log(gameState.difficulty)
             // Hide difficulty menu
             if (difficultyMenu) difficultyMenu.style.display = "none";
 
@@ -442,21 +432,31 @@ if (restartGameBtn) {
     restartGameBtn.addEventListener("click", () => {
         const confirmed = confirm("Restart the game? Progress will be lost.");
         if (!confirmed) return;
-
-        // ✅ Hide overlays first
+    
+        // Hide overlays first
         settingsModal?.classList.add("hidden");
         pauseOverlay?.classList.add("hidden");
         document.getElementById("gameOverOverlay")?.classList.add("hidden");
-
-        // Pause the game just in case
+    
+        // Pause the game
         window.gamePaused = true;
-
+    
+        // ✅ Clear any existing wave timer from previous game
+        if (waveState.countdownInterval) {
+            clearInterval(waveState.countdownInterval);
+            waveState.countdownInterval = null;
+        }
+    
+        // ✅ Clear difficulty
+        gameState.difficulty = null;
+    
         // Reset game state
         resetGame(gameState, ctx, canvas);
-
+    
         // Restart game loop
         requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
     });
+    
 }
 
 

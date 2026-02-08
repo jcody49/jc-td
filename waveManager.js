@@ -116,7 +116,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
         // no changes
         break;
     }
-
+    
 
 
 
@@ -138,6 +138,8 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 // START NEXT WAVE (COUNTDOWN)
 // =========================
 export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
+  console.log("▶ startNextWave called, difficulty:", gameState.difficulty);
+  if (!gameState.difficulty) return;
   waveState.countdown = 40;
   waveState.status = "countdown";
 
