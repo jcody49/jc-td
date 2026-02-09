@@ -66,8 +66,9 @@ export function initCursor({ canvas }) {
         document.body.style.cursor = "none";
     });
     canvas.addEventListener("mouseleave", () => {
-        document.body.style.cursor = "auto";
-    });
+      document.body.style.cursor = `url('./assets/cursor-default.png'), auto`;
+  });
+  
 
     // -------------------------
     // MOUSE MOVE
