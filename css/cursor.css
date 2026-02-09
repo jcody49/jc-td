@@ -35,6 +35,10 @@
       cursor: url("../assets/cursor-default-hover.png") 6 6, pointer !important;
     }
 
+    #towerMenu{
+        cursor: url("../assets/cursor-default.png") 6 6, auto;
+    }
+
    
    /* =========================
       CLICKABLE HUD ELEMENTS
@@ -90,7 +94,7 @@
     cursor: url("../assets/cursor-default.png") 6 6, auto !important;
   }
 
-  .modal-content {
+  .modal-content, #difficultyMenu {
     cursor: url("../assets/cursor-default.png") 6 6, auto !important;
   }
 
@@ -124,3 +128,19 @@
   .tower-modal-option {
     cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
   }
+
+  #startButton{
+    cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
+  }
+
+  #cursor-static {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    background: url('assets/cursor-default.png') no-repeat center center;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+}
+
+
