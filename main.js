@@ -15,6 +15,8 @@ import { enemiesData } from './enemies/enemyData.js';
 import { initTowerTooltip, showTowerTooltip, hideTowerTooltip } from './ui-effects.js';
 import { TOWER_REGISTRY } from "./towers/towerRegistry.js";
 import { showDifficultyMenu } from "./difficulty.js";
+import { initCursor } from './cursor.js';
+
 
 // ======================
 // PRELOAD ENEMY IMAGES
@@ -62,6 +64,12 @@ window.hideTowerModal = () => hud.hideTowerModal();
 // TOWER PLACEMENT
 // ======================
 setupTowerPlacement({ hud, gridSize });
+
+// ======================
+// INIT CURSOR
+// ======================
+initCursor({ canvas });
+
 
 // ======================
 // TOWER TOOLTIP
@@ -242,114 +250,13 @@ function updateWaveText() {
 }
 updateWaveText(); // call once; will be updated elsewhere by waveManager
 
-// ======================
-// CURSOR FX
-// ======================
-const fx = document.getElementById("cursor-fx");
-const fxImg = fx.querySelector("img");
-const CURSOR_SELECT = "./assets/select-crosshair.png";
-const CURSOR_ATTACK = "./assets/crosshair.png";
-let cursorMode = "default";
-let angle = 0;
-
-function applyCursor() {
-    if (window.selectedTowerType) {
-        fx.style.display = "none";
-        return;
-    }
-    fx.style.display = "block";
-
-    if (cursorMode === "attack") {
-        fxImg.src = CURSOR_ATTACK;
-        fx.style.opacity = "1";
-    } else if (window.hoveredTower) {
-        fxImg.src = CURSOR_SELECT;
-        fx.style.opacity = "1";
-    } else if (window.hoveredEnemy) {
-        fxImg.src = CURSOR_ATTACK;
-        fx.style.opacity = "1";
-    } else {
-        fx.style.opacity = "0";
-    }
-}
-
-
-function animateCursor() {
-    angle += 3;
-    let scale = 1;
-    if (cursorMode === "attack" && window.hoveredEnemy) scale = 1.23;
-    fx.style.transform = `translate(-50%, -50%) rotate(${angle}deg) scale(${scale})`;
-    requestAnimationFrame(animateCursor);
-}
-animateCursor();
-
-canvas.addEventListener("mousemove", e => {
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    window.mouseX = (e.clientX - rect.left) * scaleX;
-    window.mouseY = (e.clientY - rect.top) * scaleY;
-
-    fx.style.left = e.clientX + "px";
-    fx.style.top = e.clientY + "px";
-
-    window.hoveredEnemy = getHoveredEnemy(gameState.enemies, window.mouseX, window.mouseY, 65);
-    window.hoveredTower = getTowerAtPosition(gameState.towers, window.mouseX, window.mouseY, gridSize);
-    applyCursor();
-});
-
-// ======================
-// FORCE ATTACK CLICK
-// ======================
-canvas.addEventListener("click", () => {
-    if (cursorMode !== "attack") return;
-    if (!window.selectedTower || !window.hoveredEnemy) return;
-
-    window.selectedTower.setForcedTarget(window.hoveredEnemy);
-    cursorMode = "default";
-    applyCursor();
-});
-// ======================
-// FORCE ATTACK - RIGHT CLICK
-// ======================
-canvas.addEventListener("contextmenu", e => {
-    e.preventDefault(); // prevent browser menu
-
-    if (!window.selectedTower) return;
-
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-
-    const mouseX = (e.clientX - rect.left) * scaleX;
-    const mouseY = (e.clientY - rect.top) * scaleY;
-
-    const target = gameState.enemies.find(
-        enemy => Math.hypot(enemy.x - mouseX, enemy.y - mouseY) <= (enemy.radius ?? 20)
-    );
-
-    if (target) {
-        window.selectedTower.setForcedTarget(target);
-        cursorMode = "default"; // optional: exit attack mode
-        applyCursor();
-    }
-});
-
 
 // ======================
 // ATTACK / ESC / UPGRADE / SELL KEYS
 // ======================
 document.addEventListener("keydown", e => {
     const key = e.key.toLowerCase();
-    if (key === "escape") {
-        cursorMode = "default";
-        if (window.selectedTower) window.selectedTower.clearForcedTarget();
-        window.selectedTowerType = null;
-        window.selectedTowerCost = null;
-    } else if (key === "a" && window.selectedTower) {
-        cursorMode = cursorMode === "attack" ? "default" : "attack";
-        applyCursor();
-    } else if (key === "u" && window.selectedTower) {
+    if (key === "u" && window.selectedTower) {
         const tower = window.selectedTower;
         if (tower.upgrade(gameState)) hud.update();
     } else if (key === "s" && window.selectedTower) {
@@ -357,6 +264,7 @@ document.addEventListener("keydown", e => {
         if (sellBtn && typeof sellBtn.onclick === "function") sellBtn.onclick();
     }
 });
+
 
 // ======================
 // TOGGLE GRID
