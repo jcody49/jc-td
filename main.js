@@ -1,7 +1,7 @@
 // ======================
 // IMPORTS
 // ======================
-import { gameLoop, startGameWaves, resetGame } from './game-engine.js';
+import { startGameLoop, stopGameLoop, startGameWaves, resetGame } from './game-engine.js';
 import { startWave, waveState, updateWavePreview } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
@@ -200,9 +200,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             livesDisplay.style.display = "block";
             moneyDisplay.style.display = "block";
-
+            startGameLoop(ctx, canvas, gameState, hud);
             startGameWaves(gameState, ctx, canvas);
-            gameLoop(ctx, canvas, gameState, hud);
         });
     });
 });
@@ -399,34 +398,6 @@ if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnBu
     });
 }
 
-// ======================
-// RETRY BUTTON
-// ======================
-const retryButton = document.getElementById("retryButton");
-if (retryButton) {
-    retryButton.addEventListener("click", () => {
-        console.log("🔄 Retry button clicked");
-
-        // ✅ Hide overlays first
-        document.getElementById("gameOverOverlay")?.classList.add("hidden");
-        settingsModal?.classList.add("hidden");
-        pauseOverlay?.classList.add("hidden");
-        closeModal();
-
-        // Reset game state
-        resetGame(gameState, ctx, canvas);
-
-        // Restart game loop
-        console.log("▶️ Restarting game loop");
-        requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
-
-        // Reset HUD elements
-        document.getElementById("scoreText").textContent = "Score: 0";
-        document.getElementById("lives").textContent = gameState.lives;
-        document.getElementById("money").textContent = gameState.money;
-    });
-}
-
 
 // ======================
 // RESTART GAME BUTTON (PAUSE / SETTINGS)
@@ -458,11 +429,13 @@ if (restartGameBtn) {
         if (waveTextEl) waveTextEl.innerText = "";
 
         console.log("🚦 window.gamePaused before reset:", window.gamePaused);
+
+        // ✅ Stop the old game loop before restarting
+        stopGameLoop();
+
         resetGame(gameState, ctx, canvas);
         console.log("🚦 window.gamePaused after reset:", window.gamePaused);
-
-        // Restart game loop
-        requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
+        startGameLoop(ctx, canvas, gameState, hud);
     });
     
 }

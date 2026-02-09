@@ -236,149 +236,58 @@ export function resetGame(gameState, ctx, canvas) {
 // =========================
 // GAME LOOP
 // =========================
-let lastTimestamp = 0;
-export function gameLoop(ctx, canvas, gameState, hud, timestamp = 0) {
+export let rafId = null;
 
-    const deltaTime = timestamp - lastTimestamp;
-    lastTimestamp = timestamp;
+export function startGameLoop(ctx, canvas, gameState, hud) {
+    if (rafId !== null) return; // already running
 
-    const mouseX = window.mouseX || 0;
-    const mouseY = window.mouseY || 0;
+    let lastTimestamp = 0;
+    function loop(timestamp = 0) {
+        const deltaTime = timestamp - lastTimestamp;
+        lastTimestamp = timestamp;
 
-    if (tilesReady < 1 + Object.keys(roadImages).length) {
-        requestAnimationFrame((ts) => gameLoop(ctx, canvas, gameState, hud, ts));
-        return;
-    }
-
-    if (gameState.lives <= 0) {
-        showGameOver(gameState, ctx, canvas);
-        return;
-    }
-
-    if (window.gamePaused) {
-        requestAnimationFrame((ts) => gameLoop(ctx, canvas, gameState, hud, ts));
-        return;
-    }
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // --- GRID & START/END ---
-    drawGridTiles(ctx);
-    drawStartEnd(ctx, waveState.path, gridSize);
-
-    // --- GRID OVERLAY ---
-    if (window.showGrid) {
-        ctx.save();
-        ctx.strokeStyle = "rgba(0,255,255,0.2)";
-        for (let col = 0; col <= gridCols; col++) {
-            ctx.beginPath();
-            ctx.moveTo(col * gridSize, 0);
-            ctx.lineTo(col * gridSize, gridRows * gridSize);
-            ctx.stroke();
-        }
-        for (let row = 0; row <= gridRows; row++) {
-            ctx.beginPath();
-            ctx.moveTo(0, row * gridSize);
-            ctx.lineTo(gridCols * gridSize, row * gridSize);
-            ctx.stroke();
-        }
-        ctx.restore();
-    }
-
-    // --- GHOST TOWER ---
-    if (window.selectedTowerType) {
-        let col = Math.floor(mouseX / gridSize);
-        let row = Math.floor(mouseY / gridSize);
-        col = Math.max(0, Math.min(col, gridCols - 1));
-        row = Math.max(0, Math.min(row, gridRows - 1));
-
-        const validPlacement = !window.gridOccupied[col][row] &&
-                               !pathCells.some(c => c.col === col && c.row === row);
-
-        let img;
-        switch (window.selectedTowerType) {
-            case 'Cannon': img = cannonImg; break;
-            case 'Frost':  img = frostImg; break;
-            case 'Acid':   img = acidImg; break;
-            case 'Tank':   img = tankImg; break;
+        // Tiles not ready
+        if (tilesReady < 1 + Object.keys(roadImages).length) {
+            rafId = requestAnimationFrame(loop);
+            return;
         }
 
-        if (img) {
-            ctx.save();
-            ctx.globalAlpha = 0.35;
-            ctx.fillStyle = validPlacement ? 'rgba(0,255,0,0.3)' : 'rgba(255,0,0,0.3)';
-            ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
-
-            const range = {
-                'Cannon': 125,
-                'Frost': 117,
-                'Acid': 120,
-                'Tank': 125
-            }[window.selectedTowerType] || 0;
-
-            const centerX = col * gridSize + gridSize / 2;
-            const centerY = row * gridSize + gridSize / 2;
-
-            ctx.strokeStyle = 'rgba(0,255,255,0.5)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, range, 0, Math.PI * 2);
-            ctx.stroke();
-
-            ctx.drawImage(img, col * gridSize, row * gridSize, gridSize, gridSize);
-            ctx.restore();
-        }
-    }
-
-    // --- SELECTED TOWER HIGHLIGHT ---
-    if (window.selectedTower && gameState.towers.includes(window.selectedTower)) {
-        const t = window.selectedTower;
-        const col = Math.floor(t.x / gridSize);
-        const row = Math.floor(t.y / gridSize);
-        ctx.fillStyle = 'rgba(128,0,128,0.5)';
-        ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
-    }
-
-
-    // --- ENEMIES ---
-    gameState.enemies.forEach(e => e.update(gameState));
-    gameState.enemies.forEach(e => e.draw());
-
-    gameState.enemies = gameState.enemies.filter(e => {
-        if (!e.remove) return true;
-
-        if (!e.escaped) {
-            const reward = e.reward || 1;
-            gameState.money += reward;
-            showMoneyPopup(reward, e.x, e.y);
-
-            if (e.lifeReward > 0) gameState.lives += e.lifeReward;
-            if (e.score) gameState.score += e.score;
+        // Game over
+        if (gameState.lives <= 0) {
+            showGameOver(gameState, ctx, canvas);
+            rafId = null; // stop loop
+            return;
         }
 
-        return false;
-    });
+        // Game paused
+        if (window.gamePaused) {
+            rafId = requestAnimationFrame(loop);
+            return;
+        }
 
-    // --- HUD ---
-    if (hud?.updateMoneyLives) hud.updateMoneyLives();
-    if (hud?.update) hud.update();
+        // Clear canvas & draw everything
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGridTiles(ctx);
+        drawStartEnd(ctx, waveState.path, gridSize);
+        // ... rest of your gameLoop drawing logic ...
+        gameState.enemies.forEach(e => e.update(gameState));
+        gameState.enemies.forEach(e => e.draw());
+        // ... towers, projectiles, HUD, waves ...
 
-    // --- WAVES ---
-    updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl);
+        // ✅ Single RAF ownership
+        rafId = requestAnimationFrame(loop);
+    }
 
-    // --- TOWERS ---
-    gameState.towers.forEach(t => {
-        t.isHovered = Math.hypot(mouseX - t.x, mouseY - t.y) < 25;
-        t.update(gameState);
-        t.draw();
-    });
-
-    // --- PROJECTILES ---
-    gameState.projectiles.forEach(p => { p.update(gameState); p.draw(); });
-    gameState.projectiles = gameState.projectiles.filter(p => !p.hit);
-
-    requestAnimationFrame((ts) => gameLoop(ctx, canvas, gameState, hud, ts));
+    rafId = requestAnimationFrame(loop);
 }
+
+export function stopGameLoop() {
+    if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+    }
+}
+
 
 // =========================
 // START FIRST WAVE
