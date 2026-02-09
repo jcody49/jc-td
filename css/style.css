@@ -394,15 +394,36 @@ canvas {
   
 
   
-  #pauseOverlay span {
-    font-family: 'Audiowide', cursive;
-    font-size: 4rem;
-    color: #fff;
-    text-shadow:
-      0 0 6px #7B2CFF,
-      0 0 12px #7B2CFF,
-      0 0 24px #53FFFF;
+  #pauseOverlay {
+    position: fixed;           
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;             
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;      /* clicks pass through */
+    z-index: 30000;            /* make sure it’s ABOVE the modal (20000) */
   }
+  
+  #pauseOverlay span {
+    position: relative; /* default is fine usually */
+    z-index: 1;         /* just to be sure the text itself is above the overlay background */
+  }
+  
+  #pauseOverlay span {
+    position: absolute;
+    top: 50px;   /* distance from top of viewport */
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Audiowide', cursive;
+    font-size: 4.3rem;
+    color: #fff;
+    text-shadow: 0 0 6px #7B2CFF, 0 0 12px #7B2CFF, 0 0 24px #53FFFF;
+}
+
+  
   
 
   .wave-text-neon {
