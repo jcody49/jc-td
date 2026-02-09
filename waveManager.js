@@ -138,7 +138,6 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 // START NEXT WAVE (COUNTDOWN)
 // =========================
 export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
-  console.log("▶ startNextWave called, difficulty:", gameState.difficulty);
   if (!gameState.difficulty) return;
   waveState.countdown = 40;
   waveState.status = "countdown";
@@ -156,8 +155,10 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
   waveState.countdownInterval = setInterval(() => {
     if (window.gamePaused) {
-      if (waveTextEl) waveTextEl.innerText = "Paused";
-      return;
+        pauseOverlay.classList.remove("hidden"); // show PAUSED overlay
+        return;
+    } else {
+        pauseOverlay.classList.add("hidden"); // hide PAUSED overlay
     }
 
     waveState.countdown--;
@@ -168,7 +169,8 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
       waveState.countdownInterval = null;
       startWave(gameState, gridSize, ctx, canvas, waveTextEl);
     }
-  }, 1000);
+}, 1000);
+
 
   updateWavePreview(); // ensure preview shows upcoming waves during countdown
 }

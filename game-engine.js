@@ -5,6 +5,7 @@ import { gridCols, gridRows, gridSize } from './grid.js';
 import { updateWaveCompletion, startWave, startNextWave, waveState, updateWavePreview } from './waveManager.js';
 import { applyCursor } from './cursor.js';
 import { showDifficultyMenu } from "./difficulty.js";
+import {waveTextEl} from "./main.js";
 
 
 // =========================
@@ -135,7 +136,7 @@ export function showGameOver(gameState, ctx, canvas) {
     overlay.classList.remove("hidden");
 
     // Hide HUD wave text and countdown
-    const waveTextEl = document.getElementById("waveText");
+
     if (waveTextEl) waveTextEl.style.display = "none";
 
     const skipButton = document.getElementById("skipButton");
@@ -185,21 +186,19 @@ export function drawEntireGrid(ctx, gridSize, gridOccupied, pathOccupied) {
 }
 
 
-
 export function resetGame(gameState, ctx, canvas) {
     console.log("🌀 resetGame() called");
 
     // === CLEAR EVERYTHING ===
-    window.gamePaused = false; // unpause the game immediately
+    
 
-    // Reset main game state
     gameState.enemies = [];
     gameState.projectiles = [];
     gameState.towers = [];
     gameState.money = 90;
     gameState.lives = 10;
     gameState.score = 0;
-    gameState.difficulty = null; // force user to select difficulty
+    gameState.difficulty = null;
 
     // Reset grid
     for (let col = 0; col < gridCols; col++) {
@@ -208,21 +207,11 @@ export function resetGame(gameState, ctx, canvas) {
         }
     }
 
-    // ===== Reset wave manager state =====
-    if (waveState.countdownInterval) {
-        clearInterval(waveState.countdownInterval);
-        waveState.countdownInterval = null;
-    }
-    waveState.currentWave = 0;
-    waveState.status = "idle";      // prevents "Paused" text from showing
-    waveState.countdown = 0;
-    waveState.path = [];
-
-    // Show difficulty menu so user can select
+    // Show difficulty menu
     showDifficultyMenu();
-    console.log("Difficulty after reset:", gameState.difficulty); // should be null
+    console.log("Difficulty after reset:", gameState.difficulty); // null
 
-    // ===== Clear selection state / rebuild path / redraw grid =====
+    // ✅ Clear selection state / rebuild path / redraw grid
     window.selectedTower = null;
     window.selectedTowerType = null;
     window.selectedTowerCost = null;
@@ -235,7 +224,7 @@ export function resetGame(gameState, ctx, canvas) {
     drawGridTiles(ctx);
     drawStartEnd(ctx, waveState.path, gridSize);
 
-    // Update cursor visuals
+    // UPDATE CURSOR
     applyCursor();
 
     console.log("resetGame() completed ✅");
@@ -375,7 +364,6 @@ export function gameLoop(ctx, canvas, gameState, hud, timestamp = 0) {
     if (hud?.update) hud.update();
 
     // --- WAVES ---
-    const waveTextEl = document.getElementById("waveText");
     updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl);
 
     // --- TOWERS ---
@@ -396,7 +384,6 @@ export function gameLoop(ctx, canvas, gameState, hud, timestamp = 0) {
 // START FIRST WAVE
 // =========================
 export function startGameWaves(gameState, ctx, canvas) {
-    const waveTextEl = document.getElementById("waveText");
 
     const skipButton = document.getElementById("skipButton");
     if (skipButton) {

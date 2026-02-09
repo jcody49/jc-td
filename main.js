@@ -53,7 +53,7 @@ window.pathOccupied = pathCellsOccupied;
 // ======================
 // INIT HUD
 // ======================
-const waveTextEl = document.getElementById("waveText");
+export const waveTextEl = document.getElementById("waveText");
 const hud = initHUD({ gameState, gridSize, ctx, canvas, waveText: waveTextEl, waveState, startWave });
 window.showTowerModal = tower => hud.showTowerModal(tower);
 window.hideTowerModal = () => hud.hideTowerModal();
@@ -377,13 +377,16 @@ const closeSettings = document.getElementById("closeSettings");
 const returnButton = document.getElementById("returnToGame");
 const pauseOverlay = document.getElementById("pauseOverlay");
 
+let closeModal = () => {};
 if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnButton) {
     const openModal = () => {
         settingsModal.classList.remove("hidden");
         pauseOverlay.classList.remove("hidden");
         window.gamePaused = true;
+        console.log(window.gamePaused)
     };
-    const closeModal = () => {
+
+    closeModal = () => {
         settingsModal.classList.add("hidden");
         pauseOverlay.classList.add("hidden");
         window.gamePaused = false;
@@ -408,6 +411,7 @@ if (retryButton) {
         document.getElementById("gameOverOverlay")?.classList.add("hidden");
         settingsModal?.classList.add("hidden");
         pauseOverlay?.classList.add("hidden");
+        closeModal();
 
         // Reset game state
         resetGame(gameState, ctx, canvas);
@@ -432,14 +436,13 @@ if (restartGameBtn) {
     restartGameBtn.addEventListener("click", () => {
         const confirmed = confirm("Restart the game? Progress will be lost.");
         if (!confirmed) return;
-    
+  
         // Hide overlays first
         settingsModal?.classList.add("hidden");
         pauseOverlay?.classList.add("hidden");
         document.getElementById("gameOverOverlay")?.classList.add("hidden");
-    
-        // Pause the game
-        window.gamePaused = true;
+        closeModal();
+        
     
         // ✅ Clear any existing wave timer from previous game
         if (waveState.countdownInterval) {
@@ -450,9 +453,14 @@ if (restartGameBtn) {
         // ✅ Clear difficulty
         gameState.difficulty = null;
     
-        // Reset game state
+        // Pause the game
+        window.gamePaused = false;
+        if (waveTextEl) waveTextEl.innerText = "";
+
+        console.log("🚦 window.gamePaused before reset:", window.gamePaused);
         resetGame(gameState, ctx, canvas);
-    
+        console.log("🚦 window.gamePaused after reset:", window.gamePaused);
+
         // Restart game loop
         requestAnimationFrame(ts => gameLoop(ctx, canvas, gameState, hud, ts));
     });
