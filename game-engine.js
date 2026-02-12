@@ -7,7 +7,6 @@ import { applyCursor } from './cursor.js';
 import { showDifficultyMenu } from "./difficulty.js";
 import {waveTextEl} from "./main.js";
 
-
 // =========================
 // TILE LOAD TRACKING
 // =========================
@@ -242,6 +241,7 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
     if (rafId !== null) return; // already running
 
     let lastTimestamp = 0;
+
     function loop(timestamp = 0) {
         const deltaTime = timestamp - lastTimestamp;
         lastTimestamp = timestamp;
@@ -269,17 +269,33 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawGridTiles(ctx);
         drawStartEnd(ctx, waveState.path, gridSize);
-        // ... rest of your gameLoop drawing logic ...
-        gameState.enemies.forEach(e => e.update(gameState));
-        gameState.enemies.forEach(e => e.draw());
-        // ... towers, projectiles, HUD, waves ...
 
-        // ✅ Single RAF ownership
+        // --- DRAW TOWERS ---
+        gameState.towers.forEach(tower => tower.draw());
+
+        // --- DRAW ENEMIES ---
+        gameState.enemies.forEach(enemy => {
+            enemy.update(gameState);
+            enemy.draw();
+        });
+
+        // --- DRAW GHOST TOWER IF PLACING ---
+        if (window.selectedTowerType) {
+            const mouseX = window.mouseX ?? 0;
+            const mouseY = window.mouseY ?? 0;
+            window.drawGhostTower?.(mouseX, mouseY, window.selectedTowerType, gridSize);
+        }
+
+
+        // --- UPDATE CURSOR ---
+        applyCursor();
+
         rafId = requestAnimationFrame(loop);
     }
 
     rafId = requestAnimationFrame(loop);
 }
+
 
 export function stopGameLoop() {
     if (rafId !== null) {
