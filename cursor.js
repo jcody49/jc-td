@@ -195,17 +195,18 @@ export function applyCursor() {
 function animateCursor() {
     if (!cursorEl) return;
 
-    if (cursorMode === "attack" || window.hoveredEnemy) {
-        angle += 3; // degrees per frame
-    } else {
-        angle = 0;
-    }
+    // Spin if hovering enemy OR tower, or in attack mode
+    const shouldSpin = cursorMode === "attack" || window.hoveredEnemy || window.hoveredTower;
 
-    cursorEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+    if (shouldSpin) {
+        angle += 3; // rotation speed
+        cursorEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+    } else {
+        cursorEl.style.transform = `translate(-50%, -50%) rotate(0deg)`;
+    }
 
     animationRAF = requestAnimationFrame(animateCursor);
 }
-
 export function startCursorAnimation() {
     if (!animationRAF) animateCursor();
 }
