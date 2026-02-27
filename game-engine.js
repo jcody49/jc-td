@@ -295,9 +295,12 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
 
         // --- UPDATE PROJECTILES ---
         gameState.projectiles.forEach(projectile => {
-            projectile.update(gameState);  // Update each projectile's position and status
-            projectile.draw();             // Draw each projectile on the canvas
+            projectile.update(gameState);
+            projectile.draw();
         });
+        
+        // Remove dead projectiles
+        gameState.projectiles = gameState.projectiles.filter(projectile => !projectile.remove);
 
         // --- DRAW ENEMIES ---
         // Game loop update logic (where enemies are processed)
