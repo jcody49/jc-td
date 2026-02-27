@@ -1,3 +1,4 @@
+//TEST
 // game-engine.js
 import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells, buildPath } from './pathing.js';
@@ -46,6 +47,7 @@ grassTile.onload = () => tilesReady++;
 // =========================
 // TOWER IMAGES
 // =========================
+
 export const cannonImg = new Image();
 cannonImg.src = 'assets/cannon.png';
 
@@ -57,6 +59,21 @@ acidImg.src = 'assets/acid-tower.png';
 
 export const tankImg = new Image();
 tankImg.src = 'assets/tank-tower.png';
+
+// Attach images globally so towerPlacement.js can access them
+window.cannonImg = cannonImg;
+window.frostImg = frostImg;
+window.acidImg = acidImg;
+window.tankImg = tankImg;
+
+
+// Check if all images are loaded before drawing
+function checkImagesLoaded() {
+    if (cannonImg.complete && frostImg.complete && acidImg.complete && tankImg.complete) {
+      // Now the images are ready to be used in the game loop
+      console.log("All images loaded!");
+    }
+  }
 
 // =========================
 // DRAW GRID TILES
@@ -285,7 +302,7 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
             const mouseY = window.mouseY ?? 0;
             window.drawGhostTower?.(mouseX, mouseY, window.selectedTowerType, gridSize);
         }
-
+        
 
         // --- UPDATE CURSOR ---
         applyCursor();
@@ -295,7 +312,6 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
 
     rafId = requestAnimationFrame(loop);
 }
-
 
 export function stopGameLoop() {
     if (rafId !== null) {
