@@ -1,6 +1,8 @@
+//TEST
 // cursor.js
 import { getTowerAtPosition, getHoveredEnemy } from './utils.js';
 import { gameState } from './gameState.js';
+import { canvas } from './canvas.js';
 
 // =========================
 // IMAGE PATHS
@@ -17,14 +19,21 @@ let cursorImg = null;
 let cursorMode = "default"; // "default" | "hover" | "attack"
 let angle = 0;
 let animationRAF = null;
-let canvasRef = null;
 
 // =========================
 // EVENT HANDLERS
 // =========================
 function handleClick() {
     if (cursorMode === "attack" && window.selectedTower && window.hoveredEnemy) {
-        window.selectedTower.setForcedTarget(window.hoveredEnemy);
+        const tower = window.selectedTower;
+        const enemy = window.hoveredEnemy;
+
+        const dx = enemy.x - tower.x;
+        const dy = enemy.y - tower.y;
+        const distance = Math.hypot(dx, dy);
+
+        if (distance <= 55) tower.setForcedTarget(enemy);
+
         cursorMode = "default";
         applyCursor();
     }
@@ -34,19 +43,31 @@ function handleRightClick(e) {
     e.preventDefault();
     if (!window.selectedTower) return;
 
-    const rect = canvasRef.getBoundingClientRect();
-    const scaleX = canvasRef.width / rect.width;
-    const scaleY = canvasRef.height / rect.height;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
 
     const mouseX = (e.clientX - rect.left) * scaleX;
     const mouseY = (e.clientY - rect.top) * scaleY;
 
-    const target = gameState.enemies.find(
-        enemy => Math.hypot(enemy.x - mouseX, enemy.y - mouseY) <= (enemy.radius ?? 20)
-    );
+    const tower = window.selectedTower;
+
+    const target = gameState.enemies.find(enemy => {
+        const dx = enemy.x - tower.x;
+        const dy = enemy.y - tower.y;
+        const distance = Math.hypot(dx, dy);
+
+        const overMouse =
+            mouseX >= enemy.x &&
+            mouseX <= enemy.x + (enemy.width ?? 40) &&
+            mouseY >= enemy.y &&
+            mouseY <= enemy.y + (enemy.height ?? 40);
+
+        return distance <= 55 && overMouse;
+    });
 
     if (target) {
-        window.selectedTower.setForcedTarget(target);
+        tower.setForcedTarget(target);
         cursorMode = "default";
         applyCursor();
     }
@@ -73,15 +94,21 @@ function handleKeyDown(e) {
 }
 
 function handleMouseMove(e) {
-    const rect = canvasRef.getBoundingClientRect();
-    const scaleX = canvasRef.width / rect.width;
-    const scaleY = canvasRef.height / rect.height;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
 
     const mouseX = (e.clientX - rect.left) * scaleX;
     const mouseY = (e.clientY - rect.top) * scaleY;
 
     window.mouseX = mouseX;
     window.mouseY = mouseY;
+
+    // Update cursor position in viewport coordinates
+    if (cursorEl) {
+        cursorEl.style.left = `${e.clientX}px`;
+        cursorEl.style.top = `${e.clientY}px`;
+    }
 
     // Hover detection
     window.hoveredEnemy = getHoveredEnemy(gameState.enemies, mouseX, mouseY, 65);
@@ -97,22 +124,23 @@ function handleMouseMove(e) {
 // =========================
 // INIT CURSOR
 // =========================
-export function initCursor({ canvas }) {
-    canvasRef = canvas;
+export function initCursor() {
+    if (cursorEl) return; // Prevent duplicates
 
     cursorEl = document.createElement('div');
+    cursorEl.id = 'cursor-fx';
     cursorEl.style.position = 'fixed';
     cursorEl.style.width = '50px';
     cursorEl.style.height = '50px';
     cursorEl.style.pointerEvents = 'none';
     cursorEl.style.zIndex = '9999';
     cursorEl.style.transform = 'translate(-50%, -50%)';
-    
+
     cursorImg = document.createElement('img');
     cursorImg.src = CURSOR_DEFAULT;
     cursorImg.style.width = '100%';
     cursorImg.style.height = '100%';
-    
+
     cursorEl.appendChild(cursorImg);
     document.body.appendChild(cursorEl);
 
@@ -121,9 +149,7 @@ export function initCursor({ canvas }) {
     canvas.addEventListener('mouseenter', () => cursorEl.style.display = 'block');
     canvas.addEventListener('click', handleClick);
     canvas.addEventListener('contextmenu', handleRightClick);
-    document.addEventListener('keydown', handleKeyDown);
-
-    startCursorAnimation();
+    window.addEventListener('keydown', handleKeyDown);
 }
 
 // =========================
@@ -133,21 +159,42 @@ export function applyCursor() {
     if (!cursorEl || !cursorImg) return;
 
     if (window.selectedTowerType) {
-        cursorEl.style.display = "none";
+        console.log("applyCursor -> hiding cursor because towerType is selected");
+        cursorEl.classList.remove("active");
         return;
     }
 
-    cursorEl.style.display = "block";
+    cursorEl.classList.add("active");
+    console.log("applyCursor -> active class added, cursorMode:", cursorMode, "hoveredEnemy:", window.hoveredEnemy);
 
-    if (cursorMode === "attack" || window.hoveredEnemy) cursorImg.src = CURSOR_ATTACK;
-    else if (window.hoveredTower) cursorImg.src = CURSOR_SELECT;
-    else cursorImg.src = CURSOR_DEFAULT;
+    let newSrc;
+    if (window.hoveredEnemy) {
+        newSrc = CURSOR_ATTACK;
+    } else if (window.hoveredTower) {
+        newSrc = CURSOR_SELECT;
+    } else if (cursorMode === "attack") {
+        newSrc = CURSOR_ATTACK;
+    } else {
+        newSrc = CURSOR_DEFAULT;
+    }
+
+    if (cursorImg.src !== newSrc) {
+        console.log("applyCursor -> changing image src to:", newSrc);
+
+        const tempImg = new Image();
+        tempImg.src = newSrc;
+        tempImg.onload = () => {
+            cursorImg.src = newSrc;
+            console.log("Cursor image successfully updated to", newSrc);
+        };
+    }
 }
-
 // =========================
 // CURSOR ANIMATION
 // =========================
 function animateCursor() {
+    cursorEl.style.opacity = "1";
+    cursorEl.style.zIndex = "99999";
     if (cursorMode === "attack" || window.hoveredEnemy) {
         angle += 3;
         cursorEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;

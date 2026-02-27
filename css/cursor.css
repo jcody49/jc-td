@@ -133,12 +133,6 @@
     cursor: url("../assets/cursor-default-hover.png") 6 6, auto !important;
   }
 
-  #cursor-static {
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    background: url('assets/cursor-default.png') no-repeat center center;
-    pointer-events: none;
-    z-index: 9999;
-    transform: translate(-50%, -50%);
+  canvas {
+    cursor: none; /* hide the default browser cursor */
 }
