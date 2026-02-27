@@ -1,4 +1,5 @@
 // enemies/enemies.js
+import { showMoneyPopup, showLifePopup } from '../ui-effects.js';
 
 console.error("🔥 REAL enemies/enemies.js LOADED 🔥");
 
@@ -114,6 +115,11 @@ export class Enemy {
                 gameState.lives--;
             }
 
+            // Show life popup when enemy escapes (if it affects lives)
+            if (this.isBonus) {
+                showLifePopup(this.lifeReward);
+            }
+
             // Draw X as before
             const ctx = this.ctx;
             ctx.save();
@@ -152,7 +158,16 @@ export class Enemy {
         if (this.reward > 0) {
             gameState.money += this.reward;
             console.log(`Enemy ${this.name} defeated! Reward: ${this.reward}. New money: ${gameState.money}`);
+
+            // Show the money popup when an enemy is killed
+            showMoneyPopup(this.reward, this.x, this.y);
         }
+
+        // If enemy is a bonus or has a life reward, show the life popup
+        if (this.lifeReward > 0) {
+            showLifePopup(this.lifeReward, this.x, this.y);
+        }
+
         this.remove = true;
         return;
     }
