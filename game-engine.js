@@ -312,6 +312,8 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
         // Remove dead enemies
         gameState.enemies = gameState.enemies.filter(enemy => !enemy.dead);
 
+        updateWaveCompletion(gameState, gridSize, ctx, canvas, hud.waveTextEl);
+
         // --- DRAW GHOST TOWER IF PLACING ---
         if (window.selectedTowerType) {
             const mouseX = window.mouseX ?? 0;
