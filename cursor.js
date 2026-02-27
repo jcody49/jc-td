@@ -193,14 +193,16 @@ export function applyCursor() {
 // CURSOR ANIMATION
 // =========================
 function animateCursor() {
-    cursorEl.style.opacity = "1";
-    cursorEl.style.zIndex = "99999";
+    if (!cursorEl) return;
+
     if (cursorMode === "attack" || window.hoveredEnemy) {
-        angle += 3;
-        cursorEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+        angle += 3; // degrees per frame
     } else {
-        cursorEl.style.transform = `translate(-50%, -50%) rotate(0deg)`;
+        angle = 0;
     }
+
+    cursorEl.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
+
     animationRAF = requestAnimationFrame(animateCursor);
 }
 

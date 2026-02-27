@@ -15,7 +15,7 @@ import { enemiesData } from './enemies/enemyData.js';
 import { initTowerTooltip, showTowerTooltip, hideTowerTooltip } from './ui-effects.js';
 import { TOWER_REGISTRY } from "./towers/towerRegistry.js";
 import { showDifficultyMenu } from "./difficulty.js";
-import { initCursor } from './cursor.js';
+import { initCursor, startCursorAnimation } from './cursor.js';
 
 
 // ======================
@@ -69,6 +69,8 @@ setupTowerPlacement({ hud, gridSize });
 // INIT CURSOR
 // ======================
 initCursor({ canvas });
+
+startCursorAnimation();
 
 
 // ======================
