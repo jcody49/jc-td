@@ -106,51 +106,55 @@ export class Enemy {
   update(gameState) {
     // --- Exit path ---
     if (this.pathIndex >= this.path.length - 1) {
-      if (!this.escaped) {
-        this.escaped = true;
-    
-        // Only subtract lives if NOT a bonus enemy
-        if (!this.isBonus) {
-          gameState.lives--;
+        if (!this.escaped) {
+            this.escaped = true;
+
+            // Only subtract lives if NOT a bonus enemy
+            if (!this.isBonus) {
+                gameState.lives--;
+            }
+
+            // Draw X as before
+            const ctx = this.ctx;
+            ctx.save();
+            ctx.strokeStyle = "yellow";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(this.x - this.size, this.y - this.size);
+            ctx.lineTo(this.x + this.size, this.y + this.size);
+            ctx.moveTo(this.x + this.size, this.y - this.size);
+            ctx.lineTo(this.x - this.size, this.y + this.size);
+            ctx.stroke();
+            ctx.restore();
         }
-    
-        // Draw X as before
-        const ctx = this.ctx;
-        ctx.save();
-        ctx.strokeStyle = "yellow";
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(this.x - this.size, this.y - this.size);
-        ctx.lineTo(this.x + this.size, this.y + this.size);
-        ctx.moveTo(this.x + this.size, this.y - this.size);
-        ctx.lineTo(this.x - this.size, this.y + this.size);
-        ctx.stroke();
-        ctx.restore();
-      }
-      this.remove = true;
-      return;
+        this.remove = true;
+        return;
     }
-    
 
     // --- Slow ---
     if (this.slowTimer > 0) {
-      this.slowTimer--;
-      this.speed = this.baseSpeed * this.slowMultiplier;
+        this.slowTimer--;
+        this.speed = this.baseSpeed * this.slowMultiplier;
     } else {
-      this.slowMultiplier = 1;
-      this.speed = this.baseSpeed;
+        this.slowMultiplier = 1;
+        this.speed = this.baseSpeed;
     }
 
     // --- DoT ---
     for (const dot of this.activeDoTs) {
-      this.hp -= dot.damagePerTick;
-      dot.remaining--;
+        this.hp -= dot.damagePerTick;
+        dot.remaining--;
     }
     this.activeDoTs = this.activeDoTs.filter(d => d.remaining > 0);
 
     if (this.hp <= 0) {
-      this.remove = true;
-      return;
+        // Add reward to game money when enemy dies
+        if (this.reward > 0) {
+            gameState.money += this.reward;
+            console.log(`Enemy ${this.name} defeated! Reward: ${this.reward}. New money: ${gameState.money}`);
+        }
+        this.remove = true;
+        return;
     }
 
     // --- Movement ---
@@ -160,29 +164,29 @@ export class Enemy {
     const dist = Math.hypot(dx, dy);
 
     if (dist < this.speed) {
-      this.x = target.x;
-      this.y = target.y;
-      this.pathIndex++;
+        this.x = target.x;
+        this.y = target.y;
+        this.pathIndex++;
     } else {
-      this.x += (dx / dist) * this.speed;
-      this.y += (dy / dist) * this.speed;
+        this.x += (dx / dist) * this.speed;
+        this.y += (dy / dist) * this.speed;
     }
 
     // --- Hop ---
     if (this.hopPaused > 0) {
-      this.hopPaused--;
-      this.yOffset = 0;
+        this.hopPaused--;
+        this.yOffset = 0;
     } else {
-      this.yOffset =
-        -Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
-      this.hopProgress += this.hopSpeed;
+        this.yOffset =
+            -Math.sin(this.hopProgress * Math.PI) * this.hopAmplitude;
+        this.hopProgress += this.hopSpeed;
 
-      if (this.hopProgress >= 1) {
-        this.hopProgress = 0;
-        this.hopPaused = 5;
-      }
+        if (this.hopProgress >= 1) {
+            this.hopProgress = 0;
+            this.hopPaused = 5;
+        }
     }
-  }
+}
 
   draw() {
     const ctx = this.ctx;

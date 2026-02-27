@@ -319,6 +319,8 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
             window.drawGhostTower?.(mouseX, mouseY, window.selectedTowerType, gridSize);
         }
         
+        // --- UPDATE HUD ---
+        hud.updateMoneyLives();
 
         // --- UPDATE CURSOR ---
         applyCursor();
