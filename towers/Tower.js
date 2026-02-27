@@ -121,6 +121,7 @@ export class Tower {
   // UPDATE LOOP
   // ======================
   update(gameState) {
+    console.log('Tower update called');
     if (this.cooldown > 0) {
       this.cooldown--;
       return;
@@ -167,13 +168,14 @@ export class Tower {
   // FIRE
   // ======================
   fire(target, gameState) {
+    console.log('Fire method called');
     const perFrameDot =
       this.dotDuration > 0
         ? (this.dotDamage || this.damage) / this.dotDuration
         : 0;
 
-    gameState.projectiles.push(
-      new Projectile({
+    // Create and push a new projectile into the array
+    const projectile = new Projectile({
         x: this.x,
         y: this.y,
         target,
@@ -185,10 +187,15 @@ export class Tower {
         slowMultiplier: this.slowMultiplier,
         slowDuration: this.slowDuration,
         splashRadius: this.splashRadius
-      })
-    );
-  }
+    });
 
+    gameState.projectiles.push(projectile);
+
+    // Log the created projectile and the projectiles array
+    console.log('Projectile created:', projectile);
+    console.log('Current projectiles:', gameState.projectiles);
+}
+  
   // ======================
   // SELL
   // ======================

@@ -27,7 +27,6 @@ export function distance(a, b) {
         const dy = mouseY - centerY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance <= radius) {
-          console.log("Hovered enemy (radius):", en);
             return en;
         }
     }

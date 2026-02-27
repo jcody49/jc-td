@@ -11,9 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
         window.selectedTowerType = towerType;
         window.selectedTowerCost = towerCost;
   
-        // Log selection to the console (for debugging)
-        console.log(`Selected Tower: ${towerType}, Cost: $${towerCost}`);
-  
         // Optionally, add visual feedback like highlighting the selected card
         updateTowerCardSelection(card);
       });

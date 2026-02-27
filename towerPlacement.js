@@ -38,18 +38,12 @@ function getBaseRange(towerType) {
 
 export function drawGhostTower(mouseX, mouseY, selectedTowerType, gridSize) {
   const ctx = canvas.getContext("2d");
-
-  console.log("drawGhostTower -> mouseX:", mouseX, "mouseY:", mouseY); // Log mouse position
-  console.log("drawGhostTower -> selectedTowerType:", selectedTowerType); // Log selectedTowerType
-
   ctx.save();
 
   // Convert mouse position to grid coordinates
   const col = Math.floor(mouseX / gridSize);
   const row = Math.floor(mouseY / gridSize);
   const key = `${col},${row}`;
-
-  console.log("drawGhostTower -> col:", col, "row:", row, "key:", key); // Log grid position
 
   // Check if placement is valid (not occupied and enough money)
   let color = "rgba(0,255,0,0.4)"; // Green (valid)
@@ -61,9 +55,6 @@ export function drawGhostTower(mouseX, mouseY, selectedTowerType, gridSize) {
     color = "rgba(255,0,0,0.4)"; // Red if invalid
   }
 
-  // Log color selection based on validity
-  console.log("drawGhostTower -> color:", color);
-
   // Draw the square (ghost tower placeholder)
   ctx.fillStyle = color;
   ctx.fillRect(col * gridSize, row * gridSize, gridSize, gridSize);
@@ -72,9 +63,6 @@ export function drawGhostTower(mouseX, mouseY, selectedTowerType, gridSize) {
   const range = getBaseRange(selectedTowerType); // <-- Use selectedTowerType here
   const centerX = col * gridSize + gridSize / 2;
   const centerY = row * gridSize + gridSize / 2;
-
-  // Log the range of the ghost tower
-  console.log("drawGhostTower -> range:", range, "centerX:", centerX, "centerY:", centerY);
 
   // Draw the range circle (arc)
   ctx.strokeStyle = "rgba(0,255,255,0.5)"; // Light cyan color for the range ring
@@ -110,7 +98,6 @@ export function drawGhostTower(mouseX, mouseY, selectedTowerType, gridSize) {
 // Function to get the image for the selected tower type
 // Modify to use global images set in the game engine
 function getTowerImage(towerType) {
-  console.log("getTowerImage -> selectedTowerType:", towerType); // Log selected tower type
 
   switch (towerType) {
     case "Cannon":

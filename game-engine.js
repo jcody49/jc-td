@@ -288,13 +288,26 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
         drawStartEnd(ctx, waveState.path, gridSize);
 
         // --- DRAW TOWERS ---
-        gameState.towers.forEach(tower => tower.draw());
+        gameState.towers.forEach(tower => {
+            tower.update(gameState);  // Make sure this is called for every tower
+            tower.draw();             // Then draw the tower
+        });
+
+        // --- UPDATE PROJECTILES ---
+        gameState.projectiles.forEach(projectile => {
+            projectile.update(gameState);  // Update each projectile's position and status
+            projectile.draw();             // Draw each projectile on the canvas
+        });
 
         // --- DRAW ENEMIES ---
+        // Game loop update logic (where enemies are processed)
         gameState.enemies.forEach(enemy => {
-            enemy.update(gameState);
-            enemy.draw();
+            enemy.update(gameState);  // Update the enemy's position, health, etc.
+            enemy.draw();             // Draw the enemy on the canvas
         });
+
+        // Remove dead enemies
+        gameState.enemies = gameState.enemies.filter(enemy => !enemy.dead);
 
         // --- DRAW GHOST TOWER IF PLACING ---
         if (window.selectedTowerType) {
