@@ -237,6 +237,7 @@ skipButton.addEventListener("click", () => {
 // ======================
 // WAVE TEXT UPDATE
 // ======================
+/*
 function updateWaveText() {
     if (!waveTextEl) return;
 
@@ -251,7 +252,7 @@ function updateWaveText() {
     }
 }
 updateWaveText(); // call once; will be updated elsewhere by waveManager
-
+*/
 
 // ======================
 // ATTACK / ESC / UPGRADE / SELL KEYS

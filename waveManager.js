@@ -149,7 +149,7 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     skipButton.style.display = "block";
   }
 
-  if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
+  if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
 
   if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
 
@@ -162,7 +162,7 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
     }
 
     waveState.countdown--;
-    if (waveTextEl) waveTextEl.innerText = `Next wave in: ${waveState.countdown}`;
+    if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
 
     if (waveState.countdown <= 0) {
       clearInterval(waveState.countdownInterval);

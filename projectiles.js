@@ -57,7 +57,9 @@ export class Projectile {
             } else {
                 if (this.damage > 0) this.target.hp -= this.damage;
             }
-            this.hit = true; // Mark projectile as hit
+            this.hit = true;
+            this.remove = true;
+            return;
         }
     
         // Move projectile toward target
