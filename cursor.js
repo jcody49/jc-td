@@ -111,8 +111,9 @@ function handleMouseMove(e) {
     }
 
     // Hover detection
-    window.hoveredEnemy = getHoveredEnemy(gameState.enemies, mouseX, mouseY, 65);
-    window.hoveredTower = getTowerAtPosition(gameState.towers, mouseX, mouseY, 25);
+    window.hoveredEnemy = getHoveredEnemy(gameState.enemies, mouseX, mouseY, 55);
+    window.hoveredTower = getTowerAtPosition(gameState.towers, mouseX, mouseY, 60);
+    console.log("Hovered tower:", window.hoveredTower);
 
     if (!window.selectedTowerType && cursorMode !== "attack") {
         cursorMode = (window.hoveredEnemy || window.hoveredTower) ? "hover" : "default";
@@ -159,7 +160,6 @@ export function applyCursor() {
     if (!cursorEl || !cursorImg) return;
 
     if (window.selectedTowerType) {
-        console.log("applyCursor -> hiding cursor because towerType is selected");
         cursorEl.classList.remove("active");
         return;
     }
