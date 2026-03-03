@@ -155,7 +155,6 @@ export class Enemy {
         // Add reward to game money when enemy dies
         if (this.reward > 0) {
             gameState.money += this.reward;
-            console.log(`Enemy ${this.name} defeated! Reward: ${this.reward}. New money: ${gameState.money}`);
 
             // Show the money popup when an enemy is killed
             showMoneyPopup(this.reward, this.x, this.y);

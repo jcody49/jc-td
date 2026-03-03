@@ -182,7 +182,7 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
   if (waveState.status !== "spawning" || completionLocked) return;
 
   if (spawningFinished && gameState.enemies.length === 0) {
-    console.log("Wave completed, awarding income...");
+
     if (window.gamePaused) return;
 
     completionLocked = true;
@@ -192,7 +192,7 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
 
     // award income
     if (currentWaveData?.income) {
-      console.log(`Awarding wave income: +${currentWaveData.income}`);
+
       gameState.money = (gameState.money || 0) + currentWaveData.income;
       showMoneyPopup(
         currentWaveData.income,
@@ -200,7 +200,6 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
         window.innerHeight / 2,
         `Wave income: +${currentWaveData.income}`
       );
-      console.log("Wave income popup should have been shown!");
     }
 
     if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} complete!`;

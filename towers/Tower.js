@@ -121,7 +121,7 @@ export class Tower {
   // UPDATE LOOP
   // ======================
   update(gameState) {
-    console.log('Tower update called');
+
     if (this.cooldown > 0) {
       this.cooldown--;
       return;
@@ -168,7 +168,7 @@ export class Tower {
   // FIRE
   // ======================
   fire(target, gameState) {
-    console.log('Fire method called');
+
     const perFrameDot =
       this.dotDuration > 0
         ? (this.dotDamage || this.damage) / this.dotDuration
@@ -190,10 +190,6 @@ export class Tower {
     });
 
     gameState.projectiles.push(projectile);
-
-    // Log the created projectile and the projectiles array
-    console.log('Projectile created:', projectile);
-    console.log('Current projectiles:', gameState.projectiles);
 }
   
   // ======================
@@ -216,30 +212,47 @@ export class Tower {
     const size = 40;
     this.ctx.save();
 
+    // ======================
+    // Selected Tower Range Ring
+    // ======================
     if (this === window.selectedTower) {
-      this.ctx.fillStyle = "rgba(128,0,128,0.5)";
-      this.ctx.shadowColor = "rgba(128,0,128,0.7)";
-      this.ctx.shadowBlur = 15;
-      this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
-    } else if (this.isHovered) {
-      this.ctx.fillStyle = "rgba(0,0,255,0.3)";
-      this.ctx.shadowColor = "rgba(0,0,255,0.7)";
-      this.ctx.shadowBlur = 10;
-      this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
+        this.ctx.save();
+        this.ctx.strokeStyle = "rgba(128,0,128,0.5)";
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.arc(this.x, this.y, this.range, 0, Math.PI * 2);
+        this.ctx.stroke();
+        this.ctx.restore();
+
+        // Existing selection highlight
+        this.ctx.fillStyle = "rgba(128,0,128,0.5)";
+        this.ctx.shadowColor = "rgba(128,0,128,0.7)";
+        this.ctx.shadowBlur = 15;
+        this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
+    } 
+    // Hover highlight for non-selected towers
+    else if (this.isHovered) {
+        this.ctx.fillStyle = "rgba(0,0,255,0.3)";
+        this.ctx.shadowColor = "rgba(0,0,255,0.7)";
+        this.ctx.shadowBlur = 10;
+        this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
     }
 
+    // ======================
+    // Draw the tower sprite
+    // ======================
     if (this.image) {
-      this.ctx.drawImage(
-        this.image,
-        this.x - size / 2,
-        this.y - size / 2,
-        size,
-        size
-      );
+        this.ctx.drawImage(
+            this.image,
+            this.x - size / 2,
+            this.y - size / 2,
+            size,
+            size
+        );
     }
 
     this.ctx.restore();
-  }
+}
 
   // ======================
   // PLAYER-FACING FIRE RATE

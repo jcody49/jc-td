@@ -73,7 +73,7 @@ export class Projectile {
     
 
     draw() {
-        console.log(this.x, this.y);
+
         const ctx = this.ctx;
         if (this.type === "cannon") ctx.fillStyle = "yellow";
         else if (this.type === "frost") ctx.fillStyle = "#6ecbff";

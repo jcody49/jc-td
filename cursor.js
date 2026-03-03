@@ -49,11 +49,11 @@ function handleRightClick(e) {
     if (!window.selectedTower) return;
 
     const tower = window.selectedTower;
-    const enemy = window.hoveredEnemy; // <-- use this
+    const enemy = window.hoveredEnemy; // already uses hover detection
 
     if (!enemy) return;
 
-    // calculate distance to tower
+    // calculate distance to tower using visualY
     const lift = enemy.gridSize * 0.1;
     const visualY = enemy.y - lift + (enemy.yOffset ?? 0);
     const visualX = enemy.x;
@@ -61,11 +61,18 @@ function handleRightClick(e) {
     const dy = visualY - tower.y;
     const distance = Math.hypot(dx, dy);
 
-    if (distance <= (tower.range ?? 55)) {
+    // use the tower's actual range
+    if (distance <= tower.range) {
         tower.setForcedTarget(enemy);
 
         // blink red regardless of cooldown
         enemy.forceFlashTimer = 12; // double blink: 6 red, 6 white
+
+        console.log(
+            `[ForceAttack] Tower at (${tower.x},${tower.y}) forced attack on enemy at (${enemy.x},${enemy.y}), distance: ${distance.toFixed(
+                1
+            )}, tower range: ${tower.range}`
+        );
 
         cursorMode = "default";
         applyCursor();

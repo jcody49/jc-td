@@ -314,7 +314,6 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
         
 
         updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextEl);
-        console.log("waveTextEl:", hud.waveTextEl);
 
         // --- DRAW GHOST TOWER IF PLACING ---
         if (window.selectedTowerType) {
