@@ -8,28 +8,38 @@ export function distance(a, b) {
   /**********************
    * ENEMY HOVER
    **********************/
-  // hover detection: check mouse over enemy visually
   export function getHoveredEnemy(enemies, mouseX, mouseY, radius = 30) {
     for (const en of enemies) {
-        const width = en.width ?? 40;   // default width if undefined
-        const height = en.height ?? 40; // default height if undefined
+        const width = en.width ?? 40;
+        const height = en.height ?? 40;
 
-        // Check if mouse is over enemy rectangle
-        if (mouseX >= en.x && mouseX <= en.x + width &&
-            mouseY >= en.y && mouseY <= en.y + height) {
+        // match visual center (drawY)
+        const lift = en.gridSize * 0.1;
+        const visualY = en.y - lift + (en.yOffset ?? 0);
+        const visualX = en.x; // x is already centered
+
+        const halfWidth = width / 2;
+        const halfHeight = height / 2;
+
+        // Rectangle hover check
+        if (
+            mouseX >= visualX - halfWidth &&
+            mouseX <= visualX + halfWidth &&
+            mouseY >= visualY - halfHeight &&
+            mouseY <= visualY + halfHeight
+        ) {
             return en;
         }
 
-        // Optional: circle check around enemy center
-        const centerX = en.x + width / 2;
-        const centerY = en.y + height / 2;
-        const dx = mouseX - centerX;
-        const dy = mouseY - centerY;
+        // Circle check as fallback
+        const dx = mouseX - visualX;
+        const dy = mouseY - visualY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         if (distance <= radius) {
             return en;
         }
     }
+
     return null;
 }
 

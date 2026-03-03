@@ -40,7 +40,8 @@ export class Enemy {
     this.x = path[0].x;
     this.y = path[0].y;
 
-    this.blinkRedTimer = 0;
+    //target enemy flash
+    this.forceFlashTimer = 0;
 
     // =====================
     // STATS (NO SILENT FALLBACKS)
@@ -205,21 +206,10 @@ draw() {
   const lift = this.gridSize * 0.1;
   const drawY = this.y - lift + (this.yOffset ?? 0);
 
-  // ---------------------------
-  // Hover highlight (semi-transparent)
-  // ---------------------------
-  if (window.hoveredEnemy === this) {
-      ctx.save();
-      ctx.globalAlpha = 0.35;
-      ctx.fillStyle = "rgba(255,50,50,1)";
-      ctx.beginPath();
-      ctx.arc(this.x, drawY, this.size * 0.9, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-  }
+  
 
   // ---------------------------
-  // Enemy body (image or fallback rect)
+  // Enemy body
   // ---------------------------
   if (this.img) {
       ctx.drawImage(
@@ -240,24 +230,45 @@ draw() {
   }
 
   // ---------------------------
-  // Forced attack blink (timer-based)
+  // FORCE ATTACK FLASH
+  // red → white → red
   // ---------------------------
-  if (this.blinkRedTimer > 0) {
-      ctx.save();
-      ctx.globalAlpha = 0.5;
-      ctx.fillStyle = 'red';
-      ctx.beginPath();
-      ctx.arc(this.x, drawY, this.size * 0.9, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
+  if (this.forceFlashTimer > 0) {
+    ctx.save();
 
-      this.blinkRedTimer -= 1; // count down each frame
-  }
+    // Alternate every 4 frames: red ↔ white
+    const isWhite = Math.floor(this.forceFlashTimer / 4) % 2 === 0;
+
+    ctx.globalAlpha = 0.75;
+    ctx.fillStyle = isWhite ? "white" : "red";
+
+    ctx.beginPath();
+    ctx.arc(this.x, drawY, this.size * 0.9, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    this.forceFlashTimer--;
+}
 
   // ---------------------------
-  // HP bar
+  // Hover highlight
+  // ---------------------------
+  if (window.hoveredEnemy === this) {
+    ctx.save();
+    ctx.globalAlpha = 0.35;
+    ctx.fillStyle = "rgba(255,50,50,1)";
+    ctx.beginPath();
+    ctx.arc(this.x, drawY, this.size * 0.9, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+}
+
+  // ---------------------------
+  // HP Bar
   // ---------------------------
   const hpPct = Math.max(this.hp / this.maxHp, 0);
+
   ctx.save();
   ctx.fillStyle = "green";
   ctx.fillRect(
@@ -266,6 +277,7 @@ draw() {
       this.size * hpPct,
       4
   );
+
   ctx.strokeStyle = "black";
   ctx.strokeRect(
       this.x - this.size / 2,

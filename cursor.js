@@ -48,44 +48,24 @@ function handleRightClick(e) {
     e.preventDefault();
     if (!window.selectedTower) return;
 
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const mouseX = (e.clientX - rect.left) * scaleX;
-    const mouseY = (e.clientY - rect.top) * scaleY;
-
     const tower = window.selectedTower;
+    const enemy = window.hoveredEnemy; // <-- use this
 
-    // Find actual enemy object in gameState.enemies
-    const enemy = gameState.enemies.find(en => {
-        const lift = en.gridSize * 0.1;
-        const visualX = en.x;
-        const visualY = en.y - lift + (en.yOffset ?? 0);
+    if (!enemy) return;
 
-        const width = en.width ?? 40;
-        const height = en.height ?? 40;
-        const rectScale = 0.4;
-        const halfWidth = (width / 2) * rectScale;
-        const halfHeight = (height / 2) * rectScale;
+    // calculate distance to tower
+    const lift = enemy.gridSize * 0.1;
+    const visualY = enemy.y - lift + (enemy.yOffset ?? 0);
+    const visualX = enemy.x;
+    const dx = visualX - tower.x;
+    const dy = visualY - tower.y;
+    const distance = Math.hypot(dx, dy);
 
-        const overMouse =
-            mouseX >= visualX - halfWidth &&
-            mouseX <= visualX + halfWidth &&
-            mouseY >= visualY - halfHeight &&
-            mouseY <= visualY + halfHeight;
-
-        const dx = visualX - tower.x;
-        const dy = visualY - tower.y;
-        const distance = Math.hypot(dx, dy);
-
-        return overMouse && distance <= (tower.range ?? 55);
-    });
-
-    if (enemy) {
+    if (distance <= (tower.range ?? 55)) {
         tower.setForcedTarget(enemy);
 
-        // ✅ This will now actually trigger blink
-        enemy.blinkRedTimer = 6;
+        // blink red regardless of cooldown
+        enemy.forceFlashTimer = 12; // double blink: 6 red, 6 white
 
         cursorMode = "default";
         applyCursor();
