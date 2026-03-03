@@ -32,7 +32,12 @@ function handleClick() {
         const dy = enemy.y - tower.y;
         const distance = Math.hypot(dx, dy);
 
-        if (distance <= 55) tower.setForcedTarget(enemy);
+        if (distance <= 85) {
+            tower.setForcedTarget(enemy);
+
+            // ✅ Put it right here
+            enemy.blinkRedTimer = 6; // blink for 6 frames (~0.1s at 60fps)
+        }
 
         cursorMode = "default";
         applyCursor();
@@ -46,28 +51,42 @@ function handleRightClick(e) {
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
-
     const mouseX = (e.clientX - rect.left) * scaleX;
     const mouseY = (e.clientY - rect.top) * scaleY;
 
     const tower = window.selectedTower;
 
-    const target = gameState.enemies.find(enemy => {
-        const dx = enemy.x - tower.x;
-        const dy = enemy.y - tower.y;
-        const distance = Math.hypot(dx, dy);
+    // Find actual enemy object in gameState.enemies
+    const enemy = gameState.enemies.find(en => {
+        const lift = en.gridSize * 0.1;
+        const visualX = en.x;
+        const visualY = en.y - lift + (en.yOffset ?? 0);
+
+        const width = en.width ?? 40;
+        const height = en.height ?? 40;
+        const rectScale = 0.4;
+        const halfWidth = (width / 2) * rectScale;
+        const halfHeight = (height / 2) * rectScale;
 
         const overMouse =
-            mouseX >= enemy.x &&
-            mouseX <= enemy.x + (enemy.width ?? 40) &&
-            mouseY >= enemy.y &&
-            mouseY <= enemy.y + (enemy.height ?? 40);
+            mouseX >= visualX - halfWidth &&
+            mouseX <= visualX + halfWidth &&
+            mouseY >= visualY - halfHeight &&
+            mouseY <= visualY + halfHeight;
 
-        return distance <= 55 && overMouse;
+        const dx = visualX - tower.x;
+        const dy = visualY - tower.y;
+        const distance = Math.hypot(dx, dy);
+
+        return overMouse && distance <= (tower.range ?? 55);
     });
 
-    if (target) {
-        tower.setForcedTarget(target);
+    if (enemy) {
+        tower.setForcedTarget(enemy);
+
+        // ✅ This will now actually trigger blink
+        enemy.blinkRedTimer = 6;
+
         cursorMode = "default";
         applyCursor();
     }
@@ -111,7 +130,7 @@ function handleMouseMove(e) {
     }
 
     // Hover detection
-    window.hoveredEnemy = getHoveredEnemy(gameState.enemies, mouseX, mouseY, 55);
+    window.hoveredEnemy = getHoveredEnemy(gameState.enemies, mouseX, mouseY, 35);
     window.hoveredTower = getTowerAtPosition(gameState.towers, mouseX, mouseY, 60);
 
     if (!window.selectedTowerType && cursorMode !== "attack") {
