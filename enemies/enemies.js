@@ -152,22 +152,27 @@ export class Enemy {
     this.activeDoTs = this.activeDoTs.filter(d => d.remaining > 0);
 
     if (this.hp <= 0) {
-        // Add reward to game money when enemy dies
-        if (this.reward > 0) {
-            gameState.money += this.reward;
+      // --- Add reward to money ---
+      if (this.reward > 0) {
+          gameState.money += this.reward;
+          showMoneyPopup(this.reward, this.x, this.y); // optional visual
+      }
+  
+      // --- Add to score ---
+      if (this.score > 0) {
+          gameState.score += this.score;
+      }
+  
+      // --- Show life popup if applicable ---
+      if (this.lifeReward > 0) {
+          showLifePopup(this.lifeReward, this.x, this.y); // optional visual
+      }
+  
+      // --- Remove enemy ---
+      this.remove = true;
 
-            // Show the money popup when an enemy is killed
-            showMoneyPopup(this.reward, this.x, this.y);
-        }
-
-        // If enemy is a bonus or has a life reward, show the life popup
-        if (this.lifeReward > 0) {
-            showLifePopup(this.lifeReward, this.x, this.y);
-        }
-
-        this.remove = true;
-        return;
-    }
+      return;
+  }
 
     // --- Movement ---
     const target = this.path[this.pathIndex + 1];
