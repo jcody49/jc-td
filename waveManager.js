@@ -47,6 +47,39 @@ export function updateWavePreview() {
   soonEl.textContent    = getWaveEnemyType(waveState.currentWave + 2);
 }
 
+export function stopAllWaveIntervals() {
+  if (spawnInterval) {
+    clearInterval(spawnInterval);
+    spawnInterval = null;
+  }
+
+  if (waveState.countdownInterval) {
+    clearInterval(waveState.countdownInterval);
+    waveState.countdownInterval = null;
+  }
+
+  spawningFinished = false;
+  completionLocked = false;
+
+  console.log("🛑 WaveManager intervals cleared");
+}
+
+export function stopWaveSpawning() {
+  if (spawnInterval) {
+      clearInterval(spawnInterval);
+      spawnInterval = null;
+  }
+
+  if (waveState.countdownInterval) {
+      clearInterval(waveState.countdownInterval);
+      waveState.countdownInterval = null;
+  }
+
+  spawningFinished = false;
+  completionLocked = false;
+  console.log("🛑 All wave timers cleared");
+}
+
 // =========================
 // START WAVE (SPAWNING)
 // =========================
@@ -212,3 +245,6 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
     }, 2000);
   }
 }
+
+
+

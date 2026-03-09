@@ -2,7 +2,7 @@
 // IMPORTS
 // ======================
 import { startGameLoop, stopGameLoop, startGameWaves, resetGame } from './game-engine.js';
-import { startWave, waveState, updateWavePreview } from './waveManager.js';
+import { startWave, waveState, updateWavePreview, stopWaveSpawning, stopAllWaveIntervals } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
 import { gameState } from './gameState.js';
@@ -326,11 +326,7 @@ if (restartGameBtn) {
         closeModal();
         
     
-        // ✅ Clear any existing wave timer from previous game
-        if (waveState.countdownInterval) {
-            clearInterval(waveState.countdownInterval);
-            waveState.countdownInterval = null;
-        }
+        
     
         // ✅ Clear difficulty
         gameState.difficulty = null;
@@ -341,8 +337,14 @@ if (restartGameBtn) {
 
         console.log("🚦 window.gamePaused before reset:", window.gamePaused);
 
+        // ✅ Stop ALL wave timers
+        stopAllWaveIntervals();
+
         // ✅ Stop the old game loop before restarting
         stopGameLoop();
+
+        // ✅ Clear all wave timers before resetting
+        stopWaveSpawning();
 
         resetGame(gameState, ctx, canvas);
         console.log("🚦 window.gamePaused after reset:", window.gamePaused);

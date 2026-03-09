@@ -206,7 +206,14 @@ export function resetGame(gameState, ctx, canvas) {
     console.log("🌀 resetGame() called");
 
     // === CLEAR EVERYTHING ===
-    
+    window.hoveredEnemy = null;
+    window.hoveredTower = null;
+
+
+    waveState.currentWave = 0;
+    waveState.status = "idle";
+    waveState.countdown = 40;
+    waveState.countdownInterval = null;
 
     gameState.enemies = [];
     gameState.projectiles = [];
@@ -215,6 +222,11 @@ export function resetGame(gameState, ctx, canvas) {
     gameState.lives = 10;
     gameState.score = 0;
     gameState.difficulty = null;
+
+    console.log("🌀 Reset arrays:");
+    console.log("Enemies:", gameState.enemies);
+    console.log("Projectiles:", gameState.projectiles);
+    console.log("Towers:", gameState.towers);
 
     // Reset grid
     for (let col = 0; col < gridCols; col++) {
