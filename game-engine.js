@@ -132,46 +132,6 @@ function drawStartEnd(ctx, path, gridSize) {
     drawLabel(end.x, end.y, "FINISH", "red", -15);
 }
 
-// =========================
-// GAME OVER HANDLING
-// =========================
-
-export function showGameOver(gameState, ctx, canvas) {
-    window.gamePaused = true;
-
-    // Clear enemies/projectiles
-    gameState.enemies = [];
-    gameState.projectiles = [];
-
-    // Redraw the map so it doesn't disappear
-    drawGridTiles(ctx);
-    drawStartEnd(ctx, waveState.path, gridSize);
-
-    // Show overlay
-    const overlay = document.getElementById("gameOverOverlay");
-    overlay.classList.remove("hidden");
-
-    // Hide HUD wave text and countdown
-
-    if (waveTextEl) waveTextEl.style.display = "none";
-
-    const skipButton = document.getElementById("skipButton");
-    if (skipButton) skipButton.style.display = "none";
-
-    // Retry button logic
-    const retryBtn = document.getElementById("retryButton");
-    retryBtn.onclick = () => {
-        overlay.classList.add("hidden");
-
-        if (waveTextEl) waveTextEl.style.display = "block";
-        if (skipButton) skipButton.style.display = "block";
-
-        // Reset game state and redraw map
-        resetGame(gameState, ctx, canvas);
-        drawGridTiles(ctx);
-        drawStartEnd(ctx, waveState.path, gridSize);
-    };
-}
 
 
 // ======================
@@ -258,7 +218,16 @@ export function resetGame(gameState, ctx, canvas) {
     console.log("resetGame() completed ✅");
 }
 
+// =========================
+// GAME OVER HANDLING (engine-only)
+// =========================
+export function showGameOver(gameState) {
+    // Pause engine
+    window.gamePaused = true;
 
+    // Show overlay in main.js
+    window.showGameOverUI?.();
+}
 
 
 // =========================
@@ -283,8 +252,8 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
 
         // Game over
         if (gameState.lives <= 0) {
-            showGameOver(gameState, ctx, canvas);
-            rafId = null; // stop loop
+            showGameOver(gameState); 
+            rafId = null;           
             return;
         }
 

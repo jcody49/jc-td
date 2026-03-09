@@ -326,8 +326,6 @@ if (restartGameBtn) {
         closeModal();
         
     
-        
-    
         // ✅ Clear difficulty
         gameState.difficulty = null;
     
@@ -354,7 +352,44 @@ if (restartGameBtn) {
 }
 
 
+// ======================
+// GAME OVER
+// ======================
+// Elements
+const gameOverEl = document.getElementById("gameOverOverlay");
+const retryBtn = document.getElementById("retryButton");
 
+// Expose overlay function globally
+window.showGameOverUI = function() {
+    gameOverEl.classList.remove("hidden");
+}
+
+// Retry button
+retryBtn?.addEventListener("click", () => {
+    // Hide ALL overlays
+    settingsModal?.classList.add("hidden");
+    pauseOverlay?.classList.add("hidden");
+    gameOverEl.classList.add("hidden");
+    closeModal();
+
+    // Clear difficulty
+    gameState.difficulty = null;
+
+    // Reset paused flag / HUD
+    window.gamePaused = false;
+    if (waveTextEl) waveTextEl.innerText = "";
+
+    // Stop all timers
+    stopAllWaveIntervals();
+    stopGameLoop();
+    stopWaveSpawning();
+
+    // Reset everything
+    resetGame(gameState, ctx, canvas);
+
+    // Restart loop
+    startGameLoop(ctx, canvas, gameState, hud);
+});
 
 
 
