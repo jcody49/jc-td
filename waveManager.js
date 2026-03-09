@@ -22,6 +22,8 @@ export const waveState = {
 // INTERNAL FLAGS
 // =========================
 let spawnInterval = null;
+let spawnQueue = [];
+let enemiesSpawned = 0;
 let spawningFinished = false;
 let completionLocked = false;
 
@@ -47,6 +49,9 @@ export function updateWavePreview() {
   soonEl.textContent    = getWaveEnemyType(waveState.currentWave + 2);
 }
 
+// =========================
+// STOP / RESET INTERVALS
+// =========================
 export function stopAllWaveIntervals() {
   if (spawnInterval) {
     clearInterval(spawnInterval);
@@ -60,32 +65,41 @@ export function stopAllWaveIntervals() {
 
   spawningFinished = false;
   completionLocked = false;
+  spawnQueue = [];
+  enemiesSpawned = 0;
 
   console.log("🛑 WaveManager intervals cleared");
 }
 
-export function stopWaveSpawning() {
-  if (spawnInterval) {
-      clearInterval(spawnInterval);
-      spawnInterval = null;
-  }
+// Alias for clarity
+export const stopWaveSpawning = stopAllWaveIntervals;
 
-  if (waveState.countdownInterval) {
-      clearInterval(waveState.countdownInterval);
-      waveState.countdownInterval = null;
+// =========================
+// SPAWN HELPERS
+// =========================
+function applyDifficulty(config, difficulty) {
+  const copy = { ...config };
+  switch (difficulty) {
+    case "easy":
+      copy.maxHp *= 0.77;
+      copy.score = Math.round((copy.score ?? 5) * 0.8);
+      break;
+    case "hard":
+      copy.maxHp *= 1.09;
+      copy.score = Math.round((copy.score ?? 5) * 1.2);
+      break;
+    default:
+      copy.score = copy.score ?? 5;
   }
-
-  spawningFinished = false;
-  completionLocked = false;
-  console.log("🛑 All wave timers cleared");
+  return copy;
 }
 
 // =========================
 // START WAVE (SPAWNING)
 // =========================
 export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
-  if (!ctx || !(ctx instanceof CanvasRenderingContext2D)) throw new Error("Invalid ctx passed to startWave");
-  if (!waveState.path || !waveState.path.length) throw new Error("startWave called with invalid path");
+  if (!ctx || !(ctx instanceof CanvasRenderingContext2D)) throw new Error("Invalid ctx");
+  if (!waveState.path || !waveState.path.length) throw new Error("Invalid path");
 
   const waveData = waves[waveState.currentWave];
   if (!waveData) return;
@@ -93,27 +107,24 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   waveState.status = "spawning";
   spawningFinished = false;
 
-  // ✅ Update waveTextEl with enemy name
-  if (waveTextEl && waveData.enemies.length > 0) {
-    const enemyId = waveData.enemies[0].id;
-    const enemyName = enemiesData[enemyId]?.name || enemyId;
-  
-    waveTextEl.innerHTML = `Wave ${waveState.currentWave + 1} in progress: <br><span class="wave-text-neon">${enemyName}</span>`;
-  } else if (waveTextEl) {
-    waveTextEl.textContent = `Wave ${waveState.currentWave + 1} in progress`;
-  }
-
-  updateWavePreview(); // update preview as wave starts
-
-  const spawnQueue = [];
+  // Build spawn queue
+  spawnQueue = [];
   waveData.enemies.forEach(e => {
     for (let i = 0; i < e.count; i++) {
-      const enemyConfig = enemiesData[e.id];
-      if (enemyConfig) spawnQueue.push(enemyConfig);
+      const config = enemiesData[e.id];
+      if (config) spawnQueue.push(config);
     }
   });
+  enemiesSpawned = 0;
 
-  let enemiesSpawned = 0;
+  if (waveTextEl) {
+    const enemyId = waveData.enemies[0]?.id;
+    const enemyName = enemiesData[enemyId]?.name || enemyId;
+    waveTextEl.innerHTML = `Wave ${waveState.currentWave + 1} in progress:<br><span class="wave-text-neon">${enemyName}</span>`;
+  }
+
+  updateWavePreview();
+
   if (spawnInterval) clearInterval(spawnInterval);
 
   spawnInterval = setInterval(() => {
@@ -125,57 +136,28 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
       return;
     }
 
-    // clone config to avoid mutating original
-    let config = { ...spawnQueue[enemiesSpawned] };
+    const config = applyDifficulty(spawnQueue[enemiesSpawned], gameState.difficulty);
 
-    // set a default score if none exists
-    config.score = config.score ?? 5;
-
-    // =========================
-    // APPLY DIFFICULTY ADJUSTMENTS
-    // =========================
-    switch (gameState.difficulty) {
-      case "easy":
-        config.maxHp *= 0.77;
-        config.score = Math.round(config.score * 0.8);
-        break;
-
-      case "hard":
-        config.maxHp *= 1.09;
-        config.score = Math.round(config.score * 1.2);
-        break;
-
-      case "normal":
-        // no changes
-        break;
-    }
-    
-
-
-
-    gameState.enemies.push(
-      new Enemy({
-        path: waveState.path,
-        gridSize,
-        ctx,
-        canvas,
-        config
-      })
-    );
+    gameState.enemies.push(new Enemy({
+      path: waveState.path,
+      gridSize,
+      ctx,
+      canvas,
+      config
+    }));
 
     enemiesSpawned++;
-  }, waveData.spawnInterval);
+  }, waveData.spawnInterval / window.gameSpeed);
 }
 
 // =========================
-// START NEXT WAVE (COUNTDOWN)
+// COUNTDOWN TO NEXT WAVE
 // =========================
 export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   if (!gameState.difficulty) return;
   waveState.countdown = 40;
   waveState.status = "countdown";
 
-  // show skip button
   const skipButton = document.getElementById("skipButton");
   if (skipButton) {
     skipButton.disabled = false;
@@ -183,16 +165,12 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   }
 
   if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
+  updateWavePreview();
 
   if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
 
   waveState.countdownInterval = setInterval(() => {
-    if (window.gamePaused) {
-        pauseOverlay.classList.remove("hidden"); // show PAUSED overlay
-        return;
-    } else {
-        pauseOverlay.classList.add("hidden"); // hide PAUSED overlay
-    }
+    if (window.gamePaused) return;
 
     waveState.countdown--;
     if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
@@ -202,10 +180,7 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
       waveState.countdownInterval = null;
       startWave(gameState, gridSize, ctx, canvas, waveTextEl);
     }
-}, 1000);
-
-
-  updateWavePreview(); // ensure preview shows upcoming waves during countdown
+  }, 1000 / window.gameSpeed);
 }
 
 // =========================
@@ -215,17 +190,13 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
   if (waveState.status !== "spawning" || completionLocked) return;
 
   if (spawningFinished && gameState.enemies.length === 0) {
-
     if (window.gamePaused) return;
 
     completionLocked = true;
     waveState.status = "done";
 
     const currentWaveData = waves[waveState.currentWave];
-
-    // award income
     if (currentWaveData?.income) {
-
       gameState.money = (gameState.money || 0) + currentWaveData.income;
       showMoneyPopup(
         currentWaveData.income,
@@ -239,12 +210,60 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
 
     setTimeout(() => {
       waveState.currentWave++;
-      updateWavePreview();
       completionLocked = false;
+      updateWavePreview();
       startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
     }, 2000);
   }
 }
 
+// =========================
+// FAST-FORWARD SUPPORT
+// =========================
+export function adjustWaveSpeed(gameState, gridSize, ctx, canvas, waveTextEl) {
+  // Restart countdown interval
+  if (waveState.countdownInterval) {
+    clearInterval(waveState.countdownInterval);
 
+    waveState.countdownInterval = setInterval(() => {
+      if (window.gamePaused) return;
 
+      waveState.countdown--;
+      if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
+
+      if (waveState.countdown <= 0) {
+        clearInterval(waveState.countdownInterval);
+        waveState.countdownInterval = null;
+        startWave(gameState, gridSize, ctx, canvas, waveTextEl);
+      }
+    }, 1000 / window.gameSpeed);
+  }
+
+  // Restart enemy spawn interval
+  if (spawnInterval && !spawningFinished) {
+    const waveData = waves[waveState.currentWave];
+    clearInterval(spawnInterval);
+
+    spawnInterval = setInterval(() => {
+      if (window.gamePaused) return;
+
+      if (enemiesSpawned >= spawnQueue.length) {
+        clearInterval(spawnInterval);
+        spawningFinished = true;
+        return;
+      }
+
+      const config = applyDifficulty(spawnQueue[enemiesSpawned], gameState.difficulty);
+
+      gameState.enemies.push(new Enemy({
+        path: waveState.path,
+        gridSize,
+        ctx,
+        canvas,
+        config
+      }));
+
+      enemiesSpawned++;
+    }, waveData.spawnInterval / window.gameSpeed);
+  }
+}

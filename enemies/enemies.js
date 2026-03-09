@@ -108,17 +108,14 @@ export class Enemy {
         if (!this.escaped) {
             this.escaped = true;
 
-            // Only subtract lives if NOT a bonus enemy
             if (!this.isBonus) {
                 gameState.lives--;
             }
 
-            // Show life popup when enemy escapes (if it affects lives)
             if (this.isBonus) {
                 showLifePopup(this.lifeReward);
             }
 
-            // Draw X as before
             const ctx = this.ctx;
             ctx.save();
             ctx.strokeStyle = "yellow";
@@ -152,41 +149,38 @@ export class Enemy {
     this.activeDoTs = this.activeDoTs.filter(d => d.remaining > 0);
 
     if (this.hp <= 0) {
-      // --- Add reward to money ---
-      if (this.reward > 0) {
-          gameState.money += this.reward;
-          showMoneyPopup(this.reward, this.x, this.y); // optional visual
-      }
-  
-      // --- Add to score ---
-      if (this.score > 0) {
-          gameState.score += this.score;
-      }
-  
-      // --- Show life popup if applicable ---
-      if (this.lifeReward > 0) {
-          showLifePopup(this.lifeReward, this.x, this.y); // optional visual
-      }
-  
-      // --- Remove enemy ---
-      this.remove = true;
+        if (this.reward > 0) {
+            gameState.money += this.reward;
+            showMoneyPopup(this.reward, this.x, this.y);
+        }
 
-      return;
-  }
+        if (this.score > 0) {
+            gameState.score += this.score;
+        }
 
-    // --- Movement ---
+        if (this.lifeReward > 0) {
+            showLifePopup(this.lifeReward, this.x, this.y);
+        }
+
+        this.remove = true;
+        return;
+    }
+
+    // --- Movement with fast-forward ---
     const target = this.path[this.pathIndex + 1];
     const dx = target.x - this.x;
     const dy = target.y - this.y;
     const dist = Math.hypot(dx, dy);
 
-    if (dist < this.speed) {
+    const effectiveSpeed = this.speed * window.gameSpeed;
+
+    if (dist < effectiveSpeed) {
         this.x = target.x;
         this.y = target.y;
         this.pathIndex++;
     } else {
-        this.x += (dx / dist) * this.speed;
-        this.y += (dy / dist) * this.speed;
+        this.x += (dx / dist) * effectiveSpeed;
+        this.y += (dy / dist) * effectiveSpeed;
     }
 
     // --- Hop ---

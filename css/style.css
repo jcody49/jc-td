@@ -513,3 +513,33 @@ button.danger:hover {
   transform: translateY(-1px);      /* subtle lift on hover */
 }
 
+
+
+#gameWrapper {
+  position: relative; /* ensures absolute children are positioned relative to this wrapper */
+}
+
+#fastForwardBtn {
+  position: absolute;
+  top: 10px;         /* distance from top of wrapper */
+  right: 10px;       /* distance from right of wrapper */
+  z-index: 1000;     /* above canvas and overlays */
+  font-size: 1.5em;
+  padding: 8px 12px;
+  background-color: rgba(0,0,0,0.6);
+  color: #fff;
+  border: 2px solid #53FFFF;
+  border-radius: 6px;
+  cursor: pointer;
+  pointer-events: auto; /* ensures clickable */
+  transition: transform 0.2s ease;
+}
+
+#fastForwardBtn:hover {
+  transform: scale(1.1);
+}
+
+#fastForwardBtn.active {
+  background-color: #53FFFF;
+  color: #000;
+}

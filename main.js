@@ -2,7 +2,7 @@
 // IMPORTS
 // ======================
 import { startGameLoop, stopGameLoop, startGameWaves, resetGame } from './game-engine.js';
-import { startWave, waveState, updateWavePreview, stopWaveSpawning, stopAllWaveIntervals } from './waveManager.js';
+import { startWave, waveState, updateWavePreview, stopWaveSpawning, stopAllWaveIntervals, adjustWaveSpeed } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
 import { gameState } from './gameState.js';
@@ -311,6 +311,21 @@ if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnBu
 
 
 // ======================
+// FAST FORWARD
+// ======================
+const fastForwardBtn = document.getElementById("fastForwardBtn");
+
+fastForwardBtn?.addEventListener("click", () => {
+    window.gameSpeed = window.gameSpeed === 1 ? 3 : 1;
+    fastForwardBtn.classList.toggle("active");
+
+    adjustWaveSpeed(gameState, gridSize, ctx, canvas, waveTextEl);
+
+    console.log("🚀 Fast forward toggled. Current speed:", window.gameSpeed);
+});
+
+
+// ======================
 // RESTART GAME BUTTON (PAUSE / SETTINGS)
 // ======================
 const restartGameBtn = document.getElementById("restartGameBtn");
@@ -397,3 +412,6 @@ retryBtn?.addEventListener("click", () => {
 // GLOBALS
 // ======================
 window.gridOccupied = gridOccupied;
+
+// Normal speed
+window.gameSpeed = 1;

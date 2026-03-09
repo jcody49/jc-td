@@ -241,7 +241,7 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
     let lastTimestamp = 0;
 
     function loop(timestamp = 0) {
-        const deltaTime = timestamp - lastTimestamp;
+        const deltaTime = (timestamp - lastTimestamp) * window.gameSpeed;
         lastTimestamp = timestamp;
 
         // Tiles not ready
