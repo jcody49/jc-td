@@ -316,7 +316,7 @@ if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnBu
 const fastForwardBtn = document.getElementById("fastForwardBtn");
 
 fastForwardBtn?.addEventListener("click", () => {
-    window.gameSpeed = window.gameSpeed === 1 ? 3 : 1;
+    window.gameSpeed = window.gameSpeed === 1 ? 2 : 1;
     fastForwardBtn.classList.toggle("active");
 
     adjustWaveSpeed(gameState, gridSize, ctx, canvas, waveTextEl);

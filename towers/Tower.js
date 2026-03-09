@@ -121,48 +121,59 @@ export class Tower {
   // UPDATE LOOP
   // ======================
   update(gameState) {
-
+    // ------------------------
+    // Cooldown handling
+    // ------------------------
     if (this.cooldown > 0) {
-      this.cooldown--;
-      return;
+        // reduce cooldown by gameSpeed per frame to fire faster on fast-forward
+        this.cooldown -= window.gameSpeed ?? 1;
+        if (this.cooldown > 0) return; // still cooling down, exit early
     }
 
     let target = null;
 
-    // ---- FORCE TARGET PRIORITY ----
+    // ------------------------
+    // FORCE TARGET PRIORITY
+    // ------------------------
     if (
-      this.forcedTarget &&
-      !this.forcedTarget.dead &&
-      gameState.enemies.includes(this.forcedTarget)
+        this.forcedTarget &&
+        !this.forcedTarget.dead &&
+        gameState.enemies.includes(this.forcedTarget)
     ) {
-      const d = Math.hypot(
-        this.forcedTarget.x - this.x,
-        this.forcedTarget.y - this.y
-      );
+        const d = Math.hypot(
+            this.forcedTarget.x - this.x,
+            this.forcedTarget.y - this.y
+        );
 
-      if (d <= this.range) {
-        target = this.forcedTarget;
-      } else {
-        this.forcedTarget = null;
-      }
+        if (d <= this.range) {
+            target = this.forcedTarget;
+        } else {
+            this.forcedTarget = null;
+        }
     }
 
-    // ---- NORMAL TARGETING ----
+    // ------------------------
+    // NORMAL TARGETING
+    // ------------------------
     if (!target) {
-      target = this.findTarget(gameState.enemies);
+        target = this.findTarget(gameState.enemies);
     }
 
     if (!target) return;
 
+    // ------------------------
+    // FIRE
+    // ------------------------
     this.fire(target, gameState);
 
-    // set cooldown based on internal fireRate
+    // reset cooldown exactly for next shot
     this.cooldown = this.fireRate;
-    
+
+    // clear forced target if dead
     if (this.forcedTarget && this.forcedTarget.dead) {
-      this.forcedTarget = null;
+        this.forcedTarget = null;
     }
-  }
+}
 
   // ======================
   // FIRE
