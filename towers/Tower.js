@@ -19,6 +19,18 @@ export class Tower {
     this.type = type;
     this.description = description;
 
+
+    // ======================
+    // DEBUG ID (TRACK THIS TOWER INSTANCE)
+    // ======================
+    this.uid = Math.random().toString(16).slice(2);
+
+    console.log("🏗️ TOWER CREATED", {
+      uid: this.uid,
+      type: this.type,
+      level: this.level
+    });
+
     // ===== FORCE ATTACK =====
     this.forcedTarget = null;
 
@@ -65,6 +77,13 @@ export class Tower {
     this.dotDuration = data.dotDuration ?? this.dotDuration;
     this.dotDamage = data.dotDamage ?? this.dotDamage;
 
+
+    console.log("🟣 APPLY LEVEL SPRITE CHANGE", {
+      uid: this.uid,
+      level: this.level,
+      sprite: data.sprite
+    });
+
     if (data.sprite && data.sprite !== this.sprite) {
       this.sprite = data.sprite;
       this.image = new Image();
@@ -80,14 +99,57 @@ export class Tower {
   }
 
   upgrade(gameState) {
-    if (!this.canUpgrade(gameState)) return false;
+    // 🔍 TRACK EVERY CALL SOURCE
+    console.trace("🧠 UPGRADE CALL STACK");
+    console.count(`UPGRADE ${this.type}`);
+
+    console.log("🟥 UPGRADE ENTERED", {
+        uid: this.uid,
+        type: this.type,
+        levelBefore: this.level,
+        upgradeCostsIndex: this.level - 1,
+        timestamp: performance.now()
+    });
+
+    // 🛑 EARLY EXIT GUARD (important for debugging double-fires)
+    if (!this.canUpgrade(gameState)) {
+        console.warn("❌ UPGRADE BLOCKED (canUpgrade=false)", {
+            uid: this.uid,
+            level: this.level,
+            money: gameState.money
+        });
+        return false;
+    }
+
     const cost = this.upgradeCosts[this.level - 1];
+
+    // 🧠 sanity log BEFORE mutation
+    console.log("💰 APPLYING UPGRADE COST", {
+        cost,
+        moneyBefore: gameState.money
+    });
+
     gameState.money -= cost;
     this.totalSpent += cost;
+
+    // ⚠️ THIS IS THE CRITICAL MOMENT
+    console.log("⬆️ LEVEL INCREMENT", {
+        before: this.level,
+        after: this.level + 1
+    });
+
     this.level++;
+
     this.applyLevel();
+
+    console.log("🟢 UPGRADE COMPLETE", {
+        uid: this.uid,
+        newLevel: this.level,
+        sprite: this.image?.src
+    });
+
     return true;
-  }
+}
 
   // ======================
   // FORCE ATTACK API
@@ -221,40 +283,48 @@ export class Tower {
     if (!this.ctx) return;
 
     const size = 40;
-    this.ctx.save();
+    const ctx = this.ctx;
+
+    ctx.save();
 
     // ======================
-    // Selected Tower Range Ring
+    // Range / Selection UI
     // ======================
     if (this === window.selectedTower) {
-        this.ctx.save();
-        this.ctx.strokeStyle = "rgba(128,0,128,0.5)";
-        this.ctx.lineWidth = 2;
-        this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.range, 0, Math.PI * 2);
-        this.ctx.stroke();
-        this.ctx.restore();
+        ctx.strokeStyle = "rgba(128,0,128,0.5)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.range, 0, Math.PI * 2);
+        ctx.stroke();
 
-        // Existing selection highlight
-        this.ctx.fillStyle = "rgba(128,0,128,0.5)";
-        this.ctx.shadowColor = "rgba(128,0,128,0.7)";
-        this.ctx.shadowBlur = 15;
-        this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
-    } 
-    // Hover highlight for non-selected towers
-    else if (this.isHovered) {
-        this.ctx.fillStyle = "rgba(0,0,255,0.3)";
-        this.ctx.shadowColor = "rgba(0,0,255,0.7)";
-        this.ctx.shadowBlur = 10;
-        this.ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
+        ctx.fillStyle = "rgba(128,0,128,0.5)";
+        ctx.shadowColor = "rgba(128,0,128,0.7)";
+        ctx.shadowBlur = 15;
+        ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
+    } else if (this.isHovered) {
+        ctx.fillStyle = "rgba(0,0,255,0.3)";
+        ctx.shadowColor = "rgba(0,0,255,0.7)";
+        ctx.shadowBlur = 10;
+        ctx.fillRect(this.x - size / 2, this.y - size / 2, size, size);
     }
 
     // ======================
-    // Draw the tower sprite
+    // Tower Sprite
     // ======================
-    if (this.image) {
-        this.ctx.drawImage(
-            this.image,
+    const img = this.image;
+
+    if (img && img.complete && img.naturalWidth > 0) {
+        ctx.drawImage(
+            img,
+            this.x - size / 2,
+            this.y - size / 2,
+            size,
+            size
+        );
+    } else {
+        // safe fallback (no logs, no spam)
+        ctx.fillStyle = "rgba(120,120,120,0.6)";
+        ctx.fillRect(
             this.x - size / 2,
             this.y - size / 2,
             size,
@@ -262,7 +332,7 @@ export class Tower {
         );
     }
 
-    this.ctx.restore();
+    ctx.restore();
 }
 
   // ======================

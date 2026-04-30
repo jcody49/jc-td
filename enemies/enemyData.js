@@ -100,7 +100,7 @@ export const enemiesData = {
       image: "assets/enemies/enemy10.png",
       isFlying: false,
       sizeMultiplier: 1.34,
-    },
+    }
 
   };
   

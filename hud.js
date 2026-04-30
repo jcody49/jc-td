@@ -68,6 +68,11 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
         else towerUpgradeOption.classList.add("disabled");
 
         towerUpgradeOption.onclick = () => {
+            console.log("🔴 UI UPGRADE CLICKED", {
+                uid: tower.uid,
+                levelBefore: tower.level,
+                time: performance.now()
+              });
             if (!tower.canUpgrade(gameState)) return;
 
             tower.upgrade(gameState);

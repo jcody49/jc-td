@@ -74,12 +74,6 @@ function handleRightClick(e) {
         // blink red regardless of cooldown
         enemy.forceFlashTimer = 12; // double blink: 6 red, 6 white
 
-        console.log(
-            `[ForceAttack] Tower at (${tower.x},${tower.y}) forced attack on enemy at (${enemy.x},${enemy.y}), distance: ${distance.toFixed(
-                1
-            )}, tower range: ${tower.range}`
-        );
-
         cursorMode = "default";
         applyCursor();
     }
