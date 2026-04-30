@@ -100,7 +100,17 @@ export const enemiesData = {
       image: "assets/enemies/enemy10.png",
       isFlying: false,
       sizeMultiplier: 1.34,
-    }
+    },
+    enemy11: {
+      name: "Frank-The-Tank",
+      type: "speed",
+      maxHp: 250, 
+      speed: 1.43, 
+      reward: 2,
+      image: "assets/enemies/enemy11.png",
+      isFlying: false,
+      sizeMultiplier: 0.93,
+    },
 
   };
   
