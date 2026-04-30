@@ -63,26 +63,29 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
     // ------------------------------
     function updateUpgradeOption(tower) {
         if (!tower) return;
-
-        if (tower.canUpgrade(gameState)) towerUpgradeOption.classList.remove("disabled");
-        else towerUpgradeOption.classList.add("disabled");
-
+    
+        if (tower.canUpgrade(gameState)) {
+            towerUpgradeOption.classList.remove("disabled");
+        } else {
+            towerUpgradeOption.classList.add("disabled");
+        }
+    
+        // IMPORTANT: assign ONCE, no nesting, no reassigning inside itself
         towerUpgradeOption.onclick = () => {
             console.log("🔴 UI UPGRADE CLICKED", {
                 uid: tower.uid,
                 levelBefore: tower.level,
                 time: performance.now()
-              });
+            });
+    
             if (!tower.canUpgrade(gameState)) return;
-
-            //TEST
-            /*
+    
             tower.upgrade(gameState);
-            */
-            towerUpgradeOption.onclick = () => {
-                console.log("🧪 UI UPGRADE CLICKED (disabled for test)");
-            };
-
+    
+            if (window.hud?.update) {
+                window.hud.update();
+            }
+    
             updateTowerModal();
             updateMoneyLives();
         };
