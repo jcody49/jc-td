@@ -259,12 +259,20 @@ updateWaveText(); // call once; will be updated elsewhere by waveManager
 // ======================
 document.addEventListener("keydown", e => {
     const key = e.key.toLowerCase();
+
     if (key === "u" && window.selectedTower) {
         const tower = window.selectedTower;
-        if (tower.upgrade(gameState)) hud.update();
-    } else if (key === "s" && window.selectedTower) {
+
+        if (tower.upgrade(gameState)) {
+            if (window.hud?.update) {
+                window.hud.update();
+            }
+        }
+    }
+
+    else if (key === "s" && window.selectedTower) {
         const sellBtn = document.querySelector(".tower-sell");
-        if (sellBtn && typeof sellBtn.onclick === "function") sellBtn.onclick();
+        if (sellBtn?.onclick) sellBtn.onclick();
     }
 });
 

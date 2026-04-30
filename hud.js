@@ -75,7 +75,14 @@ export function initHUD({ gameState, path, gridSize, ctx, canvas, waveText, wave
               });
             if (!tower.canUpgrade(gameState)) return;
 
+            //TEST
+            /*
             tower.upgrade(gameState);
+            */
+            towerUpgradeOption.onclick = () => {
+                console.log("🧪 UI UPGRADE CLICKED (disabled for test)");
+            };
+
             updateTowerModal();
             updateMoneyLives();
         };

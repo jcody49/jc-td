@@ -89,12 +89,6 @@ function handleKeyDown(e) {
         window.selectedTowerCost = null;
     } else if (key === "a" && window.selectedTower) {
         cursorMode = cursorMode === "attack" ? "default" : "attack";
-    } else if (key === "u" && window.selectedTower) {
-        if (window.selectedTower.upgrade(gameState)) {
-            if (window.hud && typeof window.hud.update === "function") {
-                window.hud.update();
-            }
-        }
     } else if (key === "s" && window.selectedTower) {
         const sellBtn = document.querySelector(".tower-sell");
         if (sellBtn && typeof sellBtn.onclick === "function") sellBtn.onclick();
