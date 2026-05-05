@@ -24,6 +24,20 @@ export class Projectile {
     }
 
     update(gameState) {
+        function applyDamage(enemy, damage) {
+            let remaining = damage;
+        
+            if (enemy.armor > 0) {
+                const absorbed = Math.min(enemy.armor, remaining);
+                enemy.armor -= absorbed;
+                remaining -= absorbed;
+            }
+        
+            if (remaining > 0) {
+                enemy.hp -= remaining;
+            }
+        }
+
         if (!this.target || this.hit) {
             this.remove = true; // Mark this projectile for removal
             return;
@@ -39,7 +53,7 @@ export class Projectile {
                 gameState.enemies.forEach(enemy => {
                     const d = Math.hypot(enemy.x - this.x, enemy.y - this.y);
                     if (d <= this.splashRadius) {
-                        enemy.hp -= this.damage;
+                        applyDamage(enemy, this.damage);
                     }
                 });
             } else if (this.type === "acid" && this.dotDamage > 0 && this.dotDuration > 0) {
@@ -53,9 +67,9 @@ export class Projectile {
                     this.target.slowMultiplier = this.slowMultiplier;
                     this.target.slowTimer = this.slowDuration;
                 }
-                if (this.damage > 0) this.target.hp -= this.damage;
+                if (this.damage > 0) applyDamage(this.target, this.damage);
             } else {
-                if (this.damage > 0) this.target.hp -= this.damage;
+                if (this.damage > 0) applyDamage(this.target, this.damage);
             }
             this.hit = true;
             this.remove = true;

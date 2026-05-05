@@ -153,9 +153,20 @@ export class Enemy {
 
     // --- DoT ---
     for (const dot of this.activeDoTs) {
-        this.hp -= dot.damagePerTick;
-        dot.remaining--;
-    }
+      let remaining = dot.damagePerTick;
+  
+      if (this.armor > 0) {
+          const absorbed = Math.min(this.armor, remaining);
+          this.armor -= absorbed;
+          remaining -= absorbed;
+      }
+  
+      if (remaining > 0) {
+          this.hp -= remaining;
+      }
+  
+      dot.remaining--;
+  }
     this.activeDoTs = this.activeDoTs.filter(d => d.remaining > 0);
 
     if (this.hp <= 0) {
