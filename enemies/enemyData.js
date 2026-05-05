@@ -104,9 +104,9 @@ export const enemiesData = {
     enemy11: {
       name: "Frank-The-Tank",
       type: "basic",
-      maxHp: 250, 
-      armor: 150,
-      speed: 0.8, 
+      maxHp: 300, 
+      armor: 200,
+      speed: 0.77, 
       reward: 3,
       image: "assets/enemies/enemy11.png",
       isFlying: false,
