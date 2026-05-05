@@ -52,6 +52,16 @@ export class Enemy {
     this.maxHp = Number(config.maxHp);
     this.hp = this.maxHp;
 
+    console.log("🛡️ ENEMY CONFIG CHECK", {
+      name: config.name,
+      id: config.id,
+      armor: config.armor,
+      maxArmor: config.armor ?? 0
+    });
+
+    this.maxArmor = config.armor ?? 0;
+    this.armor = this.maxArmor;
+
     this.lifeReward = Number(config.lifeReward ?? 0);
     this.reward = Number(config.reward ?? 1);
     this.score = config.score ?? 5;
@@ -284,5 +294,31 @@ draw() {
       4
   );
   ctx.restore();
+
+  if (this.maxArmor > 0) {
+    const armorPct = Math.max(this.armor / this.maxArmor, 0);
+  
+    ctx.save();
+  
+    // position: directly under HP bar
+    const barX = this.x - this.size / 2;
+    const barY = drawY - this.size / 2 + 1;
+    const barWidth = this.size;
+    const barHeight = 3;
+  
+    // background
+    ctx.fillStyle = "rgba(0,0,0,0.6)";
+    ctx.fillRect(barX, barY, barWidth, barHeight);
+  
+    // armor fill (pink)
+    ctx.fillStyle = "pink";
+    ctx.fillRect(barX, barY, barWidth * armorPct, barHeight);
+  
+    // border (optional but matches HP style)
+    ctx.strokeStyle = "black";
+    ctx.strokeRect(barX, barY, barWidth, barHeight);
+  
+    ctx.restore();
+  }
 }
 }
