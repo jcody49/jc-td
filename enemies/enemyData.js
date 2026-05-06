@@ -82,7 +82,7 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 764, 
+      maxHp: 761, 
       speed: 0.88,
       reward: 9,
       image: "assets/enemies/enemy9.png",
@@ -125,8 +125,8 @@ export const enemiesData = {
     enemy13: {
       name: "Ghost Wolf",
       type: "immune",
-      maxHp: 465, 
-      speed: 1.13, 
+      maxHp: 466, 
+      speed: 1.34, 
       reward: 4,
       image: "assets/enemies/enemy13.png",
       isFlying: false,

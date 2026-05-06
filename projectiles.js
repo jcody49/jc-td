@@ -54,7 +54,7 @@ export class Projectile {
                     const d = Math.hypot(enemy.x - this.x, enemy.y - this.y);
                     if (d <= this.splashRadius) {
             
-                        const piercePct = 0.9;
+                        const piercePct = 0.92;
                         const pierceDamage = this.damage * piercePct;
             
                         // 1. FULL damage goes through armor system
