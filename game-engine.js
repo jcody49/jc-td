@@ -1,4 +1,4 @@
-console.warn("🧠 GAME ENGINE VERSION: v1.0.20 - May 5");
+console.warn("🧠 GAME ENGINE VERSION: v0.1.31 - May 6");
 // game-engine.js
 import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells, buildPath } from './pathing.js';

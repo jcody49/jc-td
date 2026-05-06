@@ -3,7 +3,7 @@ export const enemiesData = {
       name: "Mr. Krabs",
       type: "basic",
       maxHp: 100, //LOCKED
-      speed: 0.55, //LOCKED
+      speed: 0.53, //LOCKED
       reward: 1,
       image: "assets/enemies/enemy1.png",
       isFlying: false,
@@ -13,7 +13,7 @@ export const enemiesData = {
       name: "Shpider",
       type: "basic",
       maxHp: 120, //LOCKED
-      speed: 0.39, //LOCKED
+      speed: 0.38, //LOCKED
       reward: 1,
       image: "assets/enemies/enemy2.png",
       isFlying: false,
@@ -23,7 +23,7 @@ export const enemiesData = {
         name: "Robot Shpider",
         type: "basic",
         maxHp: 140, 
-        speed: 0.6, 
+        speed: 0.55, 
         reward: 1,
         image: "assets/enemies/enemy3.png",
         isFlying: false,
@@ -33,7 +33,7 @@ export const enemiesData = {
         name: "Krustacean",
         type: "basic",
         maxHp: 175, 
-        speed: 0.7, 
+        speed: 0.6, 
         reward: 1,
         image: "assets/enemies/enemy4.png",
         isFlying: false,
@@ -43,7 +43,7 @@ export const enemiesData = {
         name: "Vagrant Dead",
         type: "basic",
         maxHp: 205, 
-        speed: 0.7, 
+        speed: 0.6, 
         reward: 1,
         image: "assets/enemies/enemy5.png",
         isFlying: false,
@@ -52,8 +52,8 @@ export const enemiesData = {
     enemy6: {
       name: "Charles Barkley Dead",
       type: "basic",
-      maxHp: 250, 
-      speed: 0.71, 
+      maxHp: 245, 
+      speed: 0.64, 
       reward: 1,
       image: "assets/enemies/enemy6.png",
       isFlying: false,
@@ -104,8 +104,8 @@ export const enemiesData = {
     enemy11: {
       name: "Frank-The-Tank",
       type: "basic",
-      maxHp: 300, 
-      armor: 200,
+      maxHp: 320, 
+      armor: 235,
       speed: 0.77, 
       reward: 3,
       image: "assets/enemies/enemy11.png",

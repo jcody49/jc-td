@@ -54,15 +54,14 @@ export class Projectile {
                     const d = Math.hypot(enemy.x - this.x, enemy.y - this.y);
                     if (d <= this.splashRadius) {
             
-                        const piercePct = 0.20; // 👈 % that bypasses armor
+                        const piercePct = 0.86;
                         const pierceDamage = this.damage * piercePct;
-                        const armorDamage = this.damage - pierceDamage;
             
-                        // 1. normal damage (armor first)
-                        applyDamage(enemy, armorDamage);
+                        // 1. FULL damage goes through armor system
+                        applyDamage(enemy, this.damage);
             
-                        // 2. pierce damage (goes straight to HP)
-                        enemy.hp -= pierceDamage;
+                        // 2. EXTRA pierce damage goes straight to HP
+                        enemy.hp = Math.max(0, enemy.hp - pierceDamage);
                     }
                 });
             } else if (this.type === "acid" && this.dotDamage > 0 && this.dotDuration > 0) {

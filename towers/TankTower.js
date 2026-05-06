@@ -12,9 +12,9 @@ export class TankTower extends Tower {
             upgradeCosts: [60, 65, 400, 500, 4000],
             levelData: {
                 1: {
-                    damage: 35,
+                    damage: 18,
                     range: 125,
-                    fireRate: 120,
+                    fireRate: 155,
                     splashRadius: 60,
                     sprite: "tank-tower.png"
                 },
