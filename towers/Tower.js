@@ -100,6 +100,7 @@ export class Tower {
 
   upgrade(gameState) {
     // 🔍 TRACK EVERY CALL SOURCE
+    /*
     console.trace("🧠 UPGRADE CALL STACK");
     console.count(`UPGRADE ${this.type}`);
 
@@ -110,6 +111,7 @@ export class Tower {
         upgradeCostsIndex: this.level - 1,
         timestamp: performance.now()
     });
+    */
 
     // 🛑 EARLY EXIT GUARD (important for debugging double-fires)
     if (!this.canUpgrade(gameState)) {
@@ -133,20 +135,24 @@ export class Tower {
     this.totalSpent += cost;
 
     // ⚠️ THIS IS THE CRITICAL MOMENT
+    /*
     console.log("⬆️ LEVEL INCREMENT", {
         before: this.level,
         after: this.level + 1
     });
+    */
 
     this.level++;
 
     this.applyLevel();
 
+    /*
     console.log("🟢 UPGRADE COMPLETE", {
         uid: this.uid,
         newLevel: this.level,
         sprite: this.image?.src
     });
+    */
 
     return true;
 }
@@ -168,14 +174,21 @@ export class Tower {
   findTarget(enemies) {
     let closest = null;
     let closestDist = Infinity;
-
+  
     for (const e of enemies) {
+  
+      // 🚫 SKIP IMMUNE TARGETS
+      if (this.type === "acid" && e.immunities?.includes("acid")) continue;
+      if (this.type === "frost" && e.immunities?.includes("frost")) continue;
+  
       const d = Math.hypot(this.x - e.x, this.y - e.y);
+  
       if (d <= this.range && d < closestDist) {
         closest = e;
         closestDist = d;
       }
     }
+  
     return closest;
   }
 
@@ -198,21 +211,29 @@ export class Tower {
     // FORCE TARGET PRIORITY
     // ------------------------
     if (
-        this.forcedTarget &&
-        !this.forcedTarget.dead &&
-        gameState.enemies.includes(this.forcedTarget)
-    ) {
-        const d = Math.hypot(
-            this.forcedTarget.x - this.x,
-            this.forcedTarget.y - this.y
-        );
-
-        if (d <= this.range) {
-            target = this.forcedTarget;
-        } else {
-            this.forcedTarget = null;
-        }
-    }
+      this.forcedTarget &&
+      !this.forcedTarget.dead &&
+      gameState.enemies.includes(this.forcedTarget)
+  ) {
+      // 🚫 BLOCK forced targeting if enemy is immune to this tower
+      if (
+          (this.type === "acid" && this.forcedTarget.immunities?.includes("acid")) ||
+          (this.type === "frost" && this.forcedTarget.immunities?.includes("frost"))
+      ) {
+          this.forcedTarget = null;
+      } else {
+          const d = Math.hypot(
+              this.forcedTarget.x - this.x,
+              this.forcedTarget.y - this.y
+          );
+  
+          if (d <= this.range) {
+              target = this.forcedTarget;
+          } else {
+              this.forcedTarget = null;
+          }
+      }
+  }
 
     // ------------------------
     // NORMAL TARGETING

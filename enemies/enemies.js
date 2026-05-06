@@ -52,15 +52,19 @@ export class Enemy {
     this.maxHp = Number(config.maxHp);
     this.hp = this.maxHp;
 
+    /*
     console.log("🛡️ ENEMY CONFIG CHECK", {
       name: config.name,
       id: config.id,
       armor: config.armor,
       maxArmor: config.armor ?? 0
     });
+    */
 
     this.maxArmor = config.armor ?? 0;
     this.armor = this.maxArmor;
+
+    this.immunities = config.immunities ?? [];
 
     this.lifeReward = Number(config.lifeReward ?? 0);
     this.reward = Number(config.reward ?? 1);

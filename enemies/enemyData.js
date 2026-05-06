@@ -124,13 +124,15 @@ export const enemiesData = {
     },
     enemy13: {
       name: "Ghost Wolf",
-      type: "basic",
+      type: "immune",
       maxHp: 465, 
       speed: 1.13, 
       reward: 4,
       image: "assets/enemies/enemy13.png",
       isFlying: false,
       sizeMultiplier: 0.93,
+
+      immunities: ["frost", "acid"]
     },
     enemy14: {
       name: "Fly Boi",
