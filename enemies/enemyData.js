@@ -22,8 +22,8 @@ export const enemiesData = {
     enemy3: {
         name: "Robot Shpider",
         type: "basic",
-        maxHp: 140, 
-        speed: 0.55, 
+        maxHp: 136, 
+        speed: 0.53, 
         reward: 1,
         image: "assets/enemies/enemy3.png",
         isFlying: false,
@@ -82,7 +82,7 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 773, 
+      maxHp: 767, 
       speed: 0.93,
       reward: 9,
       image: "assets/enemies/enemy9.png",
@@ -115,7 +115,7 @@ export const enemiesData = {
     enemy12: {
       name: "Voodoo Goblin",
       type: "basic",
-      maxHp: 250, 
+      maxHp: 410, 
       speed: 0.8, 
       reward: 3,
       image: "assets/enemies/enemy12.png",
@@ -125,7 +125,7 @@ export const enemiesData = {
     enemy13: {
       name: "Ghost Wolf",
       type: "basic",
-      maxHp: 250, 
+      maxHp: 460, 
       speed: 1.13, 
       reward: 4,
       image: "assets/enemies/enemy13.png",
