@@ -57,6 +57,8 @@ export class Tower {
 
     this.canHitFlying = opts.canHitFlying ?? false;
 
+    this.isDetectionTower = opts.isDetectionTower || false;
+
     this.sprite = null;
     this.image = null;
 
@@ -186,8 +188,8 @@ export class Tower {
       // =========================
       // INVISIBILITY RULE
       // =========================
-      if (e.isInvisible) {
-        continue; // towers cannot target invisible enemies
+      if (e.isInvisible && !e.isRevealed) {
+        continue;
       }
   
       // =========================
@@ -277,6 +279,22 @@ export class Tower {
     }
 
     if (!target) return;
+
+
+    // =========================
+    // DETECTION SYSTEM
+    // =========================
+    if (this.isDetectionTower) {
+      for (const e of gameState.enemies) {
+
+        const d = Math.hypot(this.x - e.x, this.y - e.y);
+
+        if (d <= this.range) {
+          e.isRevealed = true;
+        }
+      }
+    }
+
 
     // ------------------------
     // FIRE

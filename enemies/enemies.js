@@ -71,6 +71,7 @@ export class Enemy {
     this.score = config.score ?? 5;
     this.isFlying = Boolean(config.isFlying);
     this.isInvisible = config.isInvisible ?? false;
+    this.isRevealed = !this.isInvisible;
     this.type = config.type ?? "basic";
 
     // convenience flags

@@ -1,4 +1,4 @@
-console.warn("🧠 GAME ENGINE VERSION: v0.1.55 - May 6");
+console.warn("🧠 GAME ENGINE VERSION: v0.1.56 - May 6");
 // game-engine.js
 import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells, buildPath } from './pathing.js';
@@ -63,12 +63,16 @@ tankImg.src = 'assets/tank-tower.png';
 export const antiAirImg = new Image();
 antiAirImg.src = 'assets/Anti-Air.png';
 
+export const detectionImg = new Image();
+detectionImg.src = 'assets/detection.png';
+
 // Attach images globally so towerPlacement.js can access them
 window.cannonImg = cannonImg;
 window.frostImg = frostImg;
 window.acidImg = acidImg;
 window.tankImg = tankImg;
 window.antiAirImg = antiAirImg;
+window.detectionImg = detectionImg;
 
 
 // Check if all images are loaded before drawing
