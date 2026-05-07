@@ -152,6 +152,7 @@ export const enemiesData = {
       reward: 5,
       image: "assets/enemies/enemy15.png",
       isFlying: false,
+      isInvisible: true,
       sizeMultiplier: 0.93,
     },
     enemy16: {

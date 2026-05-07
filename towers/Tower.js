@@ -182,6 +182,13 @@ export class Tower {
     let closestDist = Infinity;
   
     for (const e of enemies) {
+
+      // =========================
+      // INVISIBILITY RULE
+      // =========================
+      if (e.isInvisible) {
+        continue; // towers cannot target invisible enemies
+      }
   
       // =========================
       // FLYING RULES

@@ -70,6 +70,7 @@ export class Enemy {
     this.reward = Number(config.reward ?? 1);
     this.score = config.score ?? 5;
     this.isFlying = Boolean(config.isFlying);
+    this.isInvisible = config.isInvisible ?? false;
     this.type = config.type ?? "basic";
 
     // convenience flags
