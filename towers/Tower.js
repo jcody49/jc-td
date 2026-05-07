@@ -236,9 +236,8 @@ export class Tower {
     // Cooldown handling
     // ------------------------
     if (this.cooldown > 0) {
-        // reduce cooldown by gameSpeed per frame to fire faster on fast-forward
         this.cooldown -= window.gameSpeed ?? 1;
-        if (this.cooldown > 0) return; // still cooling down, exit early
+        if (this.cooldown > 0) return;
     }
 
     let target = null;
@@ -247,29 +246,37 @@ export class Tower {
     // FORCE TARGET PRIORITY
     // ------------------------
     if (
-      this.forcedTarget &&
-      !this.forcedTarget.dead &&
-      gameState.enemies.includes(this.forcedTarget)
-  ) {
-      // 🚫 BLOCK forced targeting if enemy is immune to this tower
-      if (
-          (this.type === "acid" && this.forcedTarget.immunities?.includes("acid")) ||
-          (this.type === "frost" && this.forcedTarget.immunities?.includes("frost"))
-      ) {
-          this.forcedTarget = null;
-      } else {
-          const d = Math.hypot(
-              this.forcedTarget.x - this.x,
-              this.forcedTarget.y - this.y
-          );
-  
-          if (d <= this.range) {
-              target = this.forcedTarget;
-          } else {
-              this.forcedTarget = null;
-          }
-      }
-  }
+        this.forcedTarget &&
+        !this.forcedTarget.dead &&
+        gameState.enemies.includes(this.forcedTarget)
+    ) {
+
+        // 🚫 BLOCK if invisible AND not revealed
+        if (this.forcedTarget.isInvisible && !this.forcedTarget.isRevealed) {
+            this.forcedTarget = null;
+        }
+
+        // 🚫 BLOCK forced targeting if enemy is immune to this tower
+        else if (
+            (this.type === "acid" && this.forcedTarget.immunities?.includes("acid")) ||
+            (this.type === "frost" && this.forcedTarget.immunities?.includes("frost"))
+        ) {
+            this.forcedTarget = null;
+        }
+
+        else {
+            const d = Math.hypot(
+                this.forcedTarget.x - this.x,
+                this.forcedTarget.y - this.y
+            );
+
+            if (d <= this.range) {
+                target = this.forcedTarget;
+            } else {
+                this.forcedTarget = null;
+            }
+        }
+    }
 
     // ------------------------
     // NORMAL TARGETING
@@ -279,8 +286,6 @@ export class Tower {
     }
 
     if (!target) return;
-
-
 
     // ------------------------
     // FIRE

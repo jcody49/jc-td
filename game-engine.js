@@ -1,4 +1,4 @@
-console.warn("🧠 GAME ENGINE VERSION: v0.1.57 - May 6");
+console.warn("🧠 GAME ENGINE VERSION: v0.1.59 - May 6");
 // game-engine.js
 import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells, buildPath } from './pathing.js';
@@ -276,20 +276,25 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
         drawGridTiles(ctx);
         drawStartEnd(ctx, waveState.path, gridSize);
 
-        // --- DRAW TOWERS ---
-        gameState.towers.forEach(tower => {
-            tower.update(gameState);  // Make sure this is called for every tower
-            tower.draw();             // Then draw the tower
-        });
-
 
         // =========================
-        // DETECTION PASS (must happen first)
+        // DETECTION PASS (FULL RECOMPUTE)
         // =========================
-        for (const tower of gameState.towers) {
-            if (tower.type === "detection") {
-                tower.update(gameState.enemies);
+        for (const e of gameState.enemies) {
+            let revealed = false;
+
+            for (const tower of gameState.towers) {
+                if (tower.type !== "detection") continue;
+
+                const d = Math.hypot(tower.x - e.x, tower.y - e.y);
+
+                if (d <= tower.range) {
+                    revealed = true;
+                    break;
+                }
             }
+
+            e.isRevealed = revealed;
         }
 
         // =========================
