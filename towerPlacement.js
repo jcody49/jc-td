@@ -9,6 +9,7 @@ import { CannonTower } from './towers/CannonTower.js';
 import { FrostTower } from './towers/FrostTower.js';
 import { AcidTower } from './towers/AcidTower.js';
 import { TankTower } from './towers/TankTower.js';
+import { AntiAirTower } from './towers/AntiAir.js';
 
 // ======================
 // GLOBAL SELECTION STATE
@@ -26,6 +27,7 @@ function getBaseRange(towerType) {
     case "Frost":  return 117;
     case "Acid":   return 120;
     case "Tank":   return 125;
+    case "AntiAir": return 180;
     default:       return 0;
   }
 }
@@ -108,6 +110,8 @@ function getTowerImage(towerType) {
       return window.acidImg;  // Use global acidImg
     case "Tank":
       return window.tankImg;  // Use global tankImg
+    case "AntiAir":
+      return window.antiAirImg;
     default:
       console.error("Unknown tower type:", towerType);  // Log error if no match
       return null;  // Return null if no valid type is found
@@ -181,6 +185,13 @@ export function setupTowerPlacement({ hud, gridSize }) {
         break;
       case "Tank":
         newTower = new TankTower({ x: px, y: py, ctx: canvas.getContext("2d") });
+        break;
+      case "AntiAir":
+        newTower = new AntiAirTower({
+          x: px,
+          y: py,
+          ctx: canvas.getContext("2d")
+        });
         break;
     }
 
