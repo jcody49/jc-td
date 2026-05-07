@@ -82,8 +82,8 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 761, 
-      speed: 0.88,
+      maxHp: 763, 
+      speed: 0.89,
       reward: 9,
       image: "assets/enemies/enemy9.png",
       isFlying: false,
@@ -137,7 +137,7 @@ export const enemiesData = {
     enemy14: {
       name: "Fly Boi",
       type: "basic",
-      maxHp: 455, 
+      maxHp: 473, 
       speed: 1.13, 
       reward: 5,
       image: "assets/enemies/enemy14.png",
@@ -147,7 +147,7 @@ export const enemiesData = {
     enemy15: {
       name: "Old Wise Goblin",
       type: "basic",
-      maxHp: 250, 
+      maxHp: 485, 
       speed: 1.13, 
       reward: 5,
       image: "assets/enemies/enemy15.png",

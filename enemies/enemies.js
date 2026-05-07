@@ -226,10 +226,45 @@ export class Enemy {
 
 draw() {
   const ctx = this.ctx;
-  const lift = this.gridSize * 0.1;
-  const drawY = this.y - lift + (this.yOffset ?? 0);
+  const baseLift = this.gridSize * 0.1;
+
+  // flying enemies hover higher
+  const flyingLift = this.isFlying
+    ? this.gridSize * 0.35
+    : 0;
+
+  const drawY =
+    this.y -
+    baseLift -
+    flyingLift +
+    (this.yOffset ?? 0);
 
   
+
+  // ---------------------------
+  // Flying shadow
+  // ---------------------------
+  if (this.isFlying) {
+    ctx.save();
+
+    ctx.fillStyle = "rgba(0,0,0,0.28)";
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+      this.x,
+      this.y + this.size * 0.18, // shadow stays on ground
+      this.size * 0.28,          // width
+      this.size * 0.12,          // height
+      0,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fill();
+    ctx.restore();
+  }
+
 
   // ---------------------------
   // Enemy body
