@@ -281,20 +281,6 @@ export class Tower {
     if (!target) return;
 
 
-    // =========================
-    // DETECTION SYSTEM
-    // =========================
-    if (this.isDetectionTower) {
-      for (const e of gameState.enemies) {
-
-        const d = Math.hypot(this.x - e.x, this.y - e.y);
-
-        if (d <= this.range) {
-          e.isRevealed = true;
-        }
-      }
-    }
-
 
     // ------------------------
     // FIRE

@@ -24,4 +24,19 @@ export class DetectionTower extends Tower {
       }
     });
   }
+
+  // =========================
+  // DETECTION LOGIC (CORRECT PLACE)
+  // =========================
+  update(enemies = []) {
+    if (!Array.isArray(enemies)) return;
+
+    for (const e of enemies) {
+      const d = Math.hypot(this.x - e.x, this.y - e.y);
+
+      if (d <= this.range) {
+        e.isRevealed = true;
+      }
+    }
+  }
 }

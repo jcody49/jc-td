@@ -153,6 +153,7 @@ export const enemiesData = {
       image: "assets/enemies/enemy15.png",
       isFlying: false,
       isInvisible: true,
+      isRevealed: false,
       sizeMultiplier: 0.93,
     },
     enemy16: {

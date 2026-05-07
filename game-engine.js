@@ -1,4 +1,4 @@
-console.warn("🧠 GAME ENGINE VERSION: v0.1.56 - May 6");
+console.warn("🧠 GAME ENGINE VERSION: v0.1.57 - May 6");
 // game-engine.js
 import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells, buildPath } from './pathing.js';
@@ -280,6 +280,30 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
         gameState.towers.forEach(tower => {
             tower.update(gameState);  // Make sure this is called for every tower
             tower.draw();             // Then draw the tower
+        });
+
+
+        // =========================
+        // DETECTION PASS (must happen first)
+        // =========================
+        for (const tower of gameState.towers) {
+            if (tower.type === "detection") {
+                tower.update(gameState.enemies);
+            }
+        }
+
+        // =========================
+        // NORMAL TOWER UPDATE (target + fire)
+        // =========================
+        gameState.towers.forEach(tower => {
+            tower.update(gameState);
+        });
+
+        // =========================
+        // DRAW PASS (visual only)
+        // =========================
+        gameState.towers.forEach(tower => {
+            tower.draw();
         });
 
         // --- UPDATE PROJECTILES ---
