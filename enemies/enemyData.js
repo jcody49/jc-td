@@ -158,9 +158,9 @@ export const enemiesData = {
     },
     enemy16: {
       name: "Speedy Boi",
-      type: "basic",
-      maxHp: 250, 
-      speed: 1.13, 
+      type: "speed",
+      maxHp: 515, 
+      speed: 1.84, 
       reward: 6,
       image: "assets/enemies/enemy16.png",
       isFlying: false,
@@ -168,12 +168,12 @@ export const enemiesData = {
     },
     enemy17: {
       name: "Flying Claw Machine",
-      type: "basic",
-      maxHp: 250, 
+      type: "air",
+      maxHp: 550, 
       speed: 1.13, 
       reward: 6,
       image: "assets/enemies/enemy17.png",
-      isFlying: false,
+      isFlying: true,
       sizeMultiplier: 0.93,
     },
 
