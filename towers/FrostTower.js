@@ -11,7 +11,8 @@ export class FrostTower extends Tower {
             maxLevel: 5,
             upgradeCosts: [50, 50, 300, 600, 3000],
             opts: {
-                targetingMode: "unslowedFirst"
+                targetingMode: "unslowedFirst",
+                canHitFlying: true
             },
             levelData: {
                 1: {

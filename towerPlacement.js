@@ -24,10 +24,10 @@ window.selectedTower = null;
 function getBaseRange(towerType) {
   switch (towerType) {
     case "Cannon": return 125;
-    case "Frost":  return 117;
-    case "Acid":   return 120;
+    case "Frost":  return 125;
+    case "Acid":   return 125;
     case "Tank":   return 125;
-    case "AntiAir": return 180;
+    case "AntiAir": return 125;
     default:       return 0;
   }
 }

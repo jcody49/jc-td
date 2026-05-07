@@ -10,6 +10,9 @@ export class AcidTower extends Tower {
             type: "acid",
             description: "Corrodes tough enemies over time. Slow fire rate and weak damage per shot. Most effective against high-health targets.",
             maxLevel: 5,
+            opts: {
+                canHitFlying: true
+            },
             upgradeCosts: [50, 50, 400, 500, 4000],
             levelData: {
                 1: { damage: 14, range: 120, fireRate: 110, dotDuration: 560, dotDamage: 42, sprite: "acid-tower.png" },

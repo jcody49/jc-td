@@ -3,7 +3,7 @@ export const enemiesData = {
       name: "Mr. Krabs",
       type: "basic",
       maxHp: 100, //LOCKED
-      speed: 0.53, //LOCKED
+      speed: 0.51, //LOCKED
       reward: 1,
       image: "assets/enemies/enemy1.png",
       isFlying: false,
@@ -137,11 +137,11 @@ export const enemiesData = {
     enemy14: {
       name: "Fly Boi",
       type: "basic",
-      maxHp: 250, 
+      maxHp: 455, 
       speed: 1.13, 
       reward: 5,
       image: "assets/enemies/enemy14.png",
-      isFlying: false,
+      isFlying: true,
       sizeMultiplier: 0.93,
     },
     enemy15: {

@@ -25,11 +25,13 @@ export class Tower {
     // ======================
     this.uid = Math.random().toString(16).slice(2);
 
+    /*
     console.log("🏗️ TOWER CREATED", {
       uid: this.uid,
       type: this.type,
       level: this.level
     });
+    */
 
     // ===== FORCE ATTACK =====
     this.forcedTarget = null;
@@ -52,6 +54,8 @@ export class Tower {
     this.slowDuration = 0;
     this.dotDuration = 0;
     this.dotDamage = 0;
+
+    this.canHitFlying = opts.canHitFlying ?? false;
 
     this.sprite = null;
     this.image = null;
@@ -78,11 +82,13 @@ export class Tower {
     this.dotDamage = data.dotDamage ?? this.dotDamage;
 
 
+    /*
     console.log("🟣 APPLY LEVEL SPRITE CHANGE", {
       uid: this.uid,
       level: this.level,
       sprite: data.sprite
     });
+    */
 
     if (data.sprite && data.sprite !== this.sprite) {
       this.sprite = data.sprite;
@@ -177,9 +183,30 @@ export class Tower {
   
     for (const e of enemies) {
   
-      // 🚫 SKIP IMMUNE TARGETS
-      if (this.type === "acid" && e.immunities?.includes("acid")) continue;
-      if (this.type === "frost" && e.immunities?.includes("frost")) continue;
+      // =========================
+      // FLYING RULES
+      // =========================
+      const canHitFlying =
+        this.type === "antiAir" ||
+        this.type === "frost" ||
+        this.type === "acid";
+  
+      // flying enemy but this tower can't hit air
+      if (e.isFlying && !canHitFlying) {
+        continue;
+      }
+  
+      // anti-air towers ignore ground
+      if (this.type === "antiAir" && !e.isFlying) {
+        continue;
+      }
+  
+      // =========================
+      // IMMUNITY RULES
+      // =========================
+      if (e.immunities?.includes(this.type)) {
+        continue;
+      }
   
       const d = Math.hypot(this.x - e.x, this.y - e.y);
   
