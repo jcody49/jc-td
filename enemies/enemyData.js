@@ -115,8 +115,8 @@ export const enemiesData = {
     enemy12: {
       name: "Voodoo Goblin",
       type: "basic",
-      maxHp: 410, 
-      speed: 0.8, 
+      maxHp: 445, 
+      speed: 0.81, 
       reward: 3,
       image: "assets/enemies/enemy12.png",
       isFlying: false,
