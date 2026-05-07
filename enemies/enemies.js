@@ -271,6 +271,28 @@ draw() {
   // ---------------------------
   // Enemy body
   // ---------------------------
+// Enemy body (invisibility-aware)
+// ---------------------------
+if (this.isInvisible && !this.isRevealed) {
+
+  ctx.save();
+
+  // invisible state (not revealed)
+  ctx.globalAlpha = 0.12;
+
+  ctx.drawImage(
+      this.img,
+      this.x - this.size / 2,
+      drawY - this.size / 2,
+      this.size,
+      this.size
+  );
+
+  ctx.restore();
+
+} else {
+
+  // fully visible
   if (this.img) {
       ctx.drawImage(
           this.img,
@@ -288,6 +310,7 @@ draw() {
           this.size
       );
   }
+}
 
   // ---------------------------
   // FORCE ATTACK FLASH
