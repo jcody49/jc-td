@@ -2,7 +2,7 @@
 // IMPORTS
 // ======================
 import { startGameLoop, stopGameLoop, startGameWaves, resetGame } from './game-engine.js';
-import { startWave, waveState, updateWavePreview, stopWaveSpawning, stopAllWaveIntervals, adjustWaveSpeed } from './waveManager.js';
+import { startWave, startNextWave, waveState, updateWavePreview, stopWaveSpawning, stopAllWaveIntervals, adjustWaveSpeed } from './waveManager.js';
 import { initHUD } from './hud.js';
 import { canvas, ctx } from './canvas.js';
 import { gameState } from './gameState.js';
@@ -413,6 +413,44 @@ retryBtn?.addEventListener("click", () => {
     // Restart loop
     startGameLoop(ctx, canvas, gameState, hud);
 });
+
+
+
+// =========================
+// DEBUG COMMANDS
+// =========================
+window.devWave = function(wave, money = 99999) {
+
+    // kill current wave activity
+    stopAllWaveIntervals();
+  
+    // clear enemies/projectiles
+    gameState.enemies = [];
+    gameState.projectiles = [];
+  
+    // set wave
+    waveState.currentWave = wave - 1;
+  
+    // reset countdown
+    waveState.countdown = 40;
+    waveState.status = "countdown";
+  
+    // give money
+    gameState.money = money;
+  
+    // restart wave countdown
+    startNextWave(
+      gameState,
+      gridSize,
+      ctx,
+      canvas,
+      waveTextEl
+    );
+  
+    console.log(`🚀 Jumped to wave ${wave} with $${money}`);
+  };
+
+  
 
 
 
