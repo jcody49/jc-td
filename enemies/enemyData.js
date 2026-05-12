@@ -82,7 +82,7 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 750, 
+      maxHp: 746, 
       speed: 0.88,
       reward: 9,
       image: "assets/enemies/enemy9.png",
@@ -115,8 +115,8 @@ export const enemiesData = {
     enemy12: {
       name: "Voodoo Goblin",
       type: "basic",
-      maxHp: 455, //LOCKED(v0.1.65)
-      speed: 0.81, //LOCKED(v0.1.65)
+      maxHp: 465, 
+      speed: 0.81, 
       reward: 3,
       image: "assets/enemies/enemy12.png",
       isFlying: false,
@@ -125,7 +125,7 @@ export const enemiesData = {
     enemy13: {
       name: "Ghost Wolf",
       type: "immune",
-      maxHp: 466, 
+      maxHp: 465, 
       speed: 1.31, 
       reward: 4,
       image: "assets/enemies/enemy13.png",
@@ -147,7 +147,7 @@ export const enemiesData = {
     enemy15: {
       name: "Old Wise Goblin",
       type: "basic",
-      maxHp: 490, 
+      maxHp: 500, 
       speed: 1.13, 
       reward: 5,
       image: "assets/enemies/enemy15.png",
@@ -160,7 +160,7 @@ export const enemiesData = {
       name: "Speedy Boi",
       type: "speed",
       maxHp: 520, 
-      speed: 1.84, 
+      speed: 1.88, 
       reward: 6,
       image: "assets/enemies/enemy16.png",
       isFlying: false,
@@ -179,7 +179,7 @@ export const enemiesData = {
     enemy18: {
       name: "Frosty",
       type: "bonus",
-      maxHp: 1260, 
+      maxHp: 1220, 
       speed: 1.35, 
       reward: 34,
       image: "assets/enemies/enemy18.png",
