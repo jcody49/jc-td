@@ -2,8 +2,8 @@ export const enemiesData = {
     enemy1: {
       name: "Mr. Krabs",
       type: "basic",
-      maxHp: 100, //LOCKED
-      speed: 0.51, //LOCKED
+      maxHp: 100, //LOCKED(v0.1.65)
+      speed: 0.53, //LOCKED(v0.1.65)
       reward: 1,
       image: "assets/enemies/enemy1.png",
       isFlying: false,
@@ -12,8 +12,8 @@ export const enemiesData = {
     enemy2: {
       name: "Shpider",
       type: "basic",
-      maxHp: 120, //LOCKED
-      speed: 0.38, //LOCKED
+      maxHp: 120, //LOCKED(v0.1.65)
+      speed: 0.38, //LOCKED(v0.1.65)
       reward: 1,
       image: "assets/enemies/enemy2.png",
       isFlying: false,
@@ -22,18 +22,18 @@ export const enemiesData = {
     enemy3: {
         name: "Robot Shpider",
         type: "basic",
-        maxHp: 136, 
-        speed: 0.52, 
+        maxHp: 135, //LOCKED(v0.1.65)
+        speed: 0.51, //LOCKED(v0.1.65)
         reward: 1,
         image: "assets/enemies/enemy3.png",
         isFlying: false,
-        sizeMultiplier: 0.55,
+        sizeMultiplier: 0.57,
     },
     enemy4: {
         name: "Krustacean",
         type: "basic",
-        maxHp: 175, 
-        speed: 0.6, 
+        maxHp: 175, //LOCKED(v0.1.65)
+        speed: 0.57, //LOCKED(v0.1.65)
         reward: 1,
         image: "assets/enemies/enemy4.png",
         isFlying: false,
@@ -42,8 +42,8 @@ export const enemiesData = {
     enemy5: {
         name: "Vagrant Dead",
         type: "basic",
-        maxHp: 205, 
-        speed: 0.6, 
+        maxHp: 201, //LOCKED(v0.1.65)
+        speed: 0.58, //LOCKED(v0.1.65)
         reward: 1,
         image: "assets/enemies/enemy5.png",
         isFlying: false,
@@ -52,8 +52,8 @@ export const enemiesData = {
     enemy6: {
       name: "Charles Barkley Dead",
       type: "basic",
-      maxHp: 245, 
-      speed: 0.62, 
+      maxHp: 243, //LOCKED(v0.1.65)
+      speed: 0.61, //LOCKED(v0.1.65)
       reward: 1,
       image: "assets/enemies/enemy6.png",
       isFlying: false,
@@ -62,8 +62,8 @@ export const enemiesData = {
     enemy7: {
       name: "El Diablin",
       type: "basic",
-      maxHp: 285, 
-      speed: 0.72, 
+      maxHp: 285, //LOCKED(v0.1.65)
+      speed: 0.69, //LOCKED(v0.1.65)
       reward: 2,
       image: "assets/enemies/enemy7.png",
       isFlying: false,
@@ -72,8 +72,8 @@ export const enemiesData = {
     enemy8: {
       name: "Mini-Van Falcon",
       type: "speed",
-      maxHp: 250, 
-      speed: 1.43, 
+      maxHp: 250, //LOCKED(v0.1.65)
+      speed: 1.43, //LOCKED(v0.1.65)
       reward: 2,
       image: "assets/enemies/enemy8.png",
       isFlying: false,
@@ -82,8 +82,8 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 763, 
-      speed: 0.89,
+      maxHp: 750, 
+      speed: 0.88,
       reward: 9,
       image: "assets/enemies/enemy9.png",
       isFlying: false,
@@ -115,8 +115,8 @@ export const enemiesData = {
     enemy12: {
       name: "Voodoo Goblin",
       type: "basic",
-      maxHp: 450, 
-      speed: 0.81, 
+      maxHp: 455, //LOCKED(v0.1.65)
+      speed: 0.81, //LOCKED(v0.1.65)
       reward: 3,
       image: "assets/enemies/enemy12.png",
       isFlying: false,
@@ -125,8 +125,8 @@ export const enemiesData = {
     enemy13: {
       name: "Ghost Wolf",
       type: "immune",
-      maxHp: 470, 
-      speed: 1.34, 
+      maxHp: 466, 
+      speed: 1.31, 
       reward: 4,
       image: "assets/enemies/enemy13.png",
       isFlying: false,
@@ -136,9 +136,9 @@ export const enemiesData = {
     },
     enemy14: {
       name: "Fly Boi",
-      type: "basic",
-      maxHp: 476, 
-      speed: 1.13, 
+      type: "air",
+      maxHp: 470, 
+      speed: 1.11, 
       reward: 5,
       image: "assets/enemies/enemy14.png",
       isFlying: true,

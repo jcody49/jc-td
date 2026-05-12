@@ -9,10 +9,10 @@ export class CannonTower extends Tower {
             type: "cannon",
             description: "Deals strong single-target damage to ground enemies.",
             maxLevel: 5,
-            upgradeCosts: [50, 50, 400, 500, 4000],
+            upgradeCosts: [50, 400, 500, 4000],
             levelData: {
                 1: { damage: 55, range: 125, fireRate: 78, sprite: "cannon.png" }, //LOCKED
-                2: { damage: 59, range: 125, fireRate: 43, sprite: "cannon2.png" },
+                2: { damage: 58, range: 125, fireRate: 41, sprite: "cannon2.png" },
                 3: { damage: 90, range: 125, fireRate: 50, sprite: "cannon3.png" },
                 4: { damage: 120, range: 125, fireRate: 46, sprite: "cannon4.png" },
                 5: { damage: 170, range: 125, fireRate: 40, sprite: "cannon5.png" }

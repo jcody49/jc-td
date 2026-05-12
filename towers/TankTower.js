@@ -9,42 +9,42 @@ export class TankTower extends Tower {
             type: "tank",
             description: "Slow fire rate, lower direct damage, but causes splash damage and destructive to armor.",
             maxLevel: 5,
-            upgradeCosts: [60, 65, 400, 500, 4000],
+            upgradeCosts: [65, 400, 500, 4000],
             levelData: {
                 1: {
                     damage: 45,
                     range: 125,
-                    fireRate: 147,
-                    splashRadius: 65,
+                    fireRate: 146,
+                    splashRadius: 70,
                     sprite: "tank-tower.png"
                 },
                 2: {
-                    damage: 60,
+                    damage: 62,
                     range: 125,
-                    fireRate: 135,
-                    splashRadius: 65,
-                    sprite: "tank-tower2.png"
-                },
-                3: {
-                    damage: 70,
-                    range: 130,
-                    fireRate: 90,
+                    fireRate: 133,
                     splashRadius: 70,
                     sprite: "tank-tower2.png"
                 },
+                3: {
+                    damage: 85,
+                    range: 125,
+                    fireRate: 127,
+                    splashRadius: 75,
+                    sprite: "tank-tower3.png"
+                },
                 4: {
-                    damage: 105,
-                    range: 135,
-                    fireRate: 85,
-                    splashRadius: 90,
-                    sprite: "tank-tower2.png"
+                    damage: 110,
+                    range: 125,
+                    fireRate: 115,
+                    splashRadius: 75,
+                    sprite: "tank-tower4.png"
                 },
                 5: {
                     damage: 150,
                     range: 145,
                     fireRate: 80,
                     splashRadius: 100,
-                    sprite: "tank-tower2.png"
+                    sprite: "tank-tower5.png"
                 }
             }
         });

@@ -9,32 +9,32 @@ export class AntiAirTower extends Tower {
             type: "antiAir",
             description: "Targets flying enemies with rapid-fire aerial attacks.",
             maxLevel: 5,
-            upgradeCosts: [50, 100, 250, 600, 3000],
+            upgradeCosts: [50, 400, 500, 4000],
 
             levelData: {
                 1: {
                     damage: 55,
                     range: 125,
-                    fireRate: 24,
+                    fireRate: 27,
                     sprite: "Anti-Air.png"
                 },
 
                 2: {
-                    damage: 65,
+                    damage: 78,
                     range: 125,
                     fireRate: 22,
                     sprite: "Anti-Air2.png"
                 },
 
                 3: {
-                    damage: 85,
+                    damage: 95,
                     range: 125,
                     fireRate: 19,
                     sprite: "antiair3.png"
                 },
 
                 4: {
-                    damage: 120,
+                    damage: 125,
                     range: 125,
                     fireRate: 16,
                     sprite: "antiair4.png"

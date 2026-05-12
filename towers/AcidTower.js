@@ -13,7 +13,7 @@ export class AcidTower extends Tower {
             opts: {
                 canHitFlying: true
             },
-            upgradeCosts: [50, 50, 400, 500, 4000],
+            upgradeCosts: [50, 400, 500, 4000],
             levelData: {
                 1: { damage: 14, range: 120, fireRate: 110, dotDuration: 560, dotDamage: 42, sprite: "acid-tower.png" },
                 2: { damage: 17, range: 120, fireRate: 85, dotDuration: 620, dotDamage: 50, sprite: "acid-tower2.png" },
