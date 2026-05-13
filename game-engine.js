@@ -66,6 +66,9 @@ antiAirImg.src = 'assets/Anti-Air.png';
 export const detectionImg = new Image();
 detectionImg.src = 'assets/detection.png';
 
+export const boosterImg = new Image();
+boosterImg.src = 'assets/booster.png';
+
 // Attach images globally so towerPlacement.js can access them
 window.cannonImg = cannonImg;
 window.frostImg = frostImg;
@@ -73,6 +76,7 @@ window.acidImg = acidImg;
 window.tankImg = tankImg;
 window.antiAirImg = antiAirImg;
 window.detectionImg = detectionImg;
+window.boosterImg = boosterImg;
 
 
 // Check if all images are loaded before drawing
@@ -295,6 +299,42 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
             }
 
             e.isRevealed = revealed;
+        }
+
+
+        // =========================
+        // BOOSTER PASS
+        // =========================
+        for (const tower of gameState.towers) {
+
+            // reset temporary boosts every frame
+            tower.damageMultiplier = 1;
+            tower.fireRateMultiplier = 1;
+
+            if (tower.type !== "booster") continue;
+
+            for (const other of gameState.towers) {
+
+                if (other === tower) continue;
+
+                const d = Math.hypot(
+                    tower.x - other.x,
+                    tower.y - other.y
+                );
+
+                if (d <= tower.range) {
+
+                    // DAMAGE MODE
+                    if (tower.boostMode === "damage") {
+                        other.damageMultiplier = 1.25;
+                    }
+
+                    // FIRE RATE MODE
+                    if (tower.boostMode === "speed") {
+                        other.fireRateMultiplier = 0.8;
+                    }
+                }
+            }
         }
 
         // =========================

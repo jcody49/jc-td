@@ -59,6 +59,13 @@ export class Tower {
 
     this.isDetectionTower = opts.isDetectionTower || false;
 
+    
+    this.boostPercent = 0;
+
+    this.baseDamage = 0;
+    this.baseFireRate = 0;
+
+    
     this.sprite = null;
     this.image = null;
 
@@ -77,6 +84,10 @@ export class Tower {
     this.damage = data.damage ?? this.damage;
     this.range = data.range ?? this.range;
     this.fireRate = data.fireRate ?? this.fireRate;
+    this.baseDamage = this.damage;
+    this.baseFireRate = this.fireRate;
+
+    this.boostPercent = data.boostPercent ?? this.boostPercent;
     this.splashRadius = data.splashRadius ?? this.splashRadius;
     this.slowMultiplier = data.slowMultiplier ?? this.slowMultiplier;
     this.slowDuration = data.slowDuration ?? this.slowDuration;
@@ -100,6 +111,45 @@ export class Tower {
 
     this.cooldown = 0;
   }
+
+  recalculateBoosts(gameState) {
+
+    // reset to base stats first
+    this.damage = this.baseDamage;
+    this.fireRate = this.baseFireRate;
+
+    // booster towers do not buff themselves
+    if (this.type === "booster") return;
+
+    for (const tower of gameState.towers) {
+
+        if (tower.type !== "booster") continue;
+
+        const d = Math.hypot(
+            tower.x - this.x,
+            tower.y - this.y
+        );
+
+        if (d > tower.range) continue;
+
+        // DAMAGE BOOST
+        if (tower.boostMode === "damage") {
+
+            this.damage *= (1 + tower.boostPercent);
+
+        }
+
+        // FIRE RATE BOOST
+        else if (tower.boostMode === "fireRate") {
+
+            // lower cooldown = faster firing
+            this.fireRate *= (1 - tower.boostPercent);
+
+            // prevent insanity
+            this.fireRate = Math.max(2, this.fireRate);
+        }
+    }
+}
 
   canUpgrade(gameState) {
     if (this.level >= this.maxLevel) return false;
@@ -232,6 +282,16 @@ export class Tower {
   // UPDATE LOOP
   // ======================
   update(gameState) {
+
+    this.recalculateBoosts(gameState);
+
+    // =========================
+    // BOOSTER TOWERS DO NOT ATTACK
+    // =========================
+    if (this.type === "booster") {
+      return;
+  }
+
     // ------------------------
     // Cooldown handling
     // ------------------------
@@ -286,6 +346,7 @@ export class Tower {
     }
 
     if (!target) return;
+
 
     // ------------------------
     // FIRE

@@ -350,3 +350,62 @@
   font-weight: bold;
   border-bottom: 2px solid #fff;
 }
+
+
+/* =========================
+   Booster Container
+========================= */
+
+.booster-mode-container {
+  font-family: "Audiowide", sans-serif;
+  text-align: center;
+  color: white;
+}
+
+.booster-mode-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+/* =========================
+ Button Row Layout
+========================= */
+
+.booster-toggle-row {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+/* BASE BUTTON (smaller footprint) */
+.booster-toggle-btn {
+  font-family: "Audiowide", sans-serif;
+  font-size: 11px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: all 0.12s ease-in-out;
+  color: white;
+  white-space: nowrap;
+}
+
+/* DAMAGE (RED) */
+#damageBoostBtn {
+  background: linear-gradient(135deg, #6a0000, #d63b3b);
+  box-shadow: 0 0 6px rgba(255, 60, 60, 0.25);
+}
+
+/* SPEED (GREEN) */
+#fireRateBoostBtn {
+  background: linear-gradient(135deg, #0a4a16, #25c85a);
+  box-shadow: 0 0 6px rgba(40, 255, 120, 0.2);
+}
+
+/* ACTIVE STATE (subtle, not chunky) */
+.booster-toggle-btn.active {
+  outline: 1px solid white;
+  transform: scale(1.03);
+}

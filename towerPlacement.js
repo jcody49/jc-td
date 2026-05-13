@@ -11,6 +11,7 @@ import { AcidTower } from './towers/AcidTower.js';
 import { TankTower } from './towers/TankTower.js';
 import { AntiAirTower } from './towers/AntiAir.js';
 import { DetectionTower } from './towers/DetectionTower.js';
+import { BoosterTower } from './towers/BoosterTower.js';
 
 // ======================
 // GLOBAL SELECTION STATE
@@ -30,6 +31,7 @@ function getBaseRange(towerType) {
     case "Tank":   return 125;
     case "AntiAir": return 125;
     case "Detection": return 154;
+    case "Booster": return 125;
     default:       return 0;
   }
 }
@@ -116,6 +118,8 @@ function getTowerImage(towerType) {
       return window.antiAirImg;
     case "Detection":
       return window.detectionImg;
+    case "Booster":
+      return window.boosterImg;
     default:
       console.error("Unknown tower type:", towerType);  // Log error if no match
       return null;  // Return null if no valid type is found
@@ -199,6 +203,13 @@ export function setupTowerPlacement({ hud, gridSize }) {
         break;
       case "Detection":
         newTower = new DetectionTower({
+          x: px,
+          y: py,
+          ctx: canvas.getContext("2d")
+        });
+        break;
+      case "Booster":
+        newTower = new BoosterTower({
           x: px,
           y: py,
           ctx: canvas.getContext("2d")
