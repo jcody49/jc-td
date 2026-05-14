@@ -211,8 +211,9 @@ export class Tower {
         sprite: this.image?.src
     });
     */
-
+    window.updateTowerModal();
     return true;
+    
 }
 
   // ======================

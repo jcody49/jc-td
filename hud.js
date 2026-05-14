@@ -66,6 +66,8 @@ export function initHUD({
         updateMoneyLives();
     }
 
+    window.updateTowerModal = updateTowerModal;
+
     // =========================
     // NORMAL TOWER INFO
     // =========================
