@@ -209,6 +209,7 @@ export const enemiesData = {
       sizeMultiplier: 1.31,
     },
     
+    
 
   };
   
