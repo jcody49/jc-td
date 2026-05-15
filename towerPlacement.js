@@ -30,7 +30,7 @@ function getBaseRange(towerType) {
     case "Acid":   return 125;
     case "Tank":   return 125;
     case "AntiAir": return 125;
-    case "Detection": return 154;
+    case "Detection": return 164;
     case "Booster": return 125;
     default:       return 0;
   }

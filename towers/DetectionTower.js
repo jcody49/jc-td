@@ -17,7 +17,7 @@ export class DetectionTower extends Tower {
 
       levelData: {
         1: {
-          range: 154,
+          range: 164,
           fireRate: 9999,
           sprite: "detection.png"
         }

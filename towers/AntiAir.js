@@ -13,14 +13,14 @@ export class AntiAirTower extends Tower {
 
             levelData: {
                 1: {
-                    damage: 57,
+                    damage: 61,
                     range: 125,
                     fireRate: 27,
                     sprite: "Anti-Air.png"
                 },
 
                 2: {
-                    damage: 80,
+                    damage: 83,
                     range: 125,
                     fireRate: 22,
                     sprite: "Anti-Air2.png"

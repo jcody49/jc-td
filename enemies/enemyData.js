@@ -82,8 +82,8 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 746, 
-      speed: 0.88,
+      maxHp: 746, //LOCKED(v0.1.65)
+      speed: 0.88,  //LOCKED(v0.1.65)
       reward: 9,
       image: "assets/enemies/enemy9.png",
       isFlying: false,
@@ -92,8 +92,8 @@ export const enemiesData = {
     enemy10: {
       name: "Russell ScareCrowe",
       type: "boss",
-      maxHp: 3100, 
-      speed: 0.82,
+      maxHp: 3100, //LOCKED(v0.1.65)
+      speed: 0.82,  //LOCKED(v0.1.65)
       reward: 22,
       lifeReward: 1,
       score: 10,
@@ -104,9 +104,9 @@ export const enemiesData = {
     enemy11: {
       name: "Frank-The-Tank",
       type: "basic",
-      maxHp: 320, 
-      armor: 240,
-      speed: 0.77, 
+      maxHp: 347, //LOCKED(v0.1.72)
+      armor: 303, //LOCKED(v0.1.72)
+      speed: 0.84, //LOCKED(v0.1.72)
       reward: 3,
       image: "assets/enemies/enemy11.png",
       isFlying: false,
@@ -115,8 +115,8 @@ export const enemiesData = {
     enemy12: {
       name: "Voodoo Goblin",
       type: "basic",
-      maxHp: 465, 
-      speed: 0.81, 
+      maxHp: 658, //LOCKED(v0.1.72)
+      speed: 0.85, //LOCKED(v0.1.72)
       reward: 3,
       image: "assets/enemies/enemy12.png",
       isFlying: false,
@@ -125,8 +125,8 @@ export const enemiesData = {
     enemy13: {
       name: "Ghost Wolf",
       type: "immune",
-      maxHp: 465, 
-      speed: 1.31, 
+      maxHp: 471, //LOCKED(v0.1.73)
+      speed: 1.31, //LOCKED(v0.1.73)
       reward: 4,
       image: "assets/enemies/enemy13.png",
       isFlying: false,
@@ -137,8 +137,8 @@ export const enemiesData = {
     enemy14: {
       name: "Fly Boi",
       type: "air",
-      maxHp: 470, 
-      speed: 1.11, 
+      maxHp: 459, //LOCKED(v0.1.73)
+      speed: 1.08, //LOCKED(v0.1.73)
       reward: 5,
       image: "assets/enemies/enemy14.png",
       isFlying: true,
@@ -146,8 +146,8 @@ export const enemiesData = {
     },
     enemy15: {
       name: "Old Wise Goblin",
-      type: "basic",
-      maxHp: 500, 
+      type: "invisible",
+      maxHp: 616, 
       speed: 1.13, 
       reward: 5,
       image: "assets/enemies/enemy15.png",
@@ -159,7 +159,7 @@ export const enemiesData = {
     enemy16: {
       name: "Speedy Boi",
       type: "speed",
-      maxHp: 520, 
+      maxHp: 543, 
       speed: 1.88, 
       reward: 6,
       image: "assets/enemies/enemy16.png",
@@ -169,8 +169,8 @@ export const enemiesData = {
     enemy17: {
       name: "Flying Claw Machine",
       type: "air",
-      maxHp: 555, 
-      speed: 1.13, 
+      maxHp: 562, 
+      speed: 1.14, 
       reward: 6,
       image: "assets/enemies/enemy17.png",
       isFlying: true,
@@ -189,8 +189,8 @@ export const enemiesData = {
     enemy19: {
       name: "Possessed Caterpie",
       type: "basic",
-      maxHp: 610, 
-      speed: 1.15, 
+      maxHp: 634, 
+      speed: 1.17, 
       reward: 8,
       image: "assets/enemies/enemy19.png",
       isFlying: false,
