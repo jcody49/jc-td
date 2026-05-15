@@ -98,6 +98,57 @@ export const waves = [
   {
     enemies: [{ id: "enemy20", count: 1 }],
     spawnInterval: 1300,
-    income: 330
+    income: 0
   },
+  {
+    enemies: [{ id: "enemy21", count: 20 }],
+    spawnInterval: 1300,
+    income: 182
+  },
+  {
+    enemies: [{ id: "enemy22", count: 20 }],
+    spawnInterval: 1300,
+    income: 200
+  },
+  {
+    enemies: [{ id: "enemy23", count: 20 }],
+    spawnInterval: 1300,
+    income: 219
+  },
+  {
+    enemies: [{ id: "enemy24", count: 20 }],
+    spawnInterval: 1300,
+    income: 238
+  },
+  {
+    enemies: [{ id: "enemy25", count: 20 }],
+    spawnInterval: 1300,
+    income: 258
+  },
+  {
+    enemies: [{ id: "enemy26", count: 20 }],
+    spawnInterval: 1300,
+    income: 279
+  },
+  {
+    enemies: [{ id: "enemy27", count: 10 }],
+    spawnInterval: 1300,
+    income: 0
+  },
+  {
+    enemies: [{ id: "enemy28", count: 20 }],
+    spawnInterval: 1300,
+    income: 324
+  },
+  {
+    enemies: [{ id: "enemy29", count: 20 }],
+    spawnInterval: 1300,
+    income: 347
+  },
+  {
+    enemies: [{ id: "enemy29", count: 1 }],
+    spawnInterval: 1300,
+    income: 0
+  },
+
 ];
