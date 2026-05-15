@@ -256,10 +256,13 @@ export class Tower {
         continue;
       }
   
-      // anti-air towers ignore ground
-      if (this.type === "antiAir" && !e.isFlying) {
+      if (
+        this.type === "antiAir" &&
+        !e.isFlying &&
+        !e.canBeTargetedByAntiAir
+    ) {
         continue;
-      }
+    }
   
       // =========================
       // IMMUNITY RULES

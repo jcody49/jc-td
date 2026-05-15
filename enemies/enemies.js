@@ -70,6 +70,8 @@ export class Enemy {
     this.reward = Number(config.reward ?? 1);
     this.score = config.score ?? 5;
     this.isFlying = Boolean(config.isFlying);
+    this.canBeTargetedByAntiAir =
+    Boolean(config.canBeTargetedByAntiAir);
     this.isInvisible = config.isInvisible ?? false;
     this.isRevealed = !this.isInvisible;
     this.type = config.type ?? "basic";

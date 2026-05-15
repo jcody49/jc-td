@@ -227,6 +227,7 @@ export const enemiesData = {
       reward: 10,
       image: "assets/enemies/enemy22.png",
       isFlying: false,
+      canBeTargetedByAntiAir: true,
       sizeMultiplier: 1.4,
     },
     enemy23: {
@@ -298,6 +299,7 @@ export const enemiesData = {
       reward: 18,
       image: "assets/enemies/enemy29.png",
       isFlying: false,
+      canBeTargetedByAntiAir: true,
       sizeMultiplier: 1.43,
     },
     enemy30: {
