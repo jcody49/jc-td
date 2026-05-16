@@ -159,8 +159,8 @@ export const enemiesData = {
     enemy16: {
       name: "Speedy Boi",
       type: "speed",
-      maxHp: 543, 
-      speed: 1.88, 
+      maxHp: 543, //LOCKED(v0.1.73)
+      speed: 1.88, //LOCKED(v0.1.73)
       reward: 6,
       image: "assets/enemies/enemy16.png",
       isFlying: false,
@@ -169,8 +169,8 @@ export const enemiesData = {
     enemy17: {
       name: "Flying Claw Machine",
       type: "air",
-      maxHp: 572, 
-      speed: 1.2, 
+      maxHp: 572, //LOCKED(v0.1.73)
+      speed: 1.2, //LOCKED(v0.1.73)
       reward: 6,
       image: "assets/enemies/enemy17.png",
       isFlying: true,
