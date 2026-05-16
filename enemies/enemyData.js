@@ -221,9 +221,9 @@ export const enemiesData = {
     enemy22: {
       name: "Swole Link",
       types: ["armored", "giant"],
-      maxHp: 600, 
-      armor: 531, 
-      speed: 0.86, 
+      maxHp: 873, 
+      armor: 846, 
+      speed: 0.9, 
       reward: 10,
       image: "assets/enemies/enemy22.png",
       isFlying: false,
@@ -233,8 +233,8 @@ export const enemiesData = {
     enemy23: {
       name: "Magic Mike",
       type: "armored",
-      maxHp: 719, 
-      armor: 668, 
+      maxHp: 754, 
+      armor: 769, 
       speed: 0.85, 
       reward: 11,
       image: "assets/enemies/enemy23.png",
@@ -254,7 +254,7 @@ export const enemiesData = {
     enemy25: {
       name: "Splooge",
       type: "basic",
-      maxHp: 875, 
+      maxHp: 1155, 
       speed: 0.86, 
       reward: 13,
       image: "assets/enemies/enemy25.png",
@@ -264,8 +264,8 @@ export const enemiesData = {
     enemy26: {
       name: "Top Cat",
       type: "air, immune",
-      maxHp: 700, 
-      speed: 1.35, 
+      maxHp: 730, 
+      speed: 1.37, 
       reward: 13,
       image: "assets/enemies/enemy26.png",
       isFlying: true,
@@ -284,7 +284,7 @@ export const enemiesData = {
     enemy28: {
       name: "Whiskers",
       type: "air",
-      maxHp: 750, 
+      maxHp: 818, 
       speed: 1.31, 
       reward: 17,
       image: "assets/enemies/enemy28.png",
@@ -294,7 +294,7 @@ export const enemiesData = {
     enemy29: {
       name: "BigBoi Gimli",
       type: "giant",
-      maxHp: 960, 
+      maxHp: 1338, 
       speed: 0.84, 
       reward: 18,
       image: "assets/enemies/enemy29.png",
@@ -305,7 +305,7 @@ export const enemiesData = {
     enemy30: {
       name: "Scary Mean Boi",
       type: "boss",
-      maxHp: 12215, 
+      maxHp: 12285, 
       speed: 1.35, 
       reward: 743,
       lifeReward: 1,
