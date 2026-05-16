@@ -97,9 +97,27 @@ export class Projectile {
     draw() {
 
         const ctx = this.ctx;
-        if (this.type === "cannon") ctx.fillStyle = "yellow";
-        else if (this.type === "frost") ctx.fillStyle = "#6ecbff";
-        else if (this.type === "acid") ctx.fillStyle = "rgba(124,255,0,0.5)";
+
+        ctx.save();
+
+        if (this.type === "cannon") {
+            ctx.fillStyle = "yellow";
+        }
+        else if (this.type === "tank") {
+            ctx.fillStyle = "#ff9933"; // orange shell
+        }
+        else if (this.type === "frost") {
+            ctx.fillStyle = "#6ecbff";
+        }
+        else if (this.type === "acid") {
+            ctx.fillStyle = "rgba(124,255,0,0.5)";
+        }
+        else if (this.type === "antiAir") {
+            ctx.fillStyle = "red";
+        }
+        else {
+            ctx.fillStyle = "white";
+        }
 
         // Draw trail
         this.trail.forEach(pos => {

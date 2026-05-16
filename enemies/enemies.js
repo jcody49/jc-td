@@ -74,12 +74,12 @@ export class Enemy {
     Boolean(config.canBeTargetedByAntiAir);
     this.isInvisible = config.isInvisible ?? false;
     this.isRevealed = !this.isInvisible;
-    this.type = config.type ?? "basic";
+    this.types = config.types ?? ["basic"];
+    this.type = this.types[0];
 
-    // convenience flags
-    this.isBoss  = this.type === "boss";
-    this.isBonus = this.type === "bonus";
-    this.isSpeed = this.type === "speed";
+    this.isBoss  = this.types.includes("boss");
+    this.isBonus = this.types.includes("bonus");
+    this.isSpeed = this.types.includes("speed");
 
 
     if (!Number.isFinite(this.maxHp)) {

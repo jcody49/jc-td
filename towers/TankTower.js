@@ -9,10 +9,10 @@ export class TankTower extends Tower {
             type: "tank",
             description: "Slow fire rate, lower direct damage, but causes splash damage and destructive to armor.",
             maxLevel: 5,
-            upgradeCosts: [65, 400, 500, 4000],
+            upgradeCosts: [65, 475, 650, 4000],
             levelData: {
                 1: {
-                    damage: 56,
+                    damage: 57,
                     range: 125,
                     fireRate: 142,
                     splashRadius: 75,
@@ -26,7 +26,7 @@ export class TankTower extends Tower {
                     sprite: "tank-tower2.png"
                 },
                 3: {
-                    damage: 85,
+                    damage: 82,
                     range: 125,
                     fireRate: 127,
                     splashRadius: 77,

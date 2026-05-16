@@ -40,8 +40,18 @@ export function updateWavePreview() {
   const getWaveEnemyType = (index) => {
     const wave = waves[index];
     if (!wave || !wave.enemies?.length) return "—";
+  
     const enemyId = wave.enemies[0].id;
-    return enemiesData[enemyId]?.type || enemyId;
+    const enemy = enemiesData[enemyId];
+  
+    if (!enemy) return enemyId;
+  
+    // prefer new system
+    if (enemy.types?.length) {
+      return enemy.types.join(", ");
+    }
+  
+    return enemy.type || enemyId;
   };
 
   currentEl.textContent = getWaveEnemyType(waveState.currentWave);

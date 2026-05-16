@@ -82,7 +82,7 @@ export const enemiesData = {
     enemy9: {
       name: "Lil Chickn-Hed",
       type: "bonus",
-      maxHp: 746, //LOCKED(v0.1.65)
+      maxHp: 745, //LOCKED(v0.1.65)
       speed: 0.88,  //LOCKED(v0.1.65)
       reward: 9,
       image: "assets/enemies/enemy9.png",
@@ -92,7 +92,7 @@ export const enemiesData = {
     enemy10: {
       name: "Russell ScareCrowe",
       type: "boss",
-      maxHp: 3100, //LOCKED(v0.1.65)
+      maxHp: 3108, //LOCKED(v0.1.65)
       speed: 0.82,  //LOCKED(v0.1.65)
       reward: 22,
       lifeReward: 1,
@@ -125,7 +125,7 @@ export const enemiesData = {
     enemy13: {
       name: "Ghost Wolf",
       type: "immune",
-      maxHp: 471, //LOCKED(v0.1.73)
+      maxHp: 470, //LOCKED(v0.1.73)
       speed: 1.31, //LOCKED(v0.1.73)
       reward: 4,
       image: "assets/enemies/enemy13.png",
@@ -147,8 +147,8 @@ export const enemiesData = {
     enemy15: {
       name: "Old Wise Goblin",
       type: "invisible",
-      maxHp: 616, 
-      speed: 1.13, 
+      maxHp: 616, //LOCKED(v0.1.73)
+      speed: 1.13, //LOCKED(v0.1.73)
       reward: 5,
       image: "assets/enemies/enemy15.png",
       isFlying: false,
@@ -169,8 +169,8 @@ export const enemiesData = {
     enemy17: {
       name: "Flying Claw Machine",
       type: "air",
-      maxHp: 562, 
-      speed: 1.14, 
+      maxHp: 572, 
+      speed: 1.2, 
       reward: 6,
       image: "assets/enemies/enemy17.png",
       isFlying: true,
@@ -179,8 +179,8 @@ export const enemiesData = {
     enemy18: {
       name: "Frosty",
       type: "bonus",
-      maxHp: 1220, 
-      speed: 1.35, 
+      maxHp: 1197, //LOCKED(v0.1.73)
+      speed: 1.35, //LOCKED(v0.1.73)
       reward: 34,
       image: "assets/enemies/enemy18.png",
       isFlying: false,
@@ -189,17 +189,17 @@ export const enemiesData = {
     enemy19: {
       name: "Possessed Caterpie",
       type: "basic",
-      maxHp: 634, 
-      speed: 1.17, 
+      maxHp: 689, 
+      speed: 1.18, 
       reward: 8,
       image: "assets/enemies/enemy19.png",
       isFlying: false,
-      sizeMultiplier: 0.93,
+      sizeMultiplier: 0.92,
     },
     enemy20: {
       name: "Protein Wolf",
       type: "boss",
-      maxHp: 6215, 
+      maxHp: 6223, 
       speed: 1.32, 
       reward: 330,
       lifeReward: 1,
@@ -211,8 +211,8 @@ export const enemiesData = {
     enemy21: {
       name: "Drone",
       type: "air",
-      maxHp: 605, 
-      speed: 1.14, 
+      maxHp: 650, 
+      speed: 1.16, 
       reward: 10,
       image: "assets/enemies/enemy21.png",
       isFlying: true,
@@ -220,10 +220,10 @@ export const enemiesData = {
     },
     enemy22: {
       name: "Swole Link",
-      type: "armored, giant",
-      maxHp: 400, 
-      armor: 352, 
-      speed: 0.84, 
+      types: ["armored", "giant"],
+      maxHp: 600, 
+      armor: 531, 
+      speed: 0.86, 
       reward: 10,
       image: "assets/enemies/enemy22.png",
       isFlying: false,
@@ -233,9 +233,9 @@ export const enemiesData = {
     enemy23: {
       name: "Magic Mike",
       type: "armored",
-      maxHp: 450, 
-      armor: 415, 
-      speed: 0.83, 
+      maxHp: 719, 
+      armor: 668, 
+      speed: 0.85, 
       reward: 11,
       image: "assets/enemies/enemy23.png",
       isFlying: false,
