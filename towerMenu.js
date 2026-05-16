@@ -25,3 +25,22 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add 'selected' class to the clicked card
     selectedCard.classList.add('selected');
   }
+
+
+
+  // =========================
+  // TIP HIGHLIGHT
+  // =========================
+  export function glowTowerCard(type) {
+    const card = document.querySelector(
+      `.towerCard[data-type="${type}"], .towerCard[data-type="${type.charAt(0).toUpperCase() + type.slice(1)}"]`
+    );
+  
+    if (!card) return;
+  
+    card.classList.add("attention-glow");
+  
+    setTimeout(() => {
+      card.classList.remove("attention-glow");
+    }, 4000);
+  }

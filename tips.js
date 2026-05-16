@@ -1,7 +1,11 @@
 // tips.js
 
-export const tips = {
+import { glowTowerCard } from "./towerMenu.js";
 
+// =========================
+// TIP DATA
+// =========================
+export const tips = {
     flyingEnemies: {
         title: "Flying Enemies",
         body: "Flying enemies require anti-air towers."
@@ -9,37 +13,47 @@ export const tips = {
 
     giantEnemies: {
         title: "Giant Enemies",
-        body: "Giant enemies can also be targeted by anti-air towers."
+        body: "Giant enemies are heavy targets — high DPS recommended."
     },
 
     armor: {
         title: "Armor",
         body: "Armor absorbs damage before HP."
     }
-
 };
 
 // =========================
-// SESSION TRACKING
+// TRACK SHOWN TIPS
 // =========================
 const shownTips = new Set();
+
+// =========================
+// TIP LOGIC MAP (clean + scalable)
+// =========================
+const tipActions = {
+    flyingEnemies: () => glowTowerCard("antiAir"),
+    giantEnemies: () => glowTowerCard("cannon"),
+    armor: () => glowTowerCard("tank")
+};
 
 // =========================
 // SHOW TIP
 // =========================
 export function showTip(id) {
 
-    // already shown
-    if (shownTips.has(id)) return;
-
     const tip = tips[id];
-
     if (!tip) return;
 
+    // prevent repeat spam
+    if (shownTips.has(id)) return;
     shownTips.add(id);
 
-    const el = document.getElementById("tipPopup");
+    // run contextual glow (if exists)
+    const action = tipActions[id];
+    if (action) action();
 
+    // render UI
+    const el = document.getElementById("tipPopup");
     if (!el) return;
 
     el.innerHTML = `
