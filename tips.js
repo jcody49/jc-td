@@ -6,6 +6,11 @@ import { glowTowerCard } from "./towerMenu.js";
 // TIP DATA
 // =========================
 export const tips = {
+
+    startGame: {
+        title: "Welcome Dude...",
+        body: "You'll want to begin this tower defense with a cannon, the best tower for direct damage..."
+    },
     
     flyingEnemies: {
         title: "Flying Enemies",
@@ -32,6 +37,7 @@ const shownTips = new Set();
 // TIP LOGIC MAP (clean + scalable)
 // =========================
 const tipActions = {
+    startGame: () => glowTowerCard("cannon"),
     flyingEnemies: () => glowTowerCard("antiAir"),
     giantEnemies: () => glowTowerCard("cannon"),
     armor: () => glowTowerCard("tank")

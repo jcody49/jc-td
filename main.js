@@ -16,6 +16,8 @@ import { initTowerTooltip, showTowerTooltip, hideTowerTooltip } from './ui-effec
 import { TOWER_REGISTRY } from "./towers/towerRegistry.js";
 import { showDifficultyMenu } from "./difficulty.js";
 import { initCursor, startCursorAnimation } from './cursor.js';
+import { showTip } from "./tips.js";
+
 import { CannonTower } from './towers/CannonTower.js';
 import { TankTower } from './towers/TankTower.js';
 import { FrostTower } from './towers/FrostTower.js';
@@ -217,6 +219,10 @@ document.addEventListener("DOMContentLoaded", () => {
             moneyDisplay.style.display = "block";
             startGameLoop(ctx, canvas, gameState, hud);
             startGameWaves(gameState, ctx, canvas);
+
+            if (window.tipsEnabled) {
+                showTip("startGame");
+            }
         });
     });
 });
