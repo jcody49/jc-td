@@ -7,6 +7,8 @@ import { enemiesData } from './enemies/enemyData.js';
 import { waves } from './waves.js';
 import { showMoneyPopup } from './ui-effects.js';
 
+import { showTip } from './tips.js';
+
 // =========================
 // WAVE STATE
 // =========================
@@ -148,6 +150,8 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
     const config = applyDifficulty(spawnQueue[enemiesSpawned], gameState.difficulty);
 
+    
+
     gameState.enemies.push(new Enemy({
       path: waveState.path,
       gridSize,
@@ -176,6 +180,27 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
   if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
   updateWavePreview();
+
+  const nextWave = waves[waveState.currentWave];
+
+  if (nextWave?.enemies?.length) {
+
+      const enemyId = nextWave.enemies[0].id;
+
+      const enemy = enemiesData[enemyId];
+
+      if (enemy?.isFlying) {
+          showTip("flyingEnemies");
+      }
+
+      if (enemy?.canBeTargetedByAntiAir) {
+          showTip("giantEnemies");
+      }
+
+      if (enemy?.armor > 0) {
+          showTip("armor");
+      }
+  }
 
   if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
 
