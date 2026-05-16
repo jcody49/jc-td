@@ -323,6 +323,17 @@ if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnBu
 }
 
 
+const tipToggle = document.getElementById("toggleTips");
+
+if (tipToggle) {
+  tipToggle.checked = window.tipsEnabled;
+
+  tipToggle.addEventListener("change", (e) => {
+    window.tipsEnabled = e.target.checked;
+  });
+}
+
+
 // ======================
 // FAST FORWARD
 // ======================
@@ -472,132 +483,132 @@ window.devWave = function(wave, money = 99999) {
     gameState.money = money;
 
     // ======================
-// TEST TOWER LAYOUT
-// ======================
+    // TEST TOWER LAYOUT
+    // ======================
 
-// --- Tower 1 (Cannon level 2) ---
-let col = 5;
-let row = 6;
+    // --- Tower 1 (Cannon level 2) ---
+    let col = 5;
+    let row = 6;
 
-let x = col * gridSize + gridSize / 2;
-let y = row * gridSize + gridSize / 2;
+    let x = col * gridSize + gridSize / 2;
+    let y = row * gridSize + gridSize / 2;
 
-let tower = new CannonTower({ x, y, ctx, gameState });
+    let tower = new CannonTower({ x, y, ctx, gameState });
 
-tower.level = 2;
-tower.applyLevel();
+    tower.level = 2;
+    tower.applyLevel();
 
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
-
-
-// --- Tower 2 (Cannon level 2) ---
-col = 7;
-row = 7;
-
-x = col * gridSize + gridSize / 2;
-y = row * gridSize + gridSize / 2;
-
-tower = new CannonTower({ x, y, ctx, gameState });
-
-tower.level = 2;
-tower.applyLevel();
-
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
 
 
-// --- Tower 3 (Cannon level 2) ---
-col = 9;
-row = 6;
+    // --- Tower 2 (Cannon level 2) ---
+    col = 7;
+    row = 7;
 
-x = col * gridSize + gridSize / 2;
-y = row * gridSize + gridSize / 2;
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
 
-tower = new CannonTower({ x, y, ctx, gameState });
+    tower = new CannonTower({ x, y, ctx, gameState });
 
-tower.level = 2;
-tower.applyLevel();
+    tower.level = 2;
+    tower.applyLevel();
 
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
-
-
-// --- Tower 4 (Tank level 3 ABOVE middle cannon) ---
-col = 7;
-row = 6;
-
-x = col * gridSize + gridSize / 2;
-y = row * gridSize + gridSize / 2;
-
-tower = new TankTower({ x, y, ctx, gameState });
-
-tower.level = 3;
-tower.applyLevel();
-
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
 
 
-// --- Tower 5 (Frost level 4 BELOW middle cannon) ---
-col = 7;
-row = 8;
+    // --- Tower 3 (Cannon level 2) ---
+    col = 9;
+    row = 6;
 
-x = col * gridSize + gridSize / 2;
-y = row * gridSize + gridSize / 2;
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
 
-tower = new FrostTower({ x, y, ctx, gameState });
+    tower = new CannonTower({ x, y, ctx, gameState });
 
-tower.level = 4;
-tower.applyLevel();
+    tower.level = 2;
+    tower.applyLevel();
 
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
-
-
-// --- Tower 6 (Anti-Air level 2 ABOVE tank) ---
-col = 7;
-row = 5;
-
-x = col * gridSize + gridSize / 2;
-y = row * gridSize + gridSize / 2;
-
-tower = new AntiAirTower({ x, y, ctx, gameState });
-
-tower.level = 2;
-tower.applyLevel();
-
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
 
 
-// --- Tower 7 (Booster ABOVE anti-air) ---
-col = 7;
-row = 4;
+    // --- Tower 4 (Tank level 3 ABOVE middle cannon) ---
+    col = 7;
+    row = 6;
 
-x = col * gridSize + gridSize / 2;
-y = row * gridSize + gridSize / 2;
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
 
-tower = new BoosterTower({ x, y, ctx, gameState });
+    tower = new TankTower({ x, y, ctx, gameState });
+
+    tower.level = 3;
+    tower.applyLevel();
+
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
 
 
+    // --- Tower 5 (Frost level 4 BELOW middle cannon) ---
+    col = 7;
+    row = 8;
 
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
+
+    tower = new FrostTower({ x, y, ctx, gameState });
+
+    tower.level = 4;
+    tower.applyLevel();
+
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
+
+
+    // --- Tower 6 (Anti-Air level 2 ABOVE tank) ---
+    col = 7;
+    row = 5;
+
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
+
+    tower = new AntiAirTower({ x, y, ctx, gameState });
+
+    tower.level = 2;
+    tower.applyLevel();
+
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
+
+
+    // --- Tower 7 (Booster ABOVE anti-air) ---
+    col = 7;
+    row = 4;
+
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
+
+    tower = new BoosterTower({ x, y, ctx, gameState });
 
 
 
-// --- Tower 8 (Detection tower below left-most cannon) ---
-col = 5;
-row = 7;
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
 
-x = col * gridSize + gridSize / 2;
-y = row * gridSize + gridSize / 2;
 
-tower = new DetectionTower({ x, y, ctx, gameState });
 
-gameState.towers.push(tower);
-gridOccupied[col][row] = true;
+    // --- Tower 8 (Detection tower below left-most cannon) ---
+    col = 5;
+    row = 7;
+
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
+
+    tower = new DetectionTower({ x, y, ctx, gameState });
+
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
 
     startNextWave(
         gameState,
@@ -614,10 +625,13 @@ gridOccupied[col][row] = true;
 
 
 
+
+
 // ======================
 // GLOBALS
 // ======================
 window.gridOccupied = gridOccupied;
+window.tipsEnabled = false;
 
 // Normal speed
 window.gameSpeed = 1;

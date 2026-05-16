@@ -6,6 +6,7 @@ import { glowTowerCard } from "./towerMenu.js";
 // TIP DATA
 // =========================
 export const tips = {
+    
     flyingEnemies: {
         title: "Flying Enemies",
         body: "Flying enemies require anti-air towers."
@@ -40,6 +41,7 @@ const tipActions = {
 // SHOW TIP
 // =========================
 export function showTip(id) {
+    if (!window.tipsEnabled) return;
 
     const tip = tips[id];
     if (!tip) return;
