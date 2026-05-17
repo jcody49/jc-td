@@ -93,9 +93,9 @@ function applyDifficulty(config, difficulty) {
   const copy = { ...config };
   switch (difficulty) {
     case "beginner":
-      copy.maxHp *= 0.55;
+      copy.maxHp *= 0.63;
       copy.score = Math.round((copy.score ?? 5) * 0.55);
-      copy.speed = (copy.speed ?? 1) * 0.9;
+      copy.speed = (copy.speed ?? 1) * 0.88;
       break;
     case "easy":
       copy.maxHp *= 0.77;
@@ -186,7 +186,7 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
   updateWavePreview();
 
-  if (waveState.currentWave === 2) {
+  if (waveState.currentWave === 1) {
     showTip("firstUpgrade");
   }
 
