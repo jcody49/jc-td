@@ -42,5 +42,5 @@ document.addEventListener("DOMContentLoaded", () => {
   
     setTimeout(() => {
       card.classList.remove("attention-glow");
-    }, 4000);
+    }, 10000);
   }

@@ -80,5 +80,5 @@ export function showTip(id) {
 
     el.hideTimeout = setTimeout(() => {
         el.classList.remove("visible");
-    }, 5000);
+    }, 10000);
 }
