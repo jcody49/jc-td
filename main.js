@@ -206,6 +206,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Apply difficulty
             gameState.difficulty = selected;
+            window.tipsEnabled = selected === "beginner";
+
+            const tipsToggle = document.getElementById("toggleTips");
+
+            if (tipsToggle) {
+                tipsToggle.checked = window.tipsEnabled;
+            }
+
             console.log(gameState.difficulty)
             // Hide difficulty menu
             if (difficultyMenu) difficultyMenu.style.display = "none";
