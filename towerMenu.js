@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================
   export function glowTowerCard(type) {
     const card = document.querySelector(
-      `.towerCard[data-type="${type}"], .towerCard[data-type="${type.charAt(0).toUpperCase() + type.slice(1)}"]`
+      `.towerCard[data-type="${type}"]`
     );
   
     if (!card) return;

@@ -37,10 +37,10 @@ const shownTips = new Set();
 // TIP LOGIC MAP (clean + scalable)
 // =========================
 const tipActions = {
-    startGame: () => glowTowerCard("cannon"),
-    flyingEnemies: () => glowTowerCard("antiAir"),
-    giantEnemies: () => glowTowerCard("cannon"),
-    armor: () => glowTowerCard("tank")
+    startGame: () => glowTowerCard("Cannon"),
+    flyingEnemies: () => glowTowerCard("AntiAir"),
+    giantEnemies: () => glowTowerCard("Cannon"),
+    armor: () => glowTowerCard("Tank")
 };
 
 // =========================
