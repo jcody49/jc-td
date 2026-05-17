@@ -90,8 +90,9 @@ document.querySelectorAll(".towerCard").forEach(card => {
     card.addEventListener("mouseover", () => {
         const rect = card.getBoundingClientRect();
     
-        const type = card.dataset.type.toLowerCase();
-        const TowerClass = TOWER_REGISTRY[type];
+        const type = card.dataset.type;
+        const key = type.charAt(0).toLowerCase() + type.slice(1);
+        const TowerClass = TOWER_REGISTRY[key];
     
         const title = TowerClass?.name || "Tower";        
         const description = TowerClass?.description || "No description";
