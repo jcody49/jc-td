@@ -249,6 +249,15 @@ skipButton.addEventListener("click", () => {
     skipButton.disabled = true;
     disableGlow(skipButton);
 
+    const tip = document.getElementById("tipPopup");
+    if (tip) {
+        tip.classList.remove("visible");
+        clearTimeout(tip.hideTimeout);
+    }
+
+    document.querySelectorAll(".towerCard.attention-glow")
+        .forEach(card => card.classList.remove("attention-glow"));
+
     startWave(gameState, gridSize, ctx, canvas, waveTextEl);
     updateWavePreview();
 });
