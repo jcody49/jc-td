@@ -11,6 +11,11 @@ export const tips = {
         title: "Welcome Dude...",
         body: "You'll want to begin this tower defense with a cannon, the best tower for direct damage..."
     },
+
+    firstUpgrade: {
+        title: "Upgrade your cannon...",
+        body: "Select your cannon & press \"U\" or click Upgrade"
+    },
     
     flyingEnemies: {
         title: "Flying Enemies",

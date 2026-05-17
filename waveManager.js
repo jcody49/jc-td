@@ -181,6 +181,10 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
   updateWavePreview();
 
+  if (waveState.currentWave === 2) {
+    showTip("firstUpgrade");
+  }
+
   const nextWave = waves[waveState.currentWave];
 
   if (nextWave?.enemies?.length) {
