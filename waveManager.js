@@ -92,6 +92,11 @@ export const stopWaveSpawning = stopAllWaveIntervals;
 function applyDifficulty(config, difficulty) {
   const copy = { ...config };
   switch (difficulty) {
+    case "beginner":
+      copy.maxHp *= 0.55;
+      copy.score = Math.round((copy.score ?? 5) * 0.55);
+      copy.speed = (copy.speed ?? 1) * 0.9;
+      break;
     case "easy":
       copy.maxHp *= 0.77;
       copy.score = Math.round((copy.score ?? 5) * 0.8);
