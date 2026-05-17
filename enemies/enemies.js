@@ -1,5 +1,6 @@
 // enemies/enemies.js
 import { showMoneyPopup, showLifePopup } from '../ui-effects.js';
+import { checkUpgradeTip } from "../tips.js";
 
 console.error("🔥 REAL enemies/enemies.js LOADED 🔥");
 
@@ -181,6 +182,8 @@ export class Enemy {
         if (this.reward > 0) {
             gameState.money += this.reward;
             showMoneyPopup(this.reward, this.x, this.y);
+
+            checkUpgradeTip(gameState);
         }
 
         if (this.score > 0) {

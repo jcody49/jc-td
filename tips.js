@@ -37,6 +37,7 @@ export const tips = {
 // TRACK SHOWN TIPS
 // =========================
 const shownTips = new Set();
+let upgradeTipQueued = false;
 
 // =========================
 // TIP LOGIC MAP (clean + scalable)
@@ -81,4 +82,19 @@ export function showTip(id) {
     el.hideTimeout = setTimeout(() => {
         el.classList.remove("visible");
     }, 10000);
+}
+
+
+export function checkUpgradeTip(gameState) {
+    if (!window.tipsEnabled) return;
+
+    if (upgradeTipQueued) return;
+
+    const hasCannon = gameState.towers?.some(t => t.type === "cannon");
+    const canUpgrade = gameState.money >= 50;
+
+    if (hasCannon && canUpgrade) {
+        upgradeTipQueued = true;
+        showTip("firstUpgrade");
+    }
 }

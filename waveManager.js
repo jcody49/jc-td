@@ -7,7 +7,8 @@ import { enemiesData } from './enemies/enemyData.js';
 import { waves } from './waves.js';
 import { showMoneyPopup } from './ui-effects.js';
 
-import { showTip } from './tips.js';
+import { showTip, checkUpgradeTip } from './tips.js';
+
 
 // =========================
 // WAVE STATE
@@ -186,10 +187,6 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
   if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} in: ${waveState.countdown}`;
   updateWavePreview();
 
-  if (waveState.currentWave === 1) {
-    showTip("firstUpgrade");
-  }
-
   const nextWave = waves[waveState.currentWave];
 
   if (nextWave?.enemies?.length) {
@@ -242,6 +239,7 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
     const currentWaveData = waves[waveState.currentWave];
     if (currentWaveData?.income) {
       gameState.money = (gameState.money || 0) + currentWaveData.income;
+      checkUpgradeTip(gameState);
       showMoneyPopup(
         currentWaveData.income,
         window.innerWidth / 2,
