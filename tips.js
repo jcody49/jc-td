@@ -16,10 +16,25 @@ export const tips = {
         title: "Upgrade your cannon...",
         body: "Select your cannon & press \"U\" or click Upgrade"
     },
+
+    speedEnemies: {
+        title: "Speed Enemies",
+        body: "Slow speed enemies down with Frost Towers."
+    },
     
     flyingEnemies: {
         title: "Flying Enemies",
         body: "Flying enemies require anti-air towers."
+    },
+
+    immuneEnemies: {
+        title: "Immune Enemies",
+        body: "Immune enemies can only be targeted by cannon and tank towers."
+    },
+
+    invisibleEnemies: {
+        title: "Invisible Enemies",
+        body: "Invisible enemies require Detection Towers to be revealed."
     },
 
     giantEnemies: {
@@ -29,7 +44,7 @@ export const tips = {
 
     armor: {
         title: "Armor",
-        body: "Armor absorbs damage before HP."
+        body: "Armor absorbs damage before HP, but tanks hit both..."
     }
 };
 
@@ -44,8 +59,9 @@ let upgradeTipQueued = false;
 // =========================
 const tipActions = {
     startGame: () => glowTowerCard("Cannon"),
+    speedEnemies: () => glowTowerCard("Frost"),
     flyingEnemies: () => glowTowerCard("AntiAir"),
-    giantEnemies: () => glowTowerCard("Cannon"),
+    invisibleEnemies: () => glowTowerCard("Detection"),
     armor: () => glowTowerCard("Tank")
 };
 

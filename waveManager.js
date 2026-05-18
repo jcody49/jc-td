@@ -195,8 +195,20 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
       const enemy = enemiesData[enemyId];
 
+      if (enemy?.type === "speed") {
+        showTip("speedEnemies");
+    }
+
       if (enemy?.isFlying) {
           showTip("flyingEnemies");
+      }
+
+      if (enemy?.type === "immune") {
+        showTip("immuneEnemies");
+      }
+
+      if (enemy?.type === "invisible") {
+        showTip("invisibleEnemies");
       }
 
       if (enemy?.canBeTargetedByAntiAir) {
