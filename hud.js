@@ -23,6 +23,7 @@ export function initHUD({
     const livesDisplay = document.getElementById("lives");
     const moneyDisplay = document.getElementById("money");
     const scoreDisplay = document.getElementById("scoreText");
+    const upgradeCostDisplay = document.getElementById("upgradeCost");
 
     let selectedTower = null;
 
@@ -148,17 +149,55 @@ export function initHUD({
     // =========================
     function updateUpgradeOption(tower) {
         if (!tower) return;
-
+    
+        const upgradeCostDisplay = document.getElementById("upgradeCost");
+    
+        // =========================
+        // COST DISPLAY
+        // =========================
+        const refreshUpgradeCost = () => {
+    
+            // MAX LEVEL
+            if (tower.level >= tower.maxLevel) {
+                upgradeCostDisplay.textContent = "MAX";
+                return;
+            }
+    
+            // NEXT UPGRADE COST
+            const nextCost = tower.upgradeCosts[tower.level - 1];
+    
+            console.log(
+                "UPGRADE HUD REFRESH",
+                "LEVEL:", tower.level,
+                "NEXT COST:", nextCost
+            );
+    
+            upgradeCostDisplay.textContent = `$${nextCost}`;
+        };
+    
+        refreshUpgradeCost();
+    
+        // =========================
+        // ENABLE / DISABLE
+        // =========================
         towerUpgradeOption.classList.toggle(
             "disabled",
             !tower.canUpgrade(gameState)
         );
-
+    
+        // =========================
+        // CLICK EVENT
+        // =========================
         towerUpgradeOption.onclick = () => {
+    
             if (!tower.canUpgrade(gameState)) return;
-
+    
             tower.upgrade(gameState);
 
+    
+            // FORCE REFRESH
+            refreshUpgradeCost();
+    
             updateTowerModal();
             updateMoneyLives();
         };

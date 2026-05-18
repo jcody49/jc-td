@@ -86,7 +86,6 @@ export class Enemy {
       config.type === "bonus";
     this.isSpeed = this.types.includes("speed");
 
-    console.log("ENEMY TYPES DEBUG:", config.name, config.types, this.types, this.isBonus);
     if (!Number.isFinite(this.maxHp)) {
       console.error("❌ INVALID maxHp:", config);
       this.maxHp = 100;

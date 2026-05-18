@@ -11,7 +11,7 @@ export class BoosterTower extends Tower {
       description:
         "Boosts nearby towers with either increased damage or faster fire rate.",
 
-      maxLevel: 5,
+      maxLevel: 6,
 
       upgradeCosts: [500, 1500, 8000, 15000, 25000],
 
@@ -46,9 +46,15 @@ export class BoosterTower extends Tower {
 
         5: {
           range: 125,
-          boostPercent: 0.85,
+          boostPercent: 0.68,
           sprite: "booster5.png"
-        }
+        },
+
+        6: {
+            range: 125,
+            boostPercent: 0.75,
+            sprite: "booster5.png"
+        },
       }
     });
 
