@@ -34,7 +34,11 @@ export function showMoneyPopup(amount, x = null, y = null, text = null) {
 // =========================
 export function showLifePopup(amount, x = null, y = null) {
     const popup = document.createElement("div");
-    popup.textContent = `+${amount} ❤️`;
+
+    const sign = amount > 0 ? "+" : amount < 0 ? "-" : "-";
+
+    popup.textContent = `${sign}${Math.abs(amount)} ❤️`;
+
     popup.style.position = "absolute";
     popup.style.color = "hotpink";
     popup.style.fontWeight = "bold";

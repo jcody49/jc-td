@@ -95,7 +95,7 @@ function applyDifficulty(config, difficulty) {
   switch (difficulty) {
     case "beginner":
       copy.maxHp *= 0.63;
-      copy.score = Math.round((copy.score ?? 5) * 0.55);
+      copy.score = Math.round((copy.score ?? 5) * 0.4);
       copy.speed = (copy.speed ?? 1) * 0.88;
       break;
     case "easy":
@@ -191,34 +191,34 @@ export function startNextWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
   if (nextWave?.enemies?.length) {
 
-      const enemyId = nextWave.enemies[0].id;
+    const enemyId = nextWave.enemies[0].id;
 
-      const enemy = enemiesData[enemyId];
+    const enemy = enemiesData[enemyId];
 
-      if (enemy?.type === "speed") {
+    if (enemy?.types?.includes("speed")) {
         showTip("speedEnemies");
     }
 
-      if (enemy?.isFlying) {
-          showTip("flyingEnemies");
-      }
+    if (enemy?.isFlying) {
+        showTip("flyingEnemies");
+    }
 
-      if (enemy?.type === "immune") {
+    if (enemy?.types?.includes("immune")) {
         showTip("immuneEnemies");
-      }
+    }
 
-      if (enemy?.type === "invisible") {
+    if (enemy?.types?.includes("invisible")) {
         showTip("invisibleEnemies");
-      }
+    }
 
-      if (enemy?.canBeTargetedByAntiAir) {
-          showTip("giantEnemies");
-      }
+    if (enemy?.canBeTargetedByAntiAir) {
+        showTip("giantEnemies");
+    }
 
-      if (enemy?.armor > 0) {
-          showTip("armor");
-      }
-  }
+    if (enemy?.armor > 0) {
+        showTip("armor");
+    }
+}
 
   if (waveState.countdownInterval) clearInterval(waveState.countdownInterval);
 

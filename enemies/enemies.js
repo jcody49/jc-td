@@ -75,14 +75,18 @@ export class Enemy {
     Boolean(config.canBeTargetedByAntiAir);
     this.isInvisible = config.isInvisible ?? false;
     this.isRevealed = !this.isInvisible;
-    this.types = config.types ?? ["basic"];
+    this.types =
+      config.types ??
+      (config.type ? [config.type] : ["basic"]);
     this.type = this.types[0];
 
     this.isBoss  = this.types.includes("boss");
-    this.isBonus = this.types.includes("bonus");
+    this.isBonus =
+      this.types.includes("bonus") ||
+      config.type === "bonus";
     this.isSpeed = this.types.includes("speed");
 
-
+    console.log("ENEMY TYPES DEBUG:", config.name, config.types, this.types, this.isBonus);
     if (!Number.isFinite(this.maxHp)) {
       console.error("❌ INVALID maxHp:", config);
       this.maxHp = 100;
@@ -124,32 +128,32 @@ export class Enemy {
   update(gameState) {
     // --- Exit path ---
     if (this.pathIndex >= this.path.length - 1) {
-        if (!this.escaped) {
-            this.escaped = true;
-
-            if (!this.isBonus) {
-                gameState.lives--;
-            }
-
-            if (this.isBonus) {
-                showLifePopup(this.lifeReward);
-            }
-
-            const ctx = this.ctx;
-            ctx.save();
-            ctx.strokeStyle = "yellow";
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(this.x - this.size, this.y - this.size);
-            ctx.lineTo(this.x + this.size, this.y + this.size);
-            ctx.moveTo(this.x + this.size, this.y - this.size);
-            ctx.lineTo(this.x - this.size, this.y + this.size);
-            ctx.stroke();
-            ctx.restore();
-        }
-        this.remove = true;
-        return;
-    }
+      if (!this.escaped) {
+          this.escaped = true;
+  
+          if (this.isBonus) {
+              showLifePopup(0);
+          } else {
+              gameState.lives--;
+              showLifePopup(-1);
+          }
+  
+          const ctx = this.ctx;
+          ctx.save();
+          ctx.strokeStyle = "yellow";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(this.x - this.size, this.y - this.size);
+          ctx.lineTo(this.x + this.size, this.y + this.size);
+          ctx.moveTo(this.x + this.size, this.y - this.size);
+          ctx.lineTo(this.x - this.size, this.y + this.size);
+          ctx.stroke();
+          ctx.restore();
+      }
+  
+      this.remove = true;
+      return;
+  }
 
     // --- Slow ---
     if (this.slowTimer > 0) {
@@ -191,8 +195,10 @@ export class Enemy {
         }
 
         if (this.lifeReward > 0) {
-            showLifePopup(this.lifeReward, this.x, this.y);
-        }
+          gameState.lives += this.lifeReward;
+          showLifePopup(this.lifeReward);
+      }
+
 
         this.remove = true;
         return;

@@ -39,7 +39,7 @@ export const tips = {
 
     giantEnemies: {
         title: "Giant Enemies",
-        body: "Giant enemies are heavy targets — high DPS recommended."
+        body: "Giant enemies are huge targets that can also be targeted by anti-air."
     },
 
     armor: {
