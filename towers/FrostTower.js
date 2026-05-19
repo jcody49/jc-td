@@ -40,11 +40,11 @@ export class FrostTower extends Tower {
                     sprite: "frost-tower3.png"
                 },
                 4: {
-                    damage: 119,
+                    damage: 120,
                     range: 125,
-                    fireRate: 37,
-                    slowMultiplier: 0.47,
-                    slowDuration: 277,
+                    fireRate: 36,
+                    slowMultiplier: 0.45,
+                    slowDuration: 280,
                     sprite: "frost-tower4.png"
                 },
                 5: {

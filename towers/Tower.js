@@ -470,13 +470,13 @@ export class Tower {
       }
 
       if (hasSpeed) {
-          ctx.fillStyle = "rgba(0, 140, 70, 0.18)";
-          ctx.shadowColor = "rgba(0, 220, 120, 0.9)";
-          ctx.shadowBlur = 14;
-
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, baseRadius * 0.85, 0, Math.PI * 2);
-          ctx.fill();
+        ctx.fillStyle = "rgba(0, 110, 55, 0.32)"; // darker green
+        ctx.shadowColor = "rgba(0, 255, 140, 0.95)"; // still bright edge
+        ctx.shadowBlur = 16;
+    
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, baseRadius * 0.85, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       ctx.restore();

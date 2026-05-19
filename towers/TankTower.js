@@ -29,7 +29,7 @@ export class TankTower extends Tower {
                     damage: 79,
                     range: 120,
                     fireRate: 127,
-                    splashRadius: 77,
+                    splashRadius: 78,
                     sprite: "tank-tower3.png"
                 },
                 4: {
