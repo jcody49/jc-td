@@ -24,6 +24,7 @@ import { FrostTower } from './towers/FrostTower.js';
 import { BoosterTower } from './towers/BoosterTower.js';
 import { DetectionTower } from './towers/DetectionTower.js';
 import { AntiAirTower } from './towers/AntiAir.js';
+import { AcidTower } from './towers/AcidTower.js';
 
 // ======================
 // PRELOAD ENEMY IMAGES
@@ -495,7 +496,7 @@ window.devWave = function(wave, money = 99999) {
 
 
 
-  window.devLayoutTest = function(money = 395) {
+  window.devLayoutTest = function(money = 255) {
 
     stopAllWaveIntervals();
 
@@ -503,7 +504,7 @@ window.devWave = function(wave, money = 99999) {
     gameState.projectiles = [];
     gameState.towers = [];
 
-    waveState.currentWave = 26;
+    waveState.currentWave = 27;
     waveState.countdown = 40;
     waveState.status = "countdown";
 
@@ -662,6 +663,22 @@ window.devWave = function(wave, money = 99999) {
     tower = new AntiAirTower({ x, y, ctx, gameState });
 
     tower.level = 2;
+    tower.applyLevel();
+
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
+
+
+    // --- Tower 11 (Acid level 2--MIDDLE ROW) ---
+    col = 7;
+    row = 3;
+
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
+
+    tower = new AcidTower({ x, y, ctx, gameState });
+
+    tower.level = 3;
     tower.applyLevel();
 
     gameState.towers.push(tower);

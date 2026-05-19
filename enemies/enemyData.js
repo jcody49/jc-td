@@ -286,8 +286,8 @@ export const enemiesData = {
     enemy28: {
       name: "Whiskers",
       types: ["air"],
-      maxHp: 1297, 
-      speed: 1.31, 
+      maxHp: 1292, //LOCKED(v0.1.75)
+      speed: 1.31, //LOCKED(v0.1.75)
       reward: 17,
       image: "assets/enemies/enemy28.png",
       isFlying: true,
