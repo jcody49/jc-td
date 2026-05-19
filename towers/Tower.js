@@ -447,35 +447,73 @@ export class Tower {
     }
 
     // ======================
-    // BOOST VISUALS
+    // BOOST VISUALS (FIXED LAYERING)
     // ======================
     if (this.visualBoostTypes?.length) {
 
       ctx.save();
 
-      // DAMAGE BOOST
-      if (this.visualBoostTypes.includes("damage")) {
+      const baseRadius = size * 0.70;
 
-          ctx.fillStyle = "rgba(255, 40, 40, 0.22)";
+      // if BOTH types exist → mixed glow (stacked)
+      const hasDamage = this.visualBoostTypes.includes("damage");
+      const hasSpeed = this.visualBoostTypes.includes("speed");
+
+      if (hasDamage) {
+          ctx.fillStyle = "rgba(255, 40, 40, 0.18)";
           ctx.shadowColor = "rgba(255, 40, 40, 0.9)";
           ctx.shadowBlur = 14;
 
           ctx.beginPath();
-          ctx.arc(this.x, this.y, size * 0.68, 0, Math.PI * 2);
+          ctx.arc(this.x, this.y, baseRadius, 0, Math.PI * 2);
           ctx.fill();
       }
 
-      // SPEED BOOST
-      if (this.visualBoostTypes.includes("speed")) {
-
-          ctx.fillStyle = "rgba(0, 120, 60, 0.28)";
-          ctx.shadowColor = "rgba(0, 220, 120, 0.85)";
+      if (hasSpeed) {
+          ctx.fillStyle = "rgba(0, 140, 70, 0.18)";
+          ctx.shadowColor = "rgba(0, 220, 120, 0.9)";
           ctx.shadowBlur = 14;
 
           ctx.beginPath();
-          ctx.arc(this.x, this.y, size * 0.45, 0, Math.PI * 2);
+          ctx.arc(this.x, this.y, baseRadius * 0.85, 0, Math.PI * 2);
           ctx.fill();
       }
+
+      ctx.restore();
+    }
+
+
+    // ======================
+    // BOOSTER MODE GLOW
+    // always visible on booster towers
+    // ======================
+    if (this.type === "booster") {
+
+      const isSpeed = this.boostMode === "fireRate";
+
+      ctx.save();
+
+      ctx.fillStyle = isSpeed
+          ? "rgba(0, 120, 60, 0.30)"
+          : "rgba(255, 40, 40, 0.24)";
+
+      ctx.shadowColor = isSpeed
+          ? "rgba(0, 220, 120, 1)"
+          : "rgba(255, 40, 40, 1)";
+
+      ctx.shadowBlur = 18;
+
+      ctx.beginPath();
+
+      ctx.arc(
+          this.x,
+          this.y,
+          size * 0.62,
+          0,
+          Math.PI * 2
+      );
+
+      ctx.fill();
 
       ctx.restore();
     }
