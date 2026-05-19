@@ -13,8 +13,8 @@ export class CannonTower extends Tower {
             levelData: {
                 1: { damage: 55, range: 125, fireRate: 78, sprite: "cannon.png" }, //LOCKED
                 2: { damage: 58, range: 125, fireRate: 41, sprite: "cannon2.png" },
-                3: { damage: 90, range: 125, fireRate: 50, sprite: "cannon3.png" },
-                4: { damage: 120, range: 125, fireRate: 46, sprite: "cannon4.png" },
+                3: { damage: 98, range: 125, fireRate: 42, sprite: "cannon3.png" },
+                4: { damage: 115, range: 125, fireRate: 41, sprite: "cannon4.png" },
                 5: { damage: 170, range: 125, fireRate: 40, sprite: "cannon5.png" }
             }
         });

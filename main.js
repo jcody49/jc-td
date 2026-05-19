@@ -495,7 +495,7 @@ window.devWave = function(wave, money = 99999) {
 
 
 
-  window.devLayoutTest = function(money = 5000) {
+  window.devLayoutTest = function(money = 656) {
 
     stopAllWaveIntervals();
 
@@ -503,7 +503,7 @@ window.devWave = function(wave, money = 99999) {
     gameState.projectiles = [];
     gameState.towers = [];
 
-    waveState.currentWave = 21;
+    waveState.currentWave = 25;
     waveState.countdown = 40;
     waveState.status = "countdown";
 
@@ -561,7 +561,7 @@ window.devWave = function(wave, money = 99999) {
     gridOccupied[col][row] = true;
 
 
-    // --- Tower 4 (Tank level 3 ABOVE middle cannon) ---
+    // --- Tower 4 (Tank level 4 ABOVE middle cannon) ---
     col = 7;
     row = 6;
 
@@ -570,7 +570,7 @@ window.devWave = function(wave, money = 99999) {
 
     tower = new TankTower({ x, y, ctx, gameState });
 
-    tower.level = 3;
+    tower.level = 4;
     tower.applyLevel();
 
     gameState.towers.push(tower);
@@ -593,7 +593,7 @@ window.devWave = function(wave, money = 99999) {
     gridOccupied[col][row] = true;
 
 
-    // --- Tower 6 (Anti-Air level 2 ABOVE tank) ---
+    // --- Tower 6 (Anti-Air level 3 MIDDLE ROW) ---
     col = 7;
     row = 5;
 
@@ -602,16 +602,16 @@ window.devWave = function(wave, money = 99999) {
 
     tower = new AntiAirTower({ x, y, ctx, gameState });
 
-    tower.level = 2;
+    tower.level = 3;
     tower.applyLevel();
 
     gameState.towers.push(tower);
     gridOccupied[col][row] = true;
 
 
-    // --- Tower 7 (Booster ABOVE anti-air) ---
-    col = 7;
-    row = 4;
+    // --- Tower 7 (Booster) ---
+    col = 9;
+    row = 7;
 
     x = col * gridSize + gridSize / 2;
     y = row * gridSize + gridSize / 2;
@@ -633,6 +633,36 @@ window.devWave = function(wave, money = 99999) {
     y = row * gridSize + gridSize / 2;
 
     tower = new DetectionTower({ x, y, ctx, gameState });
+
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
+
+    // --- Tower 9 (Damage Booster) ---
+    col = 7;
+    row = 4;
+
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
+
+    tower = new BoosterTower({ x, y, ctx, gameState });
+
+
+
+    gameState.towers.push(tower);
+    gridOccupied[col][row] = true;
+
+
+    // --- Tower 10 (Anti-Air level 2--FRONT ROW) ---
+    col = 5;
+    row = 5;
+
+    x = col * gridSize + gridSize / 2;
+    y = row * gridSize + gridSize / 2;
+
+    tower = new AntiAirTower({ x, y, ctx, gameState });
+
+    tower.level = 2;
+    tower.applyLevel();
 
     gameState.towers.push(tower);
     gridOccupied[col][row] = true;
