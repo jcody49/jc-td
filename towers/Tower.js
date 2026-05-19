@@ -118,6 +118,8 @@ export class Tower {
     this.damage = this.baseDamage;
     this.fireRate = this.baseFireRate;
 
+    this.visualBoostTypes = [];
+
     // booster towers do not buff themselves
     if (this.type === "booster") return;
 
@@ -137,6 +139,9 @@ export class Tower {
 
             this.damage *= (1 + tower.boostPercent);
 
+            if (!this.visualBoostTypes.includes("damage")) {
+              this.visualBoostTypes.push("damage");
+          }
         }
 
         // FIRE RATE BOOST
@@ -147,6 +152,10 @@ export class Tower {
 
             // prevent insanity
             this.fireRate = Math.max(2, this.fireRate);
+
+            if (!this.visualBoostTypes.includes("speed")) {
+              this.visualBoostTypes.push("speed");
+          }
         }
     }
 }
@@ -438,8 +447,43 @@ export class Tower {
     }
 
     // ======================
+    // BOOST VISUALS
+    // ======================
+    if (this.visualBoostTypes?.length) {
+
+      ctx.save();
+
+      // DAMAGE BOOST
+      if (this.visualBoostTypes.includes("damage")) {
+
+          ctx.fillStyle = "rgba(255, 40, 40, 0.22)";
+          ctx.shadowColor = "rgba(255, 40, 40, 0.9)";
+          ctx.shadowBlur = 14;
+
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, size * 0.68, 0, Math.PI * 2);
+          ctx.fill();
+      }
+
+      // SPEED BOOST
+      if (this.visualBoostTypes.includes("speed")) {
+
+          ctx.fillStyle = "rgba(0, 120, 60, 0.28)";
+          ctx.shadowColor = "rgba(0, 220, 120, 0.85)";
+          ctx.shadowBlur = 14;
+
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, size * 0.45, 0, Math.PI * 2);
+          ctx.fill();
+      }
+
+      ctx.restore();
+    }
+
+    // ======================
     // Tower Sprite
     // ======================
+
     const img = this.image;
 
     if (img && img.complete && img.naturalWidth > 0) {
