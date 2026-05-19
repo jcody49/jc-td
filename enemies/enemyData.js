@@ -307,7 +307,7 @@ export const enemiesData = {
     enemy30: {
       name: "Scary Mean Boi",
       types: ["boss", "invisible"],
-      maxHp: 13930, 
+      maxHp: 13621, 
       speed: 1.44, 
       reward: 743,
       lifeReward: 1,
