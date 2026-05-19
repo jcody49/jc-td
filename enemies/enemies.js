@@ -73,12 +73,17 @@ export class Enemy {
     this.isFlying = Boolean(config.isFlying);
     this.canBeTargetedByAntiAir =
     Boolean(config.canBeTargetedByAntiAir);
-    this.isInvisible = config.isInvisible ?? false;
-    this.isRevealed = !this.isInvisible;
     this.types =
       config.types ??
       (config.type ? [config.type] : ["basic"]);
+
     this.type = this.types[0];
+
+    this.isInvisible =
+        config.isInvisible ??
+        this.types.includes("invisible");
+
+    this.isRevealed = !this.isInvisible;
 
     this.isBoss  = this.types.includes("boss");
     this.isBonus =
