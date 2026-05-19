@@ -407,6 +407,8 @@ if (restartGameBtn) {
         // ✅ Clear all wave timers before resetting
         stopWaveSpawning();
 
+        hud.hideTowerModal();
+
         resetGame(gameState, ctx, canvas);
         console.log("🚦 window.gamePaused after reset:", window.gamePaused);
         startGameLoop(ctx, canvas, gameState, hud);
@@ -446,6 +448,7 @@ retryBtn?.addEventListener("click", () => {
     stopAllWaveIntervals();
     stopGameLoop();
     stopWaveSpawning();
+    hud.hideTowerModal();
 
     // Reset everything
     resetGame(gameState, ctx, canvas);

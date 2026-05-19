@@ -26,7 +26,7 @@ export class TankTower extends Tower {
                     sprite: "tank-tower2.png"
                 },
                 3: {
-                    damage: 78,
+                    damage: 79,
                     range: 120,
                     fireRate: 127,
                     splashRadius: 77,
@@ -35,7 +35,7 @@ export class TankTower extends Tower {
                 4: {
                     damage: 110,
                     range: 125,
-                    fireRate: 115,
+                    fireRate: 112,
                     splashRadius: 75,
                     sprite: "tank-tower4.png"
                 },

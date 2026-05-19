@@ -13,7 +13,7 @@ export class BoosterTower extends Tower {
 
       maxLevel: 6,
 
-      upgradeCosts: [500, 1500, 8000, 15000, 25000],
+      upgradeCosts: [1500, 8000, 15000, 25000],
 
       opts: {
         isBoosterTower: true

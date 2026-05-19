@@ -169,8 +169,8 @@ export const enemiesData = {
     enemy17: {
       name: "Flying Claw Machine",
       types: ["air"],
-      maxHp: 572, //LOCKED(v0.1.73)
-      speed: 1.2, //LOCKED(v0.1.73)
+      maxHp: 571, //LOCKED(v0.1.73)
+      speed: 1.19, //LOCKED(v0.1.73)
       reward: 6,
       image: "assets/enemies/enemy17.png",
       isFlying: true,
@@ -179,8 +179,8 @@ export const enemiesData = {
     enemy18: {
       name: "Frosty",
       types: ["bonus"],
-      maxHp: 1197, //LOCKED(v0.1.73)
-      speed: 1.35, //LOCKED(v0.1.73)
+      maxHp: 1184, 
+      speed: 1.32, 
       reward: 34,
       image: "assets/enemies/enemy18.png",
       isFlying: false,
@@ -189,7 +189,7 @@ export const enemiesData = {
     enemy19: {
       name: "Possessed Caterpie",
       types: ["basic"],
-      maxHp: 689, 
+      maxHp: 549, 
       speed: 1.18, 
       reward: 8,
       image: "assets/enemies/enemy19.png",
@@ -199,8 +199,8 @@ export const enemiesData = {
     enemy20: {
       name: "Protein Wolf",
       types: ["boss"],
-      maxHp: 6223, 
-      speed: 1.32, 
+      maxHp: 6223, //LOCKED(v0.1.74)
+      speed: 1.32, //LOCKED(v0.1.74)
       reward: 330,
       lifeReward: 1,
       score: 10,
@@ -211,7 +211,7 @@ export const enemiesData = {
     enemy21: {
       name: "Drone",
       types: ["air"],
-      maxHp: 650, 
+      maxHp: 655, 
       speed: 1.16, 
       reward: 10,
       image: "assets/enemies/enemy21.png",
@@ -244,8 +244,8 @@ export const enemiesData = {
     enemy24: {
       name: "Fly Kitty",
       types: ["air", "speed"],
-      maxHp: 660, 
-      speed: 1.9, 
+      maxHp: 658, 
+      speed: 1.87, 
       reward: 12,
       image: "assets/enemies/enemy24.png",
       isFlying: true,
@@ -254,8 +254,8 @@ export const enemiesData = {
     enemy25: {
       name: "Splooge",
       types: ["basic"],
-      maxHp: 1155, 
-      speed: 0.86, 
+      maxHp: 1485, 
+      speed: 0.88, 
       reward: 13,
       image: "assets/enemies/enemy25.png",
       isFlying: false,
@@ -264,12 +264,14 @@ export const enemiesData = {
     enemy26: {
       name: "Top Cat",
       types: ["air", "immune"],
-      maxHp: 730, 
-      speed: 1.37, 
+      maxHp: 726, 
+      speed: 1.36, 
       reward: 13,
       image: "assets/enemies/enemy26.png",
       isFlying: true,
       sizeMultiplier: 0.9,
+
+      immunities: ["frost", "acid"]
     },
     enemy27: {
       name: "Quack",
@@ -284,7 +286,7 @@ export const enemiesData = {
     enemy28: {
       name: "Whiskers",
       types: ["air"],
-      maxHp: 818, 
+      maxHp: 838, 
       speed: 1.31, 
       reward: 17,
       image: "assets/enemies/enemy28.png",
@@ -294,7 +296,7 @@ export const enemiesData = {
     enemy29: {
       name: "BigBoi Gimli",
       types: ["giant"],
-      maxHp: 1338, 
+      maxHp: 1738, 
       speed: 0.84, 
       reward: 18,
       image: "assets/enemies/enemy29.png",
