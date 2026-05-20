@@ -156,7 +156,7 @@ export function startWave(gameState, gridSize, ctx, canvas, waveTextEl) {
 
     const config = applyDifficulty(spawnQueue[enemiesSpawned], gameState.difficulty);
 
-    
+    //console.log("spawn:", performance.now());    
 
     gameState.enemies.push(new Enemy({
       path: waveState.path,
