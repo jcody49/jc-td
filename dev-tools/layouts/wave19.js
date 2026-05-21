@@ -8,7 +8,7 @@ import { BoosterTower } from "../../towers/BoosterTower.js";
 import { DetectionTower } from "../../towers/DetectionTower.js";
 import { AcidTower } from "../../towers/AcidTower.js";
 
-export function loadWave18Layout({
+export function loadWave19Layout({
     gameState,
     ctx,
     canvas,
@@ -23,11 +23,11 @@ export function loadWave18Layout({
     gameState.projectiles = [];
     gameState.towers = [];
 
-    waveState.currentWave = 17;
+    waveState.currentWave = 18;
     waveState.countdown = 40;
     waveState.status = "countdown";
 
-    gameState.money = 35;
+    gameState.money = 375;
 
     function placeTower(TowerClass, col, row, level = 1) {
 
@@ -77,5 +77,5 @@ export function loadWave18Layout({
         waveTextEl
     );
 
-    console.log("🚀 Wave 18 dev layout loaded");
+    console.log("🚀 Wave 19 dev layout loaded");
 }

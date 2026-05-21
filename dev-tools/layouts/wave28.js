@@ -59,7 +59,7 @@ export function loadWave28Layout({
 
     placeTower(CannonTower, 5, 6, 3);
     placeTower(CannonTower, 7, 7, 3);
-    placeTower(CannonTower, 9, 6, 2);
+    placeTower(CannonTower, 9, 6, 3);
 
     placeTower(TankTower, 7, 6, 4);
 
@@ -73,7 +73,7 @@ export function loadWave28Layout({
 
     placeTower(BoosterTower, 7, 4);
 
-    placeTower(AntiAirTower, 5, 5, 2);
+    placeTower(AntiAirTower, 5, 5, 1);
 
     placeTower(AcidTower, 7, 3, 3);
 
