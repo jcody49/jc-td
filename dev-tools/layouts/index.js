@@ -9,6 +9,8 @@ import { loadWave24Layout } from "./wave24.js";
 import { loadWave25Layout } from "./wave25.js";
 import { loadWave26Layout } from "./wave26.js";
 import { loadWave27Layout } from "./wave27.js";
+import { loadWave29Layout } from "./wave29.js";
+import { loadWave30Layout } from "./wave30.js";
 
 export const devLayouts = {
     18: loadWave18Layout,
@@ -21,5 +23,7 @@ export const devLayouts = {
     25: loadWave25Layout,
     26: loadWave26Layout,
     27: loadWave27Layout,
-    28: loadWave28Layout
+    28: loadWave28Layout,
+    29: loadWave29Layout,
+    30: loadWave30Layout,
 };

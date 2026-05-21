@@ -1,5 +1,3 @@
-// dev-tools/layouts/wave28.js
-
 import { stopAllWaveIntervals, waveState, startNextWave } from "../../waveManager.js";
 
 import { CannonTower } from "../../towers/CannonTower.js";
@@ -10,7 +8,7 @@ import { BoosterTower } from "../../towers/BoosterTower.js";
 import { DetectionTower } from "../../towers/DetectionTower.js";
 import { AcidTower } from "../../towers/AcidTower.js";
 
-export function loadWave28Layout({
+export function loadWave30Layout({
     gameState,
     ctx,
     canvas,
@@ -25,11 +23,11 @@ export function loadWave28Layout({
     gameState.projectiles = [];
     gameState.towers = [];
 
-    waveState.currentWave = 27;
+    waveState.currentWave = 29;
     waveState.countdown = 40;
     waveState.status = "countdown";
 
-    gameState.money = 255;
+    gameState.money = 126;
 
     function placeTower(TowerClass, col, row, level = 1) {
 
@@ -67,7 +65,7 @@ export function loadWave28Layout({
 
     placeTower(AntiAirTower, 7, 5, 3);
 
-    placeTower(BoosterTower, 9, 7);
+    placeTower(BoosterTower, 9, 7, 2);
 
     placeTower(DetectionTower, 5, 7);
 
@@ -85,5 +83,5 @@ export function loadWave28Layout({
         waveTextEl
     );
 
-    console.log("🚀 Wave 28 dev layout loaded");
+    console.log("🚀 Wave 30 dev layout loaded");
 }

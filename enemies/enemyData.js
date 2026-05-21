@@ -276,8 +276,8 @@ export const enemiesData = {
     enemy27: {
       name: "Quack",
       types: ["bonus"],
-      maxHp: 4662, //
-      speed: 1.31, //
+      maxHp: 8922, //locked
+      speed: 1.33, //locked
       reward: 76,
       image: "assets/enemies/enemy27.png",
       isFlying: false,
@@ -286,8 +286,8 @@ export const enemiesData = {
     enemy28: {
       name: "Whiskers",
       types: ["air"],
-      maxHp: 4042, //
-      speed: 1.31, //
+      maxHp: 3862, //locked
+      speed: 1.31, //locked
       reward: 17,
       image: "assets/enemies/enemy28.png",
       isFlying: true,
@@ -296,8 +296,8 @@ export const enemiesData = {
     enemy29: {
       name: "BigBoi Gimli",
       types: ["giant"],
-      maxHp: 7933, //
-      speed: 0.87, //
+      maxHp: 11613, //locked
+      speed: 0.89, //locked
       reward: 18,
       image: "assets/enemies/enemy29.png",
       isFlying: false,
@@ -307,8 +307,8 @@ export const enemiesData = {
     enemy30: {
       name: "Scary Mean Boi",
       types: ["boss", "invisible"],
-      maxHp: 19845, 
-      speed: 1.44, 
+      maxHp: 48530,  //locked 
+      speed: 1.44, //locked
       reward: 743,
       lifeReward: 1,
       score: 10,
