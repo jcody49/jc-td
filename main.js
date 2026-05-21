@@ -26,6 +26,8 @@ import { DetectionTower } from './towers/DetectionTower.js';
 import { AntiAirTower } from './towers/AntiAir.js';
 import { AcidTower } from './towers/AcidTower.js';
 
+import { devLayouts } from "./dev-tools/layouts/index.js";
+
 // ======================
 // PRELOAD ENEMY IMAGES
 // ======================
@@ -496,203 +498,21 @@ window.devWave = function(wave, money = 99999) {
 
 
 
-  window.devLayoutTest = function(money = 255) {
+  window.devLayoutTest = function(wave = 28) {
 
-    stopAllWaveIntervals();
+    const loadLayout =
+        devLayouts[wave] ||
+        devLayouts[28];
 
-    gameState.enemies = [];
-    gameState.projectiles = [];
-    gameState.towers = [];
-
-    waveState.currentWave = 27;
-    waveState.countdown = 40;
-    waveState.status = "countdown";
-
-    gameState.money = money;
-
-    // ======================
-    // TEST TOWER LAYOUT
-    // ======================
-
-    // --- Tower 1 (Cannon level 3) ---
-    let col = 5;
-    let row = 6;
-
-    let x = col * gridSize + gridSize / 2;
-    let y = row * gridSize + gridSize / 2;
-
-    let tower = new CannonTower({ x, y, ctx, gameState });
-
-    tower.level = 3;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 2 (Cannon level 3) ---
-    col = 7;
-    row = 7;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new CannonTower({ x, y, ctx, gameState });
-
-    tower.level = 3;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 3 (Cannon level 2) ---
-    col = 9;
-    row = 6;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new CannonTower({ x, y, ctx, gameState });
-
-    tower.level = 2;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 4 (Tank level 4 ABOVE middle cannon) ---
-    col = 7;
-    row = 6;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new TankTower({ x, y, ctx, gameState });
-
-    tower.level = 4;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 5 (Frost level 4 BELOW middle cannon) ---
-    col = 7;
-    row = 8;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new FrostTower({ x, y, ctx, gameState });
-
-    tower.level = 4;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 6 (Anti-Air level 3 MIDDLE ROW) ---
-    col = 7;
-    row = 5;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new AntiAirTower({ x, y, ctx, gameState });
-
-    tower.level = 3;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 7 (Booster) ---
-    col = 9;
-    row = 7;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new BoosterTower({ x, y, ctx, gameState });
-
-
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-
-    // --- Tower 8 (Detection tower below left-most cannon) ---
-    col = 5;
-    row = 7;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new DetectionTower({ x, y, ctx, gameState });
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-    // --- Tower 9 (Damage Booster) ---
-    col = 7;
-    row = 4;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new BoosterTower({ x, y, ctx, gameState });
-
-
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 10 (Anti-Air level 2--FRONT ROW) ---
-    col = 5;
-    row = 5;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new AntiAirTower({ x, y, ctx, gameState });
-
-    tower.level = 2;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-
-    // --- Tower 11 (Acid level 2--MIDDLE ROW) ---
-    col = 7;
-    row = 3;
-
-    x = col * gridSize + gridSize / 2;
-    y = row * gridSize + gridSize / 2;
-
-    tower = new AcidTower({ x, y, ctx, gameState });
-
-    tower.level = 3;
-    tower.applyLevel();
-
-    gameState.towers.push(tower);
-    gridOccupied[col][row] = true;
-
-    startNextWave(
+    loadLayout({
         gameState,
-        gridSize,
         ctx,
         canvas,
+        gridSize,
+        gridOccupied,
         waveTextEl
-    );
+    });
 
-    console.log("🚀 devLayoutTest loaded");
 };
 
   

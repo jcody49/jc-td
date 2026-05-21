@@ -179,8 +179,8 @@ export const enemiesData = {
     enemy18: {
       name: "Frosty",
       types: ["bonus"],
-      maxHp: 1473, 
-      speed: 1.32, 
+      maxHp: 1473, //locked
+      speed: 1.32, //locked
       reward: 34,
       image: "assets/enemies/enemy18.png",
       isFlying: false,
