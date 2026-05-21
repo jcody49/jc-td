@@ -20,28 +20,28 @@ export class AntiAirTower extends Tower {
                 },
 
                 2: {
-                    damage: 83,
+                    damage: 82,
                     range: 125,
                     fireRate: 22,
                     sprite: "Anti-Air2.png"
                 },
 
                 3: {
-                    damage: 105,
+                    damage: 443,
                     range: 125,
                     fireRate: 19,
                     sprite: "antiair3.png"
                 },
 
                 4: {
-                    damage: 125,
+                    damage: 554,
                     range: 125,
                     fireRate: 16,
                     sprite: "antiair4.png"
                 },
 
                 5: {
-                    damage: 170,
+                    damage: 3660,
                     range: 125,
                     fireRate: 13,
                     sprite: "antiair5.png"
