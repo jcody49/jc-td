@@ -442,11 +442,6 @@ const wavesCompleteEl =
 const wavesCompleteRetryBtn =
     document.getElementById("wavesCompleteRetryButton");
 
-// ======================
-// TEMP LEADERBOARD DATA
-// ======================
-
-
 
 // ======================
 // RENDER LEADERBOARD
