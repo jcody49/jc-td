@@ -57,7 +57,13 @@ document.addEventListener("visibilitychange", () => {
 // ======================
 // GLOBALS
 // ======================
+
 let gameStarted = false;
+window.audioSettings = {
+    musicEnabled: true,
+    sfxEnabled: true
+};
+
 window.hoveredEnemy = null;
 window.hoveredTower = null;
 window.selectedTower = null;
@@ -186,7 +192,6 @@ startButton.style.padding = "20px 40px";
 enableGlow(startButton);
 
 
-// Hook into START BUTTON CLICK — only show menu for now
 // ======================
 // START BUTTON CLICK — SHOW DIFFICULTY
 // ======================
@@ -194,15 +199,20 @@ startButton.addEventListener("click", () => {
     if (gameStarted) return;
     gameStarted = true;
 
-    startSound.volume = 0.04;
-    startSound.play();
+    // ======================
+    // SFX
+    // ======================
+    if (window.audioSettings.sfxEnabled) {
+        startSound.volume = 0.04;
+        startSound.play().catch(() => {});
+    }
 
-    if (!musicStarted) {
+    // ======================
+    // MUSIC
+    // ======================
+    if (!musicStarted && window.audioSettings.musicEnabled) {
         musicStarted = true;
-    
-        bgm.play().catch(() => {
-            // prevents browser autoplay errors from crashing anything
-        });
+        bgm.play().catch(() => {});
     }
 
     // Hide pre-game overlay
@@ -346,6 +356,35 @@ const settingsModal = document.getElementById("settingsModal");
 const closeSettings = document.getElementById("closeSettings");
 const returnButton = document.getElementById("returnToGame");
 const pauseOverlay = document.getElementById("pauseOverlay");
+
+
+// ======================
+// AUDIO TOGGLES (MUSIC + SFX)
+// ======================
+const musicToggle = document.getElementById("toggleMusic");
+const sfxToggle = document.getElementById("toggleSfx");
+
+if (musicToggle) {
+    musicToggle.checked = window.audioSettings.musicEnabled;
+
+    musicToggle.addEventListener("change", (e) => {
+        window.audioSettings.musicEnabled = e.target.checked;
+
+        if (!e.target.checked) {
+            bgm.pause();
+        } else {
+            bgm.play().catch(() => {});
+        }
+    });
+}
+
+if (sfxToggle) {
+    sfxToggle.checked = window.audioSettings.sfxEnabled;
+
+    sfxToggle.addEventListener("change", (e) => {
+        window.audioSettings.sfxEnabled = e.target.checked;
+    });
+}
 
 let closeModal = () => {};
 if (settingsOption && settingsModal && closeSettings && pauseOverlay && returnButton) {
