@@ -266,7 +266,7 @@ canvas {
   }
 
   #returnToGame{
-    width: 56%;
+
     height: 40px;
     margin-top:20px;
     border-radius: 6px;
@@ -676,4 +676,27 @@ button.danger:hover {
   color: #cfc8ff;
   text-align: center;
   opacity: 0.9;
+}
+
+
+#settingsModal li {
+  text-align: left;
+  padding-left: 40px;
+}
+
+.settingsButtons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.settingsButtons button {
+  width: 85%;
+}
+
+.settingsButtons button,
+#returnToGame {
+  width: 85%;
 }
