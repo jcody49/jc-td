@@ -36,6 +36,14 @@ import { devLayouts } from "./dev-tools/layouts/index.js";
 loadEnemyImages(enemiesData);
 
 
+const bgm = new Audio("assets/audio/Obsidian-2.ogg");
+bgm.loop = true;
+bgm.volume = 0.35;
+bgm.preload = "auto";
+
+let musicStarted = false;
+
+
 // ======================
 // AUTO PAUSE ON TAB SWITCH
 // ======================
@@ -185,7 +193,17 @@ enableGlow(startButton);
 startButton.addEventListener("click", () => {
     if (gameStarted) return;
     gameStarted = true;
+
+    startSound.volume = 0.1;
     startSound.play();
+
+    if (!musicStarted) {
+        musicStarted = true;
+    
+        bgm.play().catch(() => {
+            // prevents browser autoplay errors from crashing anything
+        });
+    }
 
     // Hide pre-game overlay
     overlay.style.transition = "opacity 0.5s ease";
