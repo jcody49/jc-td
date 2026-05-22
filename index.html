@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="./css/hud.css" />
   <link rel="stylesheet" href="./css/tower-menu.css" />
   <link rel="stylesheet" href="./css/cursor.css" />
+  <link rel="stylesheet" href="./leaderboard/leaderboard.css" />
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -303,8 +304,24 @@
 </div>
 
 <div id="gameOverOverlay" class="hidden">
+
   <h1>GAME OVER</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Wave</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+
+    <tbody id="leaderboardBody"></tbody>
+  </table>
+
   <button id="retryButton">Retry</button>
+
 </div>
 
 

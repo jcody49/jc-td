@@ -485,6 +485,15 @@ canvas {
 }
 
 
+#gameOverOverlay {
+  padding: 30px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+
 
 button.danger {
   width: 56%;
@@ -543,3 +552,7 @@ button.danger:hover {
   background-color: #53FFFF;
   color: #000;
 }
+
+
+
+

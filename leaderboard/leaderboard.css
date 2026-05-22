@@ -1,0 +1,83 @@
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    font-family: 'Audiowide', sans-serif;
+    color: white;
+  }
+  
+  /* Container */
+  #leaderboardContainer {
+    margin: 20px auto;
+    color: white;
+    font-family: 'Audiowide', sans-serif;
+    text-align: center;
+    }
+
+    #leaderboardContainer ol {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #leaderboardContainer li {
+        padding: 6px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        font-size: 16px;
+    }
+  
+  /* Title */
+  #leaderboardTitle {
+    font-size: 60px;
+    letter-spacing: 2px;
+    text-shadow:
+      0 0 6px #7B2CFF,
+      0 0 12px #53FFFF;
+    margin-bottom: 30px;
+  }
+  
+  /* Table wrapper */
+  #leaderboardTableWrapper {
+    width: 70%;
+    border: 2px solid #7fff00;
+    background: rgba(0,0,0,0.6);
+    box-shadow: 0 0 20px rgba(0,255,255,0.2);
+  }
+  
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+  }
+  
+  th {
+    color: #53FFFF;
+    text-shadow: 0 0 6px #53FFFF;
+  }
+  
+  tr:hover {
+    background: rgba(127,255,0,0.1);
+  }
+  
+  /* Back button */
+  #backToGameBtn {
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-family: 'Audiowide';
+    font-size: 18px;
+    background: transparent;
+    color: white;
+    border: 2px solid #7fff00;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  
+  #backToGameBtn:hover {
+    background: #7fff00;
+    color: black;
+  }

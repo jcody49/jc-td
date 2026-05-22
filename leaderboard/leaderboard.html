@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Leaderboard</title>
+
+  <link rel="stylesheet" href="./leaderboard.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+  <div id="leaderboardContainer">
+
+    <h1 id="leaderboardTitle">HIGH SCORES</h1>
+
+    <div id="leaderboardTableWrapper">
+        <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Wave</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+          
+            <tbody id="leaderboardBody"></tbody>
+        </table>
+        
+        <button id="backToGameBtn">Back</button>
+
+  </div>
+
+
+  <script type="module">
+    import { renderLeaderboard, setupBackButton } from "./leaderboardRenderer.js";
+  
+    console.log("📊 leaderboard script loaded");
+  
+    window.addEventListener("DOMContentLoaded", () => {
+      console.log("📊 DOM ready");
+  
+      renderLeaderboard();
+      setupBackButton();
+    });
+  </script>
+
+</body>
+</html>

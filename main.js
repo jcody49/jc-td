@@ -18,6 +18,7 @@ import { showDifficultyMenu } from "./difficulty.js";
 import { initCursor, startCursorAnimation } from './cursor.js';
 import { showTip } from "./tips.js";
 
+
 import { CannonTower } from './towers/CannonTower.js';
 import { TankTower } from './towers/TankTower.js';
 import { FrostTower } from './towers/FrostTower.js';
@@ -426,11 +427,42 @@ if (restartGameBtn) {
 // Elements
 const gameOverEl = document.getElementById("gameOverOverlay");
 const retryBtn = document.getElementById("retryButton");
+const leaderboardBody = document.getElementById("leaderboardBody");
+
+const leaderboardData = [
+  { name: "Player1", wave: 32, score: 12050 },
+  { name: "Player2", wave: 28, score: 9800 },
+  { name: "Player3", wave: 25, score: 8600 },
+  { name: "Player4", wave: 22, score: 7400 },
+  { name: "Player5", wave: 18, score: 6100 }
+];
+
+function renderLeaderboard() {
+  if (!leaderboardBody) return;
+
+  leaderboardBody.innerHTML = "";
+
+  const sorted = [...leaderboardData].sort((a, b) => b.score - a.score);
+
+  sorted.forEach((entry, index) => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${entry.name}</td>
+      <td>${entry.wave}</td>
+      <td>${entry.score}</td>
+    `;
+
+    leaderboardBody.appendChild(row);
+  });
+}
 
 // Expose overlay function globally
-window.showGameOverUI = function() {
+window.showGameOverUI = function () {
     gameOverEl.classList.remove("hidden");
-}
+    renderLeaderboard();
+  };
 
 // Retry button
 retryBtn?.addEventListener("click", () => {
