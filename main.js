@@ -194,7 +194,7 @@ startButton.addEventListener("click", () => {
     if (gameStarted) return;
     gameStarted = true;
 
-    startSound.volume = 0.1;
+    startSound.volume = 0.04;
     startSound.play();
 
     if (!musicStarted) {
