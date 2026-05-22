@@ -325,6 +325,56 @@
 </div>
 
 
+<div id="gameOverOverlay" class="hidden">
+
+  <h1>GAME OVER</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Wave</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+
+    <tbody id="leaderboardBody"></tbody>
+  </table>
+
+  <button id="retryButton">Retry</button>
+
+</div>
+
+
+<div id="wavesCompleteOverlay" class="hidden">
+
+  <h1>ALL WAVES CLEARED</h1>
+
+  <p class="endgameSubtext">
+    More waves coming soon...
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Wave</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+
+    <tbody id="wavesCompleteLeaderboardBody"></tbody>
+  </table>
+
+  <button id="wavesCompleteRetryButton">
+    Play Again
+  </button>
+
+</div>
+
+
 <script type="module" src="main.js"></script>
 </body>
 </html>

@@ -555,4 +555,78 @@ button.danger:hover {
 
 
 
+#wavesCompleteOverlay {
+  position: fixed;
+  inset: 0;
 
+  background: rgba(0,0,0,0.9);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+  z-index: 9999;
+
+  color: white;
+  font-family: 'Audiowide', sans-serif;
+}
+
+#wavesCompleteOverlay.hidden {
+  display: none;
+}
+
+#wavesCompleteOverlay h1 {
+  font-size: 64px;
+
+  color: #7fff00;
+
+  text-shadow:
+    0 0 10px #7fff00,
+    0 0 20px #7fff00;
+}
+
+.endgameSubtext {
+  font-size: 20px;
+  opacity: 0.8;
+  margin-top: -10px;
+}
+
+#wavesCompleteOverlay table {
+  width: 600px;
+
+  border-collapse: collapse;
+
+  background: rgba(0,0,0,0.6);
+
+  border: 2px solid #7fff00;
+}
+
+#wavesCompleteOverlay th,
+#wavesCompleteOverlay td {
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+#wavesCompleteRetryButton {
+  margin-top: 10px;
+
+  padding: 14px 32px;
+
+  font-size: 20px;
+  font-family: 'Audiowide', sans-serif;
+
+  background: transparent;
+  color: white;
+
+  border: 2px solid #7fff00;
+
+  cursor: pointer;
+}
+
+#wavesCompleteRetryButton:hover {
+  background: #7fff00;
+  color: black;
+}

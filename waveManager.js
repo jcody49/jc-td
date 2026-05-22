@@ -263,10 +263,34 @@ export function updateWaveCompletion(gameState, gridSize, ctx, canvas, waveTextE
     if (waveTextEl) waveTextEl.innerText = `Wave ${waveState.currentWave + 1} complete!`;
 
     setTimeout(() => {
+
+      // =========================
+      // ALL CURRENT WAVES COMPLETE
+      // =========================
+      if (waveState.currentWave >= 29) {
+    
+        window.gamePaused = true;
+    
+        window.showWavesCompleteUI?.();
+    
+        return;
+      }
+    
+      // Move to next wave normally
       waveState.currentWave++;
+    
       completionLocked = false;
+    
       updateWavePreview();
-      startNextWave(gameState, gridSize, ctx, canvas, waveTextEl);
+    
+      startNextWave(
+        gameState,
+        gridSize,
+        ctx,
+        canvas,
+        waveTextEl
+      );
+    
     }, 2000);
   }
 }

@@ -17,6 +17,7 @@ import { TOWER_REGISTRY } from "./towers/towerRegistry.js";
 import { showDifficultyMenu } from "./difficulty.js";
 import { initCursor, startCursorAnimation } from './cursor.js';
 import { showTip } from "./tips.js";
+import { leaderboardData } from "./leaderboard/leaderboardData.js";
 
 
 import { CannonTower } from './towers/CannonTower.js';
@@ -422,77 +423,137 @@ if (restartGameBtn) {
 
 
 // ======================
-// GAME OVER
+// GAME OVER + WAVES COMPLETE
 // ======================
+
 // Elements
-const gameOverEl = document.getElementById("gameOverOverlay");
-const retryBtn = document.getElementById("retryButton");
-const leaderboardBody = document.getElementById("leaderboardBody");
+const gameOverEl =
+    document.getElementById("gameOverOverlay");
 
-const leaderboardData = [
-  { name: "Player1", wave: 32, score: 12050 },
-  { name: "Player2", wave: 28, score: 9800 },
-  { name: "Player3", wave: 25, score: 8600 },
-  { name: "Player4", wave: 22, score: 7400 },
-  { name: "Player5", wave: 18, score: 6100 }
-];
+const retryBtn =
+    document.getElementById("retryButton");
 
-function renderLeaderboard() {
-  if (!leaderboardBody) return;
+const leaderboardBody =
+    document.getElementById("leaderboardBody");
 
-  leaderboardBody.innerHTML = "";
+const wavesCompleteEl =
+    document.getElementById("wavesCompleteOverlay");
 
-  const sorted = [...leaderboardData].sort((a, b) => b.score - a.score);
+const wavesCompleteRetryBtn =
+    document.getElementById("wavesCompleteRetryButton");
 
-  sorted.forEach((entry, index) => {
-    const row = document.createElement("tr");
+// ======================
+// TEMP LEADERBOARD DATA
+// ======================
 
-    row.innerHTML = `
-      <td>${index + 1}</td>
-      <td>${entry.name}</td>
-      <td>${entry.wave}</td>
-      <td>${entry.score}</td>
-    `;
 
-    leaderboardBody.appendChild(row);
-  });
+
+// ======================
+// RENDER LEADERBOARD
+// ======================
+
+function populateLeaderboard(bodyEl) {
+
+    if (!bodyEl) return;
+
+    bodyEl.innerHTML = "";
+
+    const sorted =
+        [...leaderboardData]
+        .sort((a, b) => b.score - a.score);
+
+    sorted.forEach((entry, index) => {
+
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${entry.name}</td>
+            <td>${entry.wave}</td>
+            <td>${entry.score}</td>
+        `;
+
+        bodyEl.appendChild(row);
+    });
 }
 
-// Expose overlay function globally
-window.showGameOverUI = function () {
-    gameOverEl.classList.remove("hidden");
-    renderLeaderboard();
-  };
+// ======================
+// SHOW GAME OVER
+// ======================
 
-// Retry button
-retryBtn?.addEventListener("click", () => {
-    // Hide ALL overlays
+window.showGameOverUI = function () {
+
+    gameOverEl.classList.remove("hidden");
+
+    populateLeaderboard(leaderboardBody);
+};
+
+// ======================
+// SHOW WAVES COMPLETE
+// ======================
+
+window.showWavesCompleteUI = function () {
+
+    wavesCompleteEl.classList.remove("hidden");
+
+    const body =
+        document.getElementById(
+            "wavesCompleteLeaderboardBody"
+        );
+
+    populateLeaderboard(body);
+};
+
+// ======================
+// RETRY LOGIC
+// ======================
+
+function restartGameFlow() {
+
+    // Hide overlays
     settingsModal?.classList.add("hidden");
     pauseOverlay?.classList.add("hidden");
+
     gameOverEl.classList.add("hidden");
+    wavesCompleteEl.classList.add("hidden");
+
     closeModal();
 
     // Clear difficulty
     gameState.difficulty = null;
 
-    // Reset paused flag / HUD
+    // Reset paused state
     window.gamePaused = false;
-    if (waveTextEl) waveTextEl.innerText = "";
 
-    // Stop all timers
+    if (waveTextEl) {
+        waveTextEl.innerText = "";
+    }
+
+    // Stop timers
     stopAllWaveIntervals();
     stopGameLoop();
     stopWaveSpawning();
+
     hud.hideTowerModal();
 
-    // Reset everything
+    // Reset game
     resetGame(gameState, ctx, canvas);
 
     // Restart loop
     startGameLoop(ctx, canvas, gameState, hud);
+}
+
+// ======================
+// BUTTON LISTENERS
+// ======================
+
+retryBtn?.addEventListener("click", () => {
+    restartGameFlow();
 });
 
-
+wavesCompleteRetryBtn?.addEventListener("click", () => {
+    restartGameFlow();
+});
 
 // =========================
 // DEBUG COMMANDS
