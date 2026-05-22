@@ -630,3 +630,50 @@ button.danger:hover {
   background: #7fff00;
   color: black;
 }
+
+
+
+#finalWaveText,
+#finalScoreText {
+    color: white;
+    font-size: 28px;
+    margin: 14px 0;
+    text-shadow:
+        0 0 6px #a855f7,
+        0 0 12px #7e22ce,
+        0 0 18px #6b21a8;
+}
+
+/* Space below leaderboard table */
+#gameOverOverlay table {
+    margin-bottom: 20px;
+}
+
+#retryButton{
+  margin-bottom: 150px;
+}
+
+
+
+
+#wavesFinalWaveText,
+#wavesFinalScoreText {
+    color: white;
+    font-size: 28px;
+    margin: 14px 0;
+    text-shadow:
+        0 0 6px #a855f7,
+        0 0 12px #7e22ce,
+        0 0 18px #6b21a8;
+}
+
+
+
+.submitScoreText {
+  margin-top: 18px;
+  margin-bottom: 24px;
+  font-size: 16px;
+  color: #cfc8ff;
+  text-align: center;
+  opacity: 0.9;
+}

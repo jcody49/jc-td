@@ -432,6 +432,11 @@ const gameOverEl =
 
 const finalWaveText = document.getElementById("finalWaveText");
 const finalScoreText = document.getElementById("finalScoreText");
+const wavesFinalWaveText =
+    document.getElementById("wavesFinalWaveText");
+
+const wavesFinalScoreText =
+    document.getElementById("wavesFinalScoreText");
 
 const retryBtn =
     document.getElementById("retryButton");
@@ -498,6 +503,12 @@ window.showGameOverUI = function () {
 window.showWavesCompleteUI = function () {
 
     wavesCompleteEl.classList.remove("hidden");
+
+    wavesFinalWaveText.textContent =
+        `You cleared Wave ${waveState.currentWave + 1}`;
+
+    wavesFinalScoreText.textContent =
+        `Final Score: ${gameState.score}`;
 
     const body =
         document.getElementById(
