@@ -390,7 +390,7 @@ export class Tower {
     // ======================
     if (this.type === "cannon") {
         const sound = new Audio("assets/audio/cannon_fire.ogg");
-        sound.volume = 0.3;
+        sound.volume = window.audioSettings.sfxVolume;
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }
@@ -400,7 +400,7 @@ export class Tower {
     // ======================
     else if (this.type === "tank") {
         const sound = new Audio("assets/audio/tank_fire.ogg");
-        sound.volume = 0.3;
+        sound.volume = window.audioSettings.sfxVolume;
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }
@@ -410,7 +410,8 @@ export class Tower {
     // ======================
     else if (this.type === "acid") {
         const sound = new Audio("assets/audio/acid_fire.ogg");
-        sound.volume = 0.31;
+        sound.volume =
+          window.audioSettings.sfxVolume * 1.15;
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }
@@ -420,7 +421,7 @@ export class Tower {
     // ======================
     else if (this.type === "frost") {
         const sound = new Audio("assets/audio/frost_fire.ogg");
-        sound.volume = 0.3;
+        sound.volume = window.audioSettings.sfxVolume;
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }
@@ -430,7 +431,7 @@ export class Tower {
     // ======================
     else if (this.type === "antiAir") {
         const sound = new Audio("assets/audio/antiAir_fire.ogg");
-        sound.volume = 0.3;
+        sound.volume = window.audioSettings.sfxVolume;
         sound.currentTime = 0;
         sound.play().catch(() => {});
     }

@@ -36,12 +36,7 @@ import { devLayouts } from "./dev-tools/layouts/index.js";
 loadEnemyImages(enemiesData);
 
 
-const bgm = new Audio("assets/audio/Obsidian-2.ogg");
-bgm.loop = true;
-bgm.volume = 0.35;
-bgm.preload = "auto";
 
-let musicStarted = false;
 
 
 // ======================
@@ -61,13 +56,25 @@ document.addEventListener("visibilitychange", () => {
 let gameStarted = false;
 window.audioSettings = {
     musicEnabled: true,
-    sfxEnabled: true
+    sfxEnabled: true,
+
+    musicVolume: 0.35,
+    sfxVolume: 0.30
 };
 
 window.hoveredEnemy = null;
 window.hoveredTower = null;
 window.selectedTower = null;
 window.selectedTowerType = null;
+
+
+
+const bgm = new Audio("assets/audio/Obsidian-2.ogg");
+bgm.loop = true;
+bgm.volume = window.audioSettings.musicVolume;
+bgm.preload = "auto";
+
+let musicStarted = false;
 
 // ======================
 // INIT GRID + PATH
@@ -203,7 +210,8 @@ startButton.addEventListener("click", () => {
     // SFX
     // ======================
     if (window.audioSettings.sfxEnabled) {
-        startSound.volume = 0.04;
+        startSound.volume =
+            window.audioSettings.sfxVolume * 0.13;
         startSound.play().catch(() => {});
     }
 
@@ -383,6 +391,40 @@ if (sfxToggle) {
 
     sfxToggle.addEventListener("change", (e) => {
         window.audioSettings.sfxEnabled = e.target.checked;
+    });
+}
+
+
+const musicVolumeSlider =
+    document.getElementById("musicVolume");
+
+const sfxVolumeSlider =
+    document.getElementById("sfxVolume");
+
+if (musicVolumeSlider) {
+
+    musicVolumeSlider.value =
+        window.audioSettings.musicVolume * 100;
+
+    musicVolumeSlider.addEventListener("input", (e) => {
+
+        const volume = e.target.value / 100;
+
+        window.audioSettings.musicVolume = volume;
+
+        bgm.volume = volume;
+    });
+}
+
+if (sfxVolumeSlider) {
+
+    sfxVolumeSlider.value =
+        window.audioSettings.sfxVolume * 100;
+
+    sfxVolumeSlider.addEventListener("input", (e) => {
+
+        window.audioSettings.sfxVolume =
+            e.target.value / 100;
     });
 }
 
