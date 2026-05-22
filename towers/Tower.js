@@ -380,12 +380,62 @@ export class Tower {
   // ======================
   fire(target, gameState) {
 
+    // ======================
+    // CANNON SOUND
+    // ======================
+    if (this.type === "cannon") {
+        const sound = new Audio("assets/audio/cannon_fire.ogg");
+        sound.volume = 0.3;
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+    }
+
+    // ======================
+    // TANK SOUND
+    // ======================
+    if (this.type === "tank") {
+      const sound = new Audio("assets/audio/tank_fire.ogg");
+      sound.volume = 0.30;
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
+
+
+    // ======================
+    // ACID SOUND
+    // ======================
+    if (this.type === "acid") {
+      const sound = new Audio("assets/audio/acid_fire.ogg");
+      sound.volume = 0.31;
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
+
+    // ======================
+    // FROST SOUND
+    // ======================
+    if (this.type === "frost") {
+      const sound = new Audio("assets/audio/frost_fire.ogg");
+      sound.volume = 0.30;
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
+
+    // ======================
+    // ANTIAIR SOUND
+    // ======================
+    if (this.type === "antiAir") {
+      const sound = new Audio("assets/audio/antiAir_fire.ogg");
+      sound.volume = 0.30;
+      sound.currentTime = 0;
+      sound.play().catch(() => {});
+    }
+
     const perFrameDot =
       this.dotDuration > 0
         ? (this.dotDamage || this.damage) / this.dotDuration
         : 0;
 
-    // Create and push a new projectile into the array
     const projectile = new Projectile({
         x: this.x,
         y: this.y,
@@ -401,7 +451,7 @@ export class Tower {
     });
 
     gameState.projectiles.push(projectile);
-}
+  }
   
   // ======================
   // SELL
