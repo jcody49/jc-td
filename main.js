@@ -430,6 +430,9 @@ if (restartGameBtn) {
 const gameOverEl =
     document.getElementById("gameOverOverlay");
 
+const finalWaveText = document.getElementById("finalWaveText");
+const finalScoreText = document.getElementById("finalScoreText");
+
 const retryBtn =
     document.getElementById("retryButton");
 
@@ -479,6 +482,11 @@ function populateLeaderboard(bodyEl) {
 window.showGameOverUI = function () {
 
     gameOverEl.classList.remove("hidden");
+    const waveReached = waveState.currentWave + 1;
+    const score = gameState.score;
+
+    finalWaveText.textContent = `You reached Wave ${waveReached}`;
+    finalScoreText.textContent = `Final Score: ${score}`;
 
     populateLeaderboard(leaderboardBody);
 };
