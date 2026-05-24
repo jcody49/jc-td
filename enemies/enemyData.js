@@ -115,7 +115,7 @@ export const enemiesData = {
     enemy12: {
       name: "Voodoo Goblin",
       types: ["basic"],
-      maxHp: 658, //LOCKED(v0.1.72)
+      maxHp: 665, //LOCKED(v0.1.72)
       speed: 0.85, //LOCKED(v0.1.72)
       reward: 3,
       image: "assets/enemies/enemy12.png",
@@ -179,7 +179,7 @@ export const enemiesData = {
     enemy18: {
       name: "Frosty",
       types: ["bonus"],
-      maxHp: 1473, //locked
+      maxHp: 1480, //locked
       speed: 1.32, //locked
       reward: 34,
       image: "assets/enemies/enemy18.png",
@@ -234,7 +234,7 @@ export const enemiesData = {
       name: "Magic Mike",
       types: ["armored"],
       maxHp: 2244, //locked
-      armor: 2430, //locked
+      armor: 2460, //locked
       speed: 0.82, 
       reward: 11,
       image: "assets/enemies/enemy23.png",
