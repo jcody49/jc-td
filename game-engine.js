@@ -1,5 +1,5 @@
-console.warn("🧠 GAME ENGINE VERSION: v0.1.83 - May 22");
-// game-engine.js
+console.warn("🧠 GAME ENGINE VERSION: v0.2.0 - May 26");
+
 import { showMoneyPopup, showLifePopup } from "./ui-effects.js";
 import { pathCells, buildPath } from './pathing.js';
 import { gridCols, gridRows, gridSize } from './grid.js';
