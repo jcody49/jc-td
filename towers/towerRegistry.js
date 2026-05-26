@@ -1,10 +1,10 @@
-import { CannonTower } from "./towers/CannonTower.js";
-import { FrostTower } from "./towers/FrostTower.js";
-import { AcidTower } from "./towers/AcidTower.js";
-import { TankTower } from "./towers/TankTower.js";
-import { AntiAirTower } from "./towers/AntiAir.js";
-import { DetectionTower } from "./towers/DetectionTower.js";
-import { BoosterTower } from "./towers/BoosterTower.js";
+import { CannonTower } from "./CannonTower.js";
+import { FrostTower } from "./FrostTower.js";
+import { AcidTower } from "./AcidTower.js";
+import { TankTower } from "./TankTower.js";
+import { AntiAirTower } from "./AntiAir.js";
+import { DetectionTower } from "./DetectionTower.js";
+import { BoosterTower } from "./BoosterTower.js";
 
 export const TOWER_REGISTRY = {
     cannon: CannonTower,
