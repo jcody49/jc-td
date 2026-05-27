@@ -103,7 +103,7 @@ function applyDifficulty(config, difficulty) {
       copy.score = Math.round((copy.score ?? 5) * 0.8);
       break;
     case "hard":
-      copy.maxHp *= 1.09;
+      copy.maxHp *= 1.12;
       copy.score = Math.round((copy.score ?? 5) * 1.2);
       break;
     default:
