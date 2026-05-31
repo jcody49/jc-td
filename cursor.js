@@ -26,12 +26,8 @@ let animationRAF = null;
 function handleClick() {
     if (cursorMode !== "attack" || !window.selectedTower) return;
 
-    // recalc hovered enemy at click time
     const tower = window.selectedTower;
-    const mouseX = window.mouseX;
-    const mouseY = window.mouseY;
-
-    const enemy = getHoveredEnemy(gameState.enemies, mouseX, mouseY, 35);
+    const enemy = window.hoveredEnemy; // ✅ use existing hover system
 
     if (!enemy) return;
 
@@ -39,11 +35,13 @@ function handleClick() {
     const dy = enemy.y - tower.y;
     const distance = Math.hypot(dx, dy);
 
-    if (distance <= tower.range) {
+    if (
+        distance <= tower.range &&
+        tower.canTarget(enemy)
+    ) {
         tower.setForcedTarget(enemy);
 
-        // reset blink timer every click
-        enemy.forceFlashTimer = 12;  // or whatever frames you want
+        enemy.forceFlashTimer = 12;
     }
 
     cursorMode = "default";
@@ -68,12 +66,14 @@ function handleRightClick(e) {
     const distance = Math.hypot(dx, dy);
 
     // use the tower's actual range
-    if (distance <= tower.range) {
+    if (
+        distance <= tower.range &&
+        tower.canTarget(enemy)
+    ) {
         tower.setForcedTarget(enemy);
-
-        // blink red regardless of cooldown
-        enemy.forceFlashTimer = 12; // double blink: 6 red, 6 white
-
+    
+        enemy.forceFlashTimer = 12;
+    
         cursorMode = "default";
         applyCursor();
     }

@@ -252,26 +252,9 @@ export class Tower {
         continue;
       }
   
-      // =========================
-      // FLYING RULES
-      // =========================
-      const canHitFlying =
-        this.type === "antiAir" ||
-        this.type === "frost" ||
-        this.type === "acid";
-  
-      // flying enemy but this tower can't hit air
-      if (e.isFlying && !canHitFlying) {
+      if (!this.canTarget(e)) {
         continue;
       }
-  
-      if (
-        this.type === "antiAir" &&
-        !e.isFlying &&
-        !e.canBeTargetedByAntiAir
-    ) {
-        continue;
-    }
   
       // =========================
       // IMMUNITY RULES
@@ -290,6 +273,30 @@ export class Tower {
   
     return closest;
   }
+
+  canTarget(enemy) {
+
+    const canHitFlying =
+        this.type === "antiAir" ||
+        this.type === "frost" ||
+        this.type === "acid";
+
+    // Flying enemy but tower cannot hit air
+    if (enemy.isFlying && !canHitFlying) {
+        return false;
+    }
+
+    // Anti-air cannot hit normal ground enemies
+    if (
+        this.type === "antiAir" &&
+        !enemy.isFlying &&
+        !enemy.canBeTargetedByAntiAir
+    ) {
+        return false;
+    }
+
+    return true;
+}
 
   // ======================
   // UPDATE LOOP
