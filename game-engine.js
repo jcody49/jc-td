@@ -122,6 +122,32 @@ function drawGridTiles(ctx) {
 }
 
 // =========================
+// DRAW GRID LINES
+// =========================
+function drawGridLines(ctx, gridSize, gridCols, gridRows) {
+    ctx.save();
+
+    ctx.strokeStyle = "rgba(255,255,255,0.15)";
+    ctx.lineWidth = 1;
+
+    for (let x = 0; x <= gridCols; x++) {
+        ctx.beginPath();
+        ctx.moveTo(x * gridSize, 0);
+        ctx.lineTo(x * gridSize, gridRows * gridSize);
+        ctx.stroke();
+    }
+
+    for (let y = 0; y <= gridRows; y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, y * gridSize);
+        ctx.lineTo(gridCols * gridSize, y * gridSize);
+        ctx.stroke();
+    }
+
+    ctx.restore();
+}
+
+// =========================
 // DRAW START / END LABELS
 // =========================
 function drawStartEnd(ctx, path, gridSize) {
@@ -224,6 +250,7 @@ export function resetGame(gameState, ctx, canvas) {
     drawGridTiles(ctx);
     drawStartEnd(ctx, waveState.path, gridSize);
 
+
     // UPDATE CURSOR
     applyCursor();
 
@@ -279,6 +306,10 @@ export function startGameLoop(ctx, canvas, gameState, hud) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawGridTiles(ctx);
         drawStartEnd(ctx, waveState.path, gridSize);
+
+        if (window.showGrid) {
+            drawGridLines(ctx, gridSize, gridCols, gridRows);
+        }
 
 
         // =========================
